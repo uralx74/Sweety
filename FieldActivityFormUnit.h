@@ -492,7 +492,7 @@ __published:	// IDE-managed Components
     TLabel *Label16;
     TLabel *Label15;
     TLabel *Label14;
-    TLabel *SelectedStatLabel;
+    TLabel *CheckedCountStatLabel;
     TLabel *TotalStatLabel;
     TLabel *FilteredStatLabel;
     TButton *Button6;
@@ -507,6 +507,10 @@ __published:	// IDE-managed Components
     TAction *createFaPackStopToControlAction;
     TMenuItem *N16;
     TMemo *Memo1;
+    TAction *printDocumentFaNoticesListForPostOfficeAction;
+    TMenuItem *N17;
+    TLabel *Label5;
+    TLabel *CheckedFilteredCountLabel;
     void __fastcall FormShow(TObject *Sender);
     void __fastcall FilterComboBoxTextChange(TObject *Sender);
     void __fastcall DBGridAltGeneralChangeCheck(TObject *Sender);
@@ -565,6 +569,8 @@ __published:	// IDE-managed Components
     void __fastcall MainTabSheetShow(TObject *Sender);
     void __fastcall FilterComboBoxIndexChange(TObject *Sender);
     void __fastcall CcDttmStatusComboBoxChange(TObject *Sender);
+    void __fastcall printDocumentFaNoticesListForPostOfficeActionExecute(
+          TObject *Sender);
 private:	// User declarations
     //void __fastcall TFieldActivityForm::selectMode(int mode);
     void __fastcall OnQueryAfterExecute(TObject *Sender);

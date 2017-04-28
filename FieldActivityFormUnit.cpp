@@ -193,6 +193,7 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     printDocumentFaNoticesListAction->Enabled = bRoleAdministrator || bRoleOperator;
     printDocumentStopAction->Enabled = bRoleAdministrator || bRoleOperator || bRoleTester;
     printDocumentStopListAction->Enabled =  bRoleAdministrator || bRoleOperator;
+    printDocumentFaNoticesListForPostOfficeAction->Enabled =  bRoleAdministrator || bRoleOperator;
     printDocumentStopActionRefuseAction->Enabled =  bRoleAdministrator || bRoleOperator;
 
     createFaPackAction->Enabled = bRoleAdministrator || bRoleOperator;
@@ -232,11 +233,12 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp->packModeId = SHEET_TYPE_NOTICES_PACK;
     sheetTemp->addAction(printDocumentFaNoticesAction);
     sheetTemp->addAction(printDocumentFaNoticesListAction);
+    sheetTemp->addAction(printDocumentFaNoticesListForPostOfficeAction);
     sheetTemp->addAction(checkAllAction);
     sheetTemp->addAction(checkNoneAction);
     sheetTemp->addAction(checkWithoutCcAction);
     sheetTemp->addAction(checkWithCcLess3MonthAction);
-    
+
 
     // Вкладка утверждения вручения уведомления
     sheetTemp = item->addSheet(ApprovalListTabSheet);
@@ -771,16 +773,25 @@ void __fastcall TFieldActivityForm::refreshCheckedCount()
 {
     if ( _currentDbGrid != NULL )
     {
+        SelectAllCheckBox->Enabled = true;
+        ShowSelectAcctMenuButton->Enabled = true;
         SummaryInfoGroupBox->Visible = true;
 
-        TSumResult checkedResult = _currentDbGrid->getSum("", "CHECK_DATA = 1", false);
-        TSumResult recordResult = _currentDbGrid->getSum("", "", false);
-        TSumResult recordFilteredResult = _currentDbGrid->getSum("", "", true);
+        TSumResult checkedResult = _currentDbGrid->getSum("", "CHECK_DATA = 1", false);         // Без учета фильтра
+        TSumResult recordResult = _currentDbGrid->getSum("", "", false);                        // Без учета фильтра
+        TSumResult recordFilteredResult = _currentDbGrid->getSum("", "", true);                 // С учетом фильтра
+        TSumResult checkedFilteredResult = _currentDbGrid->getSum("", "CHECK_DATA = 1", true);  // С учетом фильтра
 
         _checkedCount = checkedResult.first;
         _recordCount = recordResult.first;
 
-        SelectedStatLabel->Caption = IntToStr(checkedResult.first);
+        int checkedFilteredCount = checkedFilteredResult.first;
+        int recordFilteredCount = recordFilteredResult.first;
+        //int _recordCount1 = recordResult.first;
+
+
+        CheckedCountStatLabel->Caption = IntToStr(_checkedCount);
+        CheckedFilteredCountLabel->Caption = IntToStr(checkedFilteredCount);
         FilteredStatLabel->Caption = IntToStr(recordFilteredResult.first);
         TotalStatLabel->Caption = IntToStr(recordResult.first);
 
@@ -788,13 +799,13 @@ void __fastcall TFieldActivityForm::refreshCheckedCount()
         // Состояние CheckBox для выделения записей
         TNotifyEvent old_OnClick = SelectAllCheckBox->OnClick;
         SelectAllCheckBox->OnClick = NULL;
-        if (_recordCount > 0)
+        if (recordFilteredCount > 0)
         {
-            if (_checkedCount == _recordCount)
+            if (checkedFilteredCount == recordFilteredCount)
             {
                 SelectAllCheckBox->State = cbChecked;
             }
-            else if (_checkedCount > 0)
+            else if (checkedFilteredCount > 0)
             {
                 SelectAllCheckBox->State = cbGrayed;
             }
@@ -819,6 +830,9 @@ void __fastcall TFieldActivityForm::refreshCheckedCount()
     }
     else
     {
+        ShowSelectAcctMenuButton->Enabled = false;
+        SelectAllCheckBox->Enabled = false;
+        SelectAllCheckBox->State = cbUnchecked;
         SummaryInfoGroupBox->Visible = false;
     }
 }
@@ -1441,7 +1455,7 @@ void __fastcall TFieldActivityForm::checkAllActionUpdate(TObject *Sender)
     static_cast<TAction*>(Sender)->Enabled = _recordCount > 0;
 }
 
-/**/
+/* Универсальная функция отображения/скрытия пукнта меню */
 void __fastcall TFieldActivityForm::createFaPackNoticeActionUpdate(
       TObject *Sender)
 {
@@ -1644,4 +1658,13 @@ void __fastcall TFieldActivityForm::MainTabSheetShow(
 
 /* Создать реестр заявок на ограничение*/
 
+
+void __fastcall TFieldActivityForm::printDocumentFaNoticesListForPostOfficeActionExecute(
+      TObject *Sender)
+{
+    DocumentDataModule->getDocumentFaNoticesListForPostOffice(MainDataModule->getOtdelenListFilter, MainDataModule->getFaPackInfoFilter, MainDataModule->getFaPackFilter);
+    MessageBoxInf("Список уведомлений сформирован.");
+   
+}
+//---------------------------------------------------------------------------
 

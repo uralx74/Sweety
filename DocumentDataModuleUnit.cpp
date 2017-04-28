@@ -32,24 +32,24 @@ __fastcall TDocumentDataModule::~TDocumentDataModule()
 
 /* Функция для подготовки к выводу данных
    Фильтрует dataset оставляя только отмеченные */
-void __fastcall TDocumentDataModule::BeginPrint(TDataSetFilter* mergeFields)
+void __fastcall TDocumentDataModule::BeginPrint(TDataSetFilter* dsFilter)
 {
-    mergeFields->LockDataSetPos();      // Запоминаем позицию в dataset
+    dsFilter->LockDataSetPos();      // Запоминаем позицию в dataset
     //mergeFields->DisableControls();     // Блокируем отображение изменений dataset
 
     // Внимание, здесь, использовать локальный фильтр
     //MainDataModule->getCheckedFilter->setValue("group", "param", ""); //
     getCheckedFilter->setValue("checked", "param", "1"); //
-    getCheckedFilter->DataSet = mergeFields->DataSet;   // Присоединяем фильтр к dataset
+    getCheckedFilter->DataSet = dsFilter->DataSet;   // Присоединяем фильтр к dataset
 }
 
 /* Функция, вызываемая при завершении вывода данных */
-void __fastcall TDocumentDataModule::EndPrint(TDataSetFilter* mergeFields)
+void __fastcall TDocumentDataModule::EndPrint(TDataSetFilter* dsFilter)
 {
     getCheckedFilter->DataSet = NULL;
 
     //mergeFields->EnableControls();
-    mergeFields->UnlockDataSetPos();
+    dsFilter->UnlockDataSetPos();
 }
 
 
@@ -71,7 +71,7 @@ String __fastcall TDocumentDataModule::askExcelFileName()
 }
 
 /* Открытие окна с вопросом пути сохранения Word */
-String __fastcall TDocumentDataModule::askWordFileName()
+String __fastcall TDocumentDataModule::askWordFileName(const String &defaultFileName)
 {
     /*#ifndef NDEBUG
     return "c:\\test_" + FormatDateTime("yyyy.mm.dd_hh.MM.ss", Now()) + "_";
@@ -83,6 +83,7 @@ String __fastcall TDocumentDataModule::askWordFileName()
     SaveDialog1->Filter = "MS Word файлы (*.doc)|*.doc|Все файлы (*.*)|*.*";
     SaveDialog1->FilterIndex = 1;
     SaveDialog1->DefaultExt = "";
+    SaveDialog1->FileName = defaultFileName;
 
     if ( SaveDialog1->Execute() )
     {
@@ -173,6 +174,40 @@ void __fastcall TDocumentDataModule::getDocumentFaNoticesList(TDataSetFilter *me
     }
     EndPrint(mergeFields);
 }
+
+/* Печать списка уведомлений для почтового отделения */
+void __fastcall TDocumentDataModule::getDocumentFaNoticesListForPostOffice(TDataSetFilter* otdelenData, TDataSetFilter* faPackData, TDataSetFilter* faData)
+{
+    if ( faData->DataSet->Eof )
+    {
+        return;
+    }
+
+    String resultFilename = askWordFileName(faPackData->DataSet->FieldByName("fa_pack_id")->AsString);
+    if (resultFilename == "")
+    {
+        return;
+    }
+
+    TWordExportParams wordExportParams;
+    wordExportParams.templateFilename = MainDataModule->getConfigQuery->FieldByName("report_path")->AsString + "\\template_document_notice_pack_post.dotx";     // Путь к шаблону
+    wordExportParams.resultFilename = ExtractFilePath(resultFilename) + ExtractFileName(resultFilename)/* +  faPackData->DataSet->FieldByName("fa_pack_id")->AsString*/;     // Путь к результату
+    //wordExportParams.pagePerDocument = 500;   // Количество страниц на документ
+
+    /* Присоединяем источники данных */
+    wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");     // Общая информация по участку
+    wordExportParams.addSingleTextDataSet(faPackData->DataSet, "rec_");  // Информация по реестру
+    wordExportParams.addTableDataSet(faData->DataSet, 1, "table_");                  // Информация для таблицы
+
+    // Далее фильтруем выделенные и формируем документы
+    BeginPrint(faData);    // Фиксируем исходный набор данных
+
+    documentWriter->ExportToWordTemplate(&wordExportParams);    // Формируем документ
+
+    EndPrint(faData);       // Освобождаем набор данных
+}
+
+
 
 /* Печать списка заявок на ограничение - устаревшая */
 void __fastcall TDocumentDataModule::getDocumentStopService(TDataSetFilter *mergeFields)

@@ -36,16 +36,18 @@ private:	// User declarations
     TDocumentWriter* documentWriter;
     
     String __fastcall askExcelFileName();
-    String __fastcall askWordFileName();
+    String __fastcall askWordFileName(const String &defaultFileName = "");
 
-    void __fastcall BeginPrint(TDataSetFilter* mergeFields);
-    void __fastcall EndPrint(TDataSetFilter* mergeFields);
+    void __fastcall BeginPrint(TDataSetFilter* dsFilter);
+    void __fastcall EndPrint(TDataSetFilter* dsFilter);
 
 
 public:		// User declarations
     __fastcall TDocumentDataModule(TComponent* Owner);
     __fastcall ~TDocumentDataModule();
     void __fastcall getDocumentFaNoticesList(TDataSetFilter *mergeFields);
+    void __fastcall getDocumentFaNoticesListForPostOffice(TDataSetFilter* otdelenDsF, TDataSetFilter* recDsF, TDataSetFilter* tableDsF);
+
     void __fastcall getDocumentFaNotices(TDataSetFilter* mergeFields);
     //void __fastcall getDocumentFaNotices(TDataSet *mergeFields, TDataSet* formFields);
     void __fastcall getDocumentStopService(TDataSetFilter *mergeFields);

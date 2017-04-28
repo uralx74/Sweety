@@ -1,8 +1,8 @@
 object MainDataModule: TMainDataModule
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Left = 246
-  Top = 131
+  Left = 399
+  Top = 129
   Height = 908
   Width = 1519
   object EsaleSession: TOraSession
@@ -67,8 +67,8 @@ object MainDataModule: TMainDataModule
       '  and (:otdelen is null or acct_otdelen = :otdelen)')
     FetchAll = True
     FilterOptions = [foCaseInsensitive]
-    Left = 248
-    Top = 592
+    Left = 272
+    Top = 728
     ParamData = <
       item
         DataType = ftUnknown
@@ -266,7 +266,7 @@ object MainDataModule: TMainDataModule
     Filtered = True
     FilterOptions = [foCaseInsensitive]
     Left = 576
-    Top = 56
+    Top = 64
     ParamData = <
       item
         DataType = ftUnknown
@@ -656,7 +656,7 @@ object MainDataModule: TMainDataModule
       '    from nasel_fa'
       
         '    inner join nasel_fa_pack on nasel_fa_pack.fa_pack_id = nasel' +
-        '_fa.fa_pack_id'
+        '_fa.fa_pack_id and nasel_fa_pack.fa_pack_status_flg in ('#39'50'#39')'
       
         '  ) last_fa on last_fa.acct_id = nasel_ccb_prem.acct_id and last' +
         '_fa.n = 1    '
@@ -917,8 +917,8 @@ object MainDataModule: TMainDataModule
         '850000'#39','#39'1390950000'#39')')
     FetchAll = True
     FilterOptions = [foCaseInsensitive]
-    Left = 248
-    Top = 544
+    Left = 272
+    Top = 680
     ParamData = <
       item
         DataType = ftUnknown
@@ -1700,7 +1700,8 @@ object MainDataModule: TMainDataModule
       '  , :app_path || '#39'report\visa\'#39'|| raion.nachalnik || '#39'.png'#39' visa'
       
         '  , substr(trim(raion.FNAME),1,length(trim(raion.FNAME))-2) || '#39 +
-        #1086#1075#1086' '#1091#1095#1072#1089#1090#1082#1072#39'  post  '
+        #1086#1075#1086' '#1091#1095#1072#1089#1090#1082#1072#39'  post'
+      '  , nasel_uch.descr_l '
       ' '
       'from acc_grp_dar'
       
@@ -1753,6 +1754,10 @@ object MainDataModule: TMainDataModule
     object getOtdelenListQueryPOST: TStringField
       FieldName = 'POST'
       Size = 36
+    end
+    object getOtdelenListQueryDESCR_L: TStringField
+      FieldName = 'DESCR_L'
+      Size = 25
     end
   end
   object getApprovalListQuery_old: TOraQuery
@@ -3706,5 +3711,19 @@ object MainDataModule: TMainDataModule
         ParamType = ptInput
       end>
     CommandStoredProcName = 'PK_NASEL_SWEETY.UPDATE_FA_PACK_CHAR_RECIPIENT'
+  end
+  object getOtdelenListFilter: TDataSetFilter
+    OnChange = OnFilterChange
+    Glue = ' AND '
+    DataSet = getOtdelenListQuery
+    Left = 240
+    Top = 544
+  end
+  object getFaPackInfoFilter: TDataSetFilter
+    OnChange = OnFilterChange
+    Glue = ' AND '
+    DataSet = getFaPackInfo
+    Left = 240
+    Top = 600
   end
 end

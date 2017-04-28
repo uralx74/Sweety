@@ -474,6 +474,9 @@ __published:	// IDE-managed Components
     TStringField *getFaCancelListQueryRT_POST;
     TStringField *getFaCancelListQueryRT_NAME;
     TOraStoredProc *updateFaPackCharRecipientProc;
+    TStringField *getOtdelenListQueryDESCR_L;
+    TDataSetFilter *getOtdelenListFilter;
+    TDataSetFilter *getFaPackInfoFilter;
     void __fastcall DataModuleCreate(TObject *Sender);
     void __fastcall OnFilterChange(TDataSetFilter *Sender,
           AnsiString filterName);

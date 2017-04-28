@@ -1,6 +1,6 @@
 object FieldActivityForm: TFieldActivityForm
-  Left = 193
-  Top = 125
+  Left = 484
+  Top = 181
   Width = 1418
   Height = 884
   Caption = #1044#1086#1083#1078#1085#1080#1082#1080#1060
@@ -1944,45 +1944,59 @@ object FieldActivityForm: TFieldActivityForm
         TabOrder = 0
         object Label16: TLabel
           Left = 16
-          Top = 40
+          Top = 24
           Width = 80
           Height = 13
           Caption = #1054#1090#1092#1080#1083#1100#1090#1088#1086#1074#1072#1085#1086
         end
         object Label15: TLabel
           Left = 16
-          Top = 56
+          Top = 72
           Width = 30
           Height = 13
           Caption = #1042#1089#1077#1075#1086
         end
         object Label14: TLabel
           Left = 16
-          Top = 24
-          Width = 81
+          Top = 56
+          Width = 77
           Height = 13
-          Caption = #1050#1086#1083'-'#1074#1086' '#1074#1099#1073#1088#1072#1085#1086
+          Caption = #1042#1099#1073#1088#1072#1085#1086' '#1074#1089#1077#1075#1086
         end
-        object SelectedStatLabel: TLabel
+        object CheckedCountStatLabel: TLabel
           Left = 152
-          Top = 24
-          Width = 87
+          Top = 56
+          Width = 116
           Height = 13
-          Caption = 'SelectedStatLabel'
+          Caption = 'CheckedCountStatLabel'
         end
         object TotalStatLabel: TLabel
           Left = 152
-          Top = 56
+          Top = 72
           Width = 69
           Height = 13
           Caption = 'TotalStatLabel'
         end
         object FilteredStatLabel: TLabel
           Left = 152
-          Top = 40
+          Top = 24
           Width = 79
           Height = 13
           Caption = 'FilteredStatLabel'
+        end
+        object Label5: TLabel
+          Left = 16
+          Top = 40
+          Width = 108
+          Height = 13
+          Caption = #1042#1099#1073#1088#1072#1085#1086' '#1089' '#1092#1080#1083#1100#1090#1088#1086#1084
+        end
+        object CheckedFilteredCountLabel: TLabel
+          Left = 152
+          Top = 40
+          Width = 131
+          Height = 13
+          Caption = 'CheckedFilteredCountLabel'
         end
       end
     end
@@ -1995,6 +2009,9 @@ object FieldActivityForm: TFieldActivityForm
     end
     object N5: TMenuItem
       Action = printDocumentFaNoticesListAction
+    end
+    object N17: TMenuItem
+      Action = printDocumentFaNoticesListForPostOfficeAction
     end
     object N11: TMenuItem
       Action = printFaNoticeEnvelopeAction
@@ -2138,6 +2155,13 @@ object FieldActivityForm: TFieldActivityForm
       Category = 'Actions_stop'
       Caption = #1055#1077#1088#1077#1074#1077#1089#1090#1080' '#1088#1077#1077#1089#1090#1088' '#1074' '#1089#1090#1072#1090#1091#1089' ['#1059#1090#1074#1077#1088#1078#1076#1077#1085']'
       OnExecute = setFaPackStatusFrozenActionExecute
+    end
+    object printDocumentFaNoticesListForPostOfficeAction: TAction
+      Category = 'Reports'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1087#1080#1089#1082#1072' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081' '#1076#1083#1103' '#1087#1086#1095#1090#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1077#1085#1080#1103
+      Enabled = False
+      OnExecute = printDocumentFaNoticesListForPostOfficeActionExecute
+      OnUpdate = createFaPackNoticeActionUpdate
     end
   end
   object ActionsPopupMenu: TPopupMenu
