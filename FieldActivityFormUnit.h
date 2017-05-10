@@ -70,7 +70,7 @@ typedef enum   {
     SHEET_TYPE_STOP,
     SHEET_TYPE_PACK_STOP_LIST,  // Список реестров на отключение
     SHEET_TYPE_STOP_PACK,
-    SHEET_TYPE_FA_CANCEL_LIST,
+    SHEET_TYPE_CANCEL_STOP_LIST,
     SHEET_TYPE_RELOAD
     //PACK_APPROVE_LIST
 } TSheetType;
@@ -380,7 +380,7 @@ __published:	// IDE-managed Components
     TMenuItem *N8;
     TActionList *ActionList1;
     TAction *printDocumentFaNoticesAction;
-    TAction *printDocumentStopActionRefuseAction;
+    TAction *printCancelStopAction;
     TAction *printDocumentStopListAction;
     TAction *createFaPackAction;
     TAction *approveFaPackCcDttmAction;
@@ -445,8 +445,6 @@ __published:	// IDE-managed Components
     TBitBtn *ResetFiltersButton;
     TPanel *FilterSplitterPanel;
     TPanel *FaPackTypeFilterPanel;
-    TAction *createFaCancelPackAction;
-    TMenuItem *N12;
     TPanel *PremTypeFilterPanel;
     TComboBox *PremTypeComboBox;
     TAction *deleteFaPackAction;
@@ -479,12 +477,11 @@ __published:	// IDE-managed Components
     TDBGridAlt *PackStopListGrid;
     TTabSheet *PackStopTabSheet;
     TDBGridAlt *StopPackGrid;
-    TTabSheet *FaCancelListTabSheet;
-    TDBGridAlt *FaCancelListGrid;
+    TTabSheet *FaCancelStopListTabSheet;
+    TDBGridAlt *CancelStopListGrid;
     TTabSheet *PackReloadTabSheet;
     TDBGridAlt *FaResumptionList;
     TTabSheet *PostListTabSheet;
-    TDBGridAlt *PostListGrid;
     TTabSheet *FullListTabSheet;
     TDBGridAlt *FullListGrid;
     TPanel *Panel3;
@@ -495,7 +492,6 @@ __published:	// IDE-managed Components
     TLabel *CheckedCountStatLabel;
     TLabel *TotalStatLabel;
     TLabel *FilteredStatLabel;
-    TButton *Button6;
     TComboBox *ApprovedStatusComboBox;
     TComboBox *CcDttmStatusComboBox;
     TLabel *Label4;
@@ -511,12 +507,16 @@ __published:	// IDE-managed Components
     TMenuItem *N17;
     TLabel *Label5;
     TLabel *CheckedFilteredCountLabel;
+    TSplitter *Splitter1;
+    TDBGridAlt *PostListGrid;
+    TButton *Button6;
+    TDBLookupComboBox *DBLookupComboBox1;
+    TLabel *Label8;
+    TLabel *Label9;
+    TDBLookupComboBox *DBLookupComboBox2;
     void __fastcall FormShow(TObject *Sender);
     void __fastcall FilterComboBoxTextChange(TObject *Sender);
-    void __fastcall DBGridAltGeneralChangeCheck(TObject *Sender);
-    void __fastcall DBGridAltGeneralChangeFilter(TObject *Sender);
     void __fastcall ParamPackIdEditClick(TObject *Sender);
-    void __fastcall Button6Click(TObject *Sender);
     void __fastcall OtdelenBoxChange(TObject *Sender);
     void __fastcall ParamPackIdEditKeyPress(TObject *Sender, char &Key);
     void __fastcall FilterCcDttmChange(TObject *Sender);
@@ -551,7 +551,7 @@ __published:	// IDE-managed Components
     void __fastcall checkNoneActionExecute(TObject *Sender);
     void __fastcall createFaPackStopActionExecute(TObject *Sender);
     void __fastcall PackStopTabSheetShow(TObject *Sender);
-    void __fastcall FaCancelListTabSheetShow(TObject *Sender);
+    void __fastcall FaCancelStopListTabSheetShow(TObject *Sender);
     void __fastcall SelectAllCheckBoxClick(TObject *Sender);
     void __fastcall PackStopListTabSheetShow(TObject *Sender);
     void __fastcall checkAllActionUpdate(TObject *Sender);
@@ -571,6 +571,10 @@ __published:	// IDE-managed Components
     void __fastcall CcDttmStatusComboBoxChange(TObject *Sender);
     void __fastcall printDocumentFaNoticesListForPostOfficeActionExecute(
           TObject *Sender);
+    void __fastcall printCancelStopActionExecute(
+          TObject *Sender);
+    void __fastcall OnChangeCheck(TObject *Sender);
+    void __fastcall Button6Click(TObject *Sender);
 private:	// User declarations
     //void __fastcall TFieldActivityForm::selectMode(int mode);
     void __fastcall OnQueryAfterExecute(TObject *Sender);
@@ -588,7 +592,7 @@ private:	// User declarations
     void __fastcall showFullList();
     void __fastcall showDebtorList();
     void __fastcall showPostList();
-    void __fastcall showFaPack(const Variant faPackId);
+    void __fastcall showFaPackNotices(const Variant faPackId);
     void __fastcall showFaPackStop(const Variant faPackId);
     void __fastcall showStopList();
     void __fastcall showApprovalList();

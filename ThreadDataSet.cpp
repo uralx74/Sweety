@@ -7,7 +7,7 @@
 #include "ThreadDataSet.h"
 
 
-__fastcall TThreadDataSet::TThreadDataSet(bool CreateSuspended, TOraQuery* query, TDataSet* destinationDataSet,  TThreadEvent ThreadEvent)
+__fastcall TThreadDataSet::TThreadDataSet(bool CreateSuspended, TOraQuery* query, TDataSet* destinationDataSet, TThreadEvent ThreadEvent)
     : TThread(CreateSuspended)
 {
     FreeOnTerminate = true;
@@ -19,12 +19,21 @@ __fastcall TThreadDataSet::TThreadDataSet(bool CreateSuspended, TOraQuery* query
 
     _oraSession = new TOraSession(NULL);
 
-    _dataSet = new TOraQuery(NULL);
+
+    TOraObjectQuery* oraObjectQuery = new TOraObjectQuery(NULL);
+    oraObjectQuery->oraQuery->Assign(query);
+    oraObjectQuery->oraQuery->FetchAll = true;
+    _oraSession->AssignConnect(query->Session);
+    oraObjectQuery->oraQuery->Session = _oraSession;
+
+    _uniObject = oraObjectQuery;
+
+    /*_dataSet = new TOraQuery(NULL);
     _dataSet->Assign(query);
     _dataSet->FetchAll = true;
 
     _oraSession->AssignConnect(query->Session);
-    _dataSet->Session = _oraSession;
+    _dataSet->Session = _oraSession;*/
 
     if (destinationDataSet != NULL)
     {
@@ -36,7 +45,7 @@ __fastcall TThreadDataSet::TThreadDataSet(bool CreateSuspended, TOraQuery* query
     if ( !CreateSuspended )
     {
         Resume();
-    } 
+    }
 
 
     //WParamResultMessage = 0;
@@ -48,6 +57,48 @@ __fastcall TThreadDataSet::TThreadDataSet(bool CreateSuspended, TOraQuery* query
 
     randomize();
     _threadId = random(9999999999);*/
+}
+
+
+__fastcall TThreadDataSet::TThreadDataSet(bool CreateSuspended, TOraStoredProc* proc, TDataSet* destinationDataSet, TThreadEvent ThreadEvent)
+    : TThread(CreateSuspended)
+{
+    FreeOnTerminate = true;
+    Suspended = true;
+
+
+    //_notifyEvent = NotifyEvent;
+    _threadEvent = ThreadEvent;
+
+    _oraSession = new TOraSession(NULL);
+
+
+    TOraObjectProc* oraObjectProc = new TOraObjectProc(NULL);
+    oraObjectProc->oraProc->Assign(proc);
+    oraObjectProc->oraProc->FetchAll = true;
+    _oraSession->AssignConnect(proc->Session);
+    oraObjectProc->oraProc->Session = _oraSession;
+
+    _uniObject = oraObjectProc;
+
+    /*_dataSet = new TOraQuery(NULL);
+    _dataSet->Assign(query);
+    _dataSet->FetchAll = true;
+
+    _oraSession->AssignConnect(query->Session);
+    _dataSet->Session = _oraSession;*/
+
+    if (destinationDataSet != NULL)
+    {
+        _destinationDataSet = destinationDataSet;
+        destinationDataSet->Close();
+    }
+
+
+    if ( !CreateSuspended )
+    {
+        Resume();
+    }
 }
 
 /**/
@@ -93,7 +144,17 @@ __fastcall TThreadDataSet::TThreadDataSet(bool CreateSuspended, TOraQuery* query
 /**/
 __fastcall TThreadDataSet::~TThreadDataSet()
 {
-    delete _dataSet;
+    /*if (_oraQuery != NULL)
+    {
+        delete _oraQuery;
+    }
+    if (_oraProc != NULL)
+    {
+        delete _oraProc;
+    }
+      */
+
+    delete _uniObject;
     delete _oraSession;
 }
 
@@ -104,9 +165,11 @@ void __fastcall TThreadDataSet::Execute()
 
     try
     {
-        if (_dataSet != NULL)
+        //if (_dataSet != NULL)
+        if (_uniObject != NULL)
         {
-            _dataSet->Open();
+            //_dataSet->Open();
+            _uniObject->Open();
         }
     }
     catch(Exception &e)
@@ -127,7 +190,8 @@ void __fastcall  TThreadDataSet::SyncBeginThread()
         {
             _threadEvent(TEM_THREAD_BEGIN, NULL);
         }
-    } catch(...)
+    }
+    catch(...)
     {
     }
 }
@@ -143,8 +207,10 @@ void __fastcall  TThreadDataSet::SyncEndThread()
         }
         if (_destinationDataSet != NULL)
         {
-            try {
-                CopyDataSet(_dataSet, _destinationDataSet);
+            try
+            {
+                CopyDataSet(_uniObject->getDataSet(), _destinationDataSet);
+                //CopyDataSet(_dataSet, _destinationDataSet);
             }
             catch(Exception &e)
             {
@@ -154,7 +220,8 @@ void __fastcall  TThreadDataSet::SyncEndThread()
         }
         if ( _threadEvent != NULL )
         {
-            _threadEvent(TEM_THREAD_END, _dataSet);
+            _threadEvent(TEM_THREAD_END, _uniObject->getDataSet());
+            //_threadEvent(TEM_THREAD_END, _dataSet);
         }
     }
     catch(Exception &e)
@@ -187,10 +254,20 @@ void __fastcall TThreadDataSet::CopyDataSet(TDataSet* sourceDs, TDataSet* destin
     destinationDs->Open();
     destinationDs->Assign(sourceDs);
     destinationDs->EnableControls();
+}
+
+/*  опирует данные из источника в приемник */
+/*void __fastcall TThreadDataSet::CopyDataSet(TDataSet* sourceDs, TDataSet* destinationDs)
+{
+    destinationDs->DisableControls();
+    destinationDs->FieldDefs->Assign(sourceDs->FieldDefs);
+    destinationDs->Open();
+    destinationDs->Assign(sourceDs);
+    destinationDs->EnableControls();
     //ShowMessage(MainDataModule->VirtualTable1->RecordCount);
     //DBGridAltGeneral->DataSource->DataSet = MainDataModule->VirtualTable1;
     //MainDataModule->VirtualTable1->Filtered = true;
-}
+}   */
 
 
 

@@ -1,6 +1,6 @@
 object FieldActivityForm: TFieldActivityForm
-  Left = 484
-  Top = 181
+  Left = 200
+  Top = 127
   Width = 1418
   Height = 884
   Caption = #1044#1086#1083#1078#1085#1080#1082#1080#1060
@@ -18,6 +18,16 @@ object FieldActivityForm: TFieldActivityForm
     846)
   PixelsPerInch = 96
   TextHeight = 13
+  object Splitter1: TSplitter
+    Left = 289
+    Top = 0
+    Width = 6
+    Height = 846
+    Cursor = crHSplit
+    Beveled = True
+    Color = clBtnFace
+    ParentColor = False
+  end
   object GroupBox3: TGroupBox
     Left = 8
     Top = 747
@@ -36,9 +46,9 @@ object FieldActivityForm: TFieldActivityForm
     end
   end
   object MainPanel: TPanel
-    Left = 289
+    Left = 295
     Top = 0
-    Width = 1113
+    Width = 1107
     Height = 846
     Align = alClient
     BevelOuter = bvNone
@@ -46,7 +56,7 @@ object FieldActivityForm: TFieldActivityForm
     object Panel1: TPanel
       Left = 0
       Top = 40
-      Width = 1113
+      Width = 1107
       Height = 806
       Align = alClient
       BevelOuter = bvNone
@@ -54,14 +64,14 @@ object FieldActivityForm: TFieldActivityForm
       object PackPageControl: TPageControl
         Left = 0
         Top = 0
-        Width = 1113
+        Width = 1107
         Height = 806
-        ActivePage = MainTabSheet
+        ActivePage = PackManualTabSheet
         Align = alClient
         OwnerDraw = True
         Style = tsFlatButtons
         TabHeight = 25
-        TabIndex = 0
+        TabIndex = 2
         TabOrder = 0
         OnDrawTab = PackPageControlDrawTab
         object MainTabSheet: TTabSheet
@@ -74,13 +84,22 @@ object FieldActivityForm: TFieldActivityForm
           ImageIndex = 10
           ParentFont = False
           OnShow = MainTabSheetShow
+          DesignSize = (
+            1099
+            771)
           object GroupBox2: TGroupBox
             Left = 7
             Top = 7
-            Width = 402
-            Height = 298
+            Width = 802
+            Height = 754
+            Anchors = [akLeft, akTop, akRight, akBottom]
             Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072
+            Color = clBtnFace
+            ParentColor = False
             TabOrder = 0
+            DesignSize = (
+              802
+              754)
             object Label3: TLabel
               Left = 48
               Top = 32
@@ -88,11 +107,26 @@ object FieldActivityForm: TFieldActivityForm
               Height = 13
               Caption = #1069#1090#1072' '#1087#1072#1085#1077#1083#1100' '#1085#1072#1093#1086#1076#1080#1090#1089#1103' '#1085#1072' '#1089#1090#1072#1076#1080#1080' '#1088#1072#1079#1088#1072#1073#1086#1090#1082#1080
             end
+            object Label8: TLabel
+              Left = 16
+              Top = 176
+              Width = 146
+              Height = 13
+              Caption = #1055#1086#1076#1087#1080#1089#1072#1085#1090' '#1076#1083#1103' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081
+            end
+            object Label9: TLabel
+              Left = 16
+              Top = 208
+              Width = 193
+              Height = 13
+              Caption = #1055#1086#1076#1087#1080#1089#1072#1085#1090' '#1076#1083#1103' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
+            end
             object Memo1: TMemo
               Left = 16
-              Top = 216
+              Top = 672
               Width = 281
               Height = 73
+              Anchors = [akLeft, akBottom]
               BevelInner = bvNone
               BevelOuter = bvNone
               BorderStyle = bsNone
@@ -107,6 +141,41 @@ object FieldActivityForm: TFieldActivityForm
               ReadOnly = True
               TabOrder = 0
             end
+            object Button6: TButton
+              Left = 14
+              Top = 135
+              Width = 75
+              Height = 25
+              Caption = 'TestButton'
+              TabOrder = 1
+              OnClick = Button6Click
+            end
+            object DBLookupComboBox1: TDBLookupComboBox
+              Left = 224
+              Top = 168
+              Width = 166
+              Height = 21
+              DropDownRows = 11
+              KeyField = 'ACCT_OTDELEN'
+              ListField = 'ACCT_OTDELEN; OTDELEN_DESCR'
+              ListFieldIndex = 1
+              ParentColor = True
+              TabOrder = 2
+              OnClick = OtdelenComboBoxClick
+            end
+            object DBLookupComboBox2: TDBLookupComboBox
+              Left = 224
+              Top = 200
+              Width = 166
+              Height = 21
+              DropDownRows = 11
+              KeyField = 'ACCT_OTDELEN'
+              ListField = 'ACCT_OTDELEN; OTDELEN_DESCR'
+              ListFieldIndex = 1
+              ParentColor = True
+              TabOrder = 3
+              OnClick = OtdelenComboBoxClick
+            end
           end
         end
         object DebtorsTabSheet: TTabSheet
@@ -115,8 +184,8 @@ object FieldActivityForm: TFieldActivityForm
           object DBGridAltGeneral: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 704
-            Height = 828
+            Width = 1099
+            Height = 771
             Align = alClient
             DataSource = MainDataModule.getDebtorsDataSource
             ReadOnly = True
@@ -142,8 +211,7 @@ object FieldActivityForm: TFieldActivityForm
             EditableFont.Height = -11
             EditableFont.Name = 'MS Sans Serif'
             EditableFont.Style = []
-            OnChangeCheck = DBGridAltGeneralChangeCheck
-            OnChangeFilter = DBGridAltGeneralChangeFilter
+            OnChangeCheck = OnChangeCheck
             Columns = <
               item
                 Expanded = False
@@ -256,7 +324,7 @@ object FieldActivityForm: TFieldActivityForm
           object DBGridAltManual: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 1105
+            Width = 1099
             Height = 771
             Align = alClient
             DataSource = MainDataModule.getFaPackDataSource
@@ -283,7 +351,7 @@ object FieldActivityForm: TFieldActivityForm
             EditableFont.Height = -11
             EditableFont.Name = 'MS Sans Serif'
             EditableFont.Style = []
-            OnChangeCheck = DBGridAltGeneralChangeCheck
+            OnChangeCheck = OnChangeCheck
             Columns = <
               item
                 Expanded = False
@@ -309,6 +377,13 @@ object FieldActivityForm: TFieldActivityForm
                 FieldName = 'CC_DTTM'
                 ReadOnly = True
                 Title.Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1072#1082#1090#1072
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'APPROVAL_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1091#1090#1074'.'
                 Width = 100
                 Visible = True
               end
@@ -371,7 +446,7 @@ object FieldActivityForm: TFieldActivityForm
                 Expanded = False
                 FieldName = 'OP_AREA_DESCR'
                 Title.Caption = #1050#1086#1085#1090#1088#1086#1083#1077#1088
-                Width = 64
+                Width = 100
                 Visible = True
               end>
           end
@@ -383,7 +458,7 @@ object FieldActivityForm: TFieldActivityForm
           object ApproveListGrid: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 1105
+            Width = 1099
             Height = 771
             Align = alClient
             DataSource = MainDataModule.getApprovalListDataSource
@@ -409,7 +484,7 @@ object FieldActivityForm: TFieldActivityForm
             EditableFont.Height = -11
             EditableFont.Name = 'MS Sans Serif'
             EditableFont.Style = []
-            OnChangeCheck = DBGridAltGeneralChangeCheck
+            OnChangeCheck = OnChangeCheck
             Columns = <
               item
                 Expanded = False
@@ -426,6 +501,13 @@ object FieldActivityForm: TFieldActivityForm
                 Expanded = False
                 FieldName = 'ACCT_ID'
                 Title.Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CITY'
+                Title.Caption = #1043#1086#1088#1086#1076
                 Width = 100
                 Visible = True
               end
@@ -470,7 +552,7 @@ object FieldActivityForm: TFieldActivityForm
               item
                 Expanded = False
                 FieldName = 'FA_ID'
-                Title.Caption = 'ID '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+                Title.Caption = 'ID '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
                 Width = 100
                 Visible = True
               end>
@@ -483,8 +565,8 @@ object FieldActivityForm: TFieldActivityForm
           object StopListGrid: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 1090
-            Height = 900
+            Width = 1099
+            Height = 771
             Align = alClient
             DataSource = MainDataModule.getStopListDataSource
             ReadOnly = True
@@ -510,7 +592,7 @@ object FieldActivityForm: TFieldActivityForm
             EditableFont.Height = -11
             EditableFont.Name = 'MS Sans Serif'
             EditableFont.Style = []
-            OnChangeCheck = DBGridAltGeneralChangeCheck
+            OnChangeCheck = OnChangeCheck
             Columns = <
               item
                 Expanded = False
@@ -609,10 +691,10 @@ object FieldActivityForm: TFieldActivityForm
           object PackStopListGrid: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 1090
-            Height = 900
+            Width = 1099
+            Height = 771
             Align = alClient
-            DataSource = MainDataModule.getPackStopListDataSource
+            DataSource = MainDataModule.getPackListStopDataSource
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
             TitleFont.Color = clWindowText
@@ -635,7 +717,7 @@ object FieldActivityForm: TFieldActivityForm
             EditableFont.Height = -11
             EditableFont.Name = 'MS Sans Serif'
             EditableFont.Style = []
-            OnChangeCheck = DBGridAltGeneralChangeCheck
+            OnChangeCheck = OnChangeCheck
             Columns = <
               item
                 Expanded = False
@@ -690,6 +772,19 @@ object FieldActivityForm: TFieldActivityForm
                 Title.Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
                 Width = 120
                 Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_CNT'
+                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082
+                Width = 80
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'OWNER'
+                Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
+                Visible = True
               end>
           end
         end
@@ -701,8 +796,8 @@ object FieldActivityForm: TFieldActivityForm
           object StopPackGrid: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 1090
-            Height = 900
+            Width = 1099
+            Height = 771
             Align = alClient
             DataSource = MainDataModule.getFaPackStopDataSource
             TabOrder = 0
@@ -727,6 +822,7 @@ object FieldActivityForm: TFieldActivityForm
             EditableFont.Height = -11
             EditableFont.Name = 'MS Sans Serif'
             EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
             Columns = <
               item
                 Expanded = False
@@ -844,18 +940,18 @@ object FieldActivityForm: TFieldActivityForm
               end>
           end
         end
-        object FaCancelListTabSheet: TTabSheet
+        object FaCancelStopListTabSheet: TTabSheet
           Tag = 1
           Caption = #1054#1090#1079#1099#1074' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077
           ImageIndex = 5
-          OnShow = FaCancelListTabSheetShow
-          object FaCancelListGrid: TDBGridAlt
+          OnShow = FaCancelStopListTabSheetShow
+          object CancelStopListGrid: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 1105
+            Width = 1099
             Height = 771
             Align = alClient
-            DataSource = MainDataModule.getFaCancelListDataSource
+            DataSource = MainDataModule.getCancelStopListDataSource
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
             TitleFont.Color = clWindowText
@@ -878,6 +974,7 @@ object FieldActivityForm: TFieldActivityForm
             EditableFont.Height = -11
             EditableFont.Name = 'MS Sans Serif'
             EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
             Columns = <
               item
                 Expanded = False
@@ -897,6 +994,7 @@ object FieldActivityForm: TFieldActivityForm
                 Expanded = False
                 FieldName = 'FA_PACK_ID'
                 Title.Caption = #1056#1077#1077#1089#1090#1088
+                Width = 80
                 Visible = True
               end
               item
@@ -909,20 +1007,19 @@ object FieldActivityForm: TFieldActivityForm
                 Expanded = False
                 FieldName = 'FA_PACK_STATUS_FLG'
                 Title.Caption = #1057#1090#1072#1090#1091#1089
-                Width = 40
+                Width = 80
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'PRNT_FA_ID'
-                Title.Caption = #1047#1072#1103#1074#1082#1072
-                Width = 90
+                Width = 80
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'FA_ID'
-                Width = 90
+                Width = 80
                 Visible = True
               end
               item
@@ -933,19 +1030,15 @@ object FieldActivityForm: TFieldActivityForm
               end
               item
                 Expanded = False
-                FieldName = 'RT_ADDR'
-                Width = 100
+                FieldName = 'ACCT_ID_CNT'
+                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082
+                Width = 80
                 Visible = True
               end
               item
                 Expanded = False
-                FieldName = 'RT_POST'
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'RT_NAME'
+                FieldName = 'OWNER'
+                Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
                 Width = 100
                 Visible = True
               end>
@@ -958,8 +1051,8 @@ object FieldActivityForm: TFieldActivityForm
           object FaResumptionList: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 906
-            Height = 842
+            Width = 1099
+            Height = 771
             Align = alClient
             DataSource = MainDataModule.getFaPackStopDataSource
             TabOrder = 0
@@ -984,6 +1077,7 @@ object FieldActivityForm: TFieldActivityForm
             EditableFont.Height = -11
             EditableFont.Name = 'MS Sans Serif'
             EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
             Columns = <
               item
                 Expanded = False
@@ -1097,8 +1191,8 @@ object FieldActivityForm: TFieldActivityForm
           object PostListGrid: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 906
-            Height = 842
+            Width = 1099
+            Height = 771
             Align = alClient
             DataSource = MainDataModule.getPostListDataSource
             ReadOnly = True
@@ -1124,8 +1218,7 @@ object FieldActivityForm: TFieldActivityForm
             EditableFont.Height = -11
             EditableFont.Name = 'MS Sans Serif'
             EditableFont.Style = []
-            OnChangeCheck = DBGridAltGeneralChangeCheck
-            OnChangeFilter = DBGridAltGeneralChangeFilter
+            OnChangeCheck = OnChangeCheck
             Columns = <
               item
                 Expanded = False
@@ -1157,13 +1250,11 @@ object FieldActivityForm: TFieldActivityForm
               item
                 Expanded = False
                 FieldName = 'SALDO_BT_UCH'
-                Width = 64
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'SALDO_ACT_UCH'
-                Width = 64
                 Visible = True
               end
               item
@@ -1227,10 +1318,9 @@ object FieldActivityForm: TFieldActivityForm
           object FullListGrid: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 906
-            Height = 842
+            Width = 1099
+            Height = 771
             Align = alClient
-            DataSource = MainDataModule.getFullListDataSource
             ReadOnly = True
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
@@ -1254,8 +1344,7 @@ object FieldActivityForm: TFieldActivityForm
             EditableFont.Height = -11
             EditableFont.Name = 'MS Sans Serif'
             EditableFont.Style = []
-            OnChangeCheck = DBGridAltGeneralChangeCheck
-            OnChangeFilter = DBGridAltGeneralChangeFilter
+            OnChangeCheck = OnChangeCheck
             Columns = <
               item
                 Expanded = False
@@ -1368,13 +1457,13 @@ object FieldActivityForm: TFieldActivityForm
     object Panel2: TPanel
       Left = 0
       Top = 0
-      Width = 1113
+      Width = 1107
       Height = 40
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
       object SelectAcctPopupMenuPanel: TPanel
-        Left = 0
+        Left = 8
         Top = 8
         Width = 65
         Height = 25
@@ -1403,7 +1492,7 @@ object FieldActivityForm: TFieldActivityForm
         end
       end
       object ShowActionsMenuButton: TBitBtn
-        Left = 72
+        Left = 80
         Top = 8
         Width = 75
         Height = 25
@@ -1412,23 +1501,13 @@ object FieldActivityForm: TFieldActivityForm
         OnMouseDown = ShowActionsMenuButtonMouseDown
       end
       object ShowDocumentsMenuButton: TBitBtn
-        Left = 152
+        Left = 160
         Top = 8
         Width = 75
         Height = 25
         Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
         TabOrder = 2
         OnMouseDown = ShowDocumentsMenuButtonMouseDown
-      end
-      object Button6: TButton
-        Left = 238
-        Top = 7
-        Width = 75
-        Height = 25
-        Caption = 'TestButton'
-        TabOrder = 3
-        Visible = False
-        OnClick = Button6Click
       end
     end
   end
@@ -1441,15 +1520,22 @@ object FieldActivityForm: TFieldActivityForm
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 2
+    DesignSize = (
+      289
+      846)
     object GroupBox7: TGroupBox
-      Left = 8
+      Left = 6
       Top = 40
-      Width = 273
+      Width = 278
       Height = 73
+      Anchors = [akLeft, akTop, akRight]
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
       Color = clBtnFace
       ParentColor = False
       TabOrder = 0
+      DesignSize = (
+        278
+        73)
       object Label2: TLabel
         Left = 16
         Top = 24
@@ -1467,8 +1553,9 @@ object FieldActivityForm: TFieldActivityForm
       object ParamPackIdEdit: TEdit
         Left = 96
         Top = 40
-        Width = 129
+        Width = 134
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         Color = clBtnFace
         TabOrder = 0
         Text = 'ParamPackIdEdit'
@@ -1478,8 +1565,9 @@ object FieldActivityForm: TFieldActivityForm
       object OtdelenComboBox: TDBLookupComboBox
         Left = 96
         Top = 16
-        Width = 161
+        Width = 166
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         DropDownRows = 11
         KeyField = 'ACCT_OTDELEN'
         ListField = 'ACCT_OTDELEN; OTDELEN_DESCR'
@@ -1490,10 +1578,11 @@ object FieldActivityForm: TFieldActivityForm
         OnClick = OtdelenComboBoxClick
       end
       object BitBtn1: TBitBtn
-        Left = 232
+        Left = 237
         Top = 40
         Width = 25
         Height = 21
+        Anchors = [akTop, akRight]
         Caption = '...'
         TabOrder = 2
         OnClick = ParamPackIdEditClick
@@ -1505,6 +1594,7 @@ object FieldActivityForm: TFieldActivityForm
       Width = 273
       Height = 28
       Style = csDropDownList
+      Anchors = [akLeft, akTop, akRight]
       Color = 4194304
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindow
@@ -1517,10 +1607,11 @@ object FieldActivityForm: TFieldActivityForm
       OnChange = SelectModeComboBoxChange
     end
     object FilterGroupBox: TGroupBox
-      Left = 8
+      Left = 5
       Top = 120
-      Width = 273
+      Width = 279
       Height = 617
+      Anchors = [akLeft, akTop, akRight]
       Caption = #1060#1080#1083#1100#1090#1088
       Color = clBtnFace
       Ctl3D = True
@@ -1530,7 +1621,7 @@ object FieldActivityForm: TFieldActivityForm
       object AcctIdFilterPanel: TPanel
         Left = 2
         Top = 15
-        Width = 269
+        Width = 275
         Height = 31
         Align = alTop
         Alignment = taLeftJustify
@@ -1540,11 +1631,15 @@ object FieldActivityForm: TFieldActivityForm
         ParentCtl3D = False
         TabOrder = 0
         Visible = False
+        DesignSize = (
+          275
+          31)
         object AcctIdComboBox: TEditAlt
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
           Text = '0'
           OnChange = FilterEditTextChange
@@ -1554,7 +1649,7 @@ object FieldActivityForm: TFieldActivityForm
       object CityFilterPanel: TPanel
         Left = 2
         Top = 77
-        Width = 269
+        Width = 275
         Height = 31
         Align = alTop
         Alignment = taLeftJustify
@@ -1564,11 +1659,15 @@ object FieldActivityForm: TFieldActivityForm
         ParentCtl3D = False
         TabOrder = 1
         Visible = False
+        DesignSize = (
+          275
+          31)
         object CityComboBox: TComboBox
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           TabOrder = 0
           OnChange = FilterComboBoxTextChange
@@ -1577,7 +1676,7 @@ object FieldActivityForm: TFieldActivityForm
       object AddressFilterPanel: TPanel
         Left = 2
         Top = 139
-        Width = 269
+        Width = 275
         Height = 31
         Align = alTop
         Alignment = taLeftJustify
@@ -1587,11 +1686,15 @@ object FieldActivityForm: TFieldActivityForm
         ParentCtl3D = False
         TabOrder = 2
         Visible = False
+        DesignSize = (
+          275
+          31)
         object AddressComboBox: TComboBox
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           TabOrder = 0
           OnChange = FilterComboBoxTextChange
@@ -1600,7 +1703,7 @@ object FieldActivityForm: TFieldActivityForm
       object FioFilterPanel: TPanel
         Left = 2
         Top = 46
-        Width = 269
+        Width = 275
         Height = 31
         Align = alTop
         Alignment = taLeftJustify
@@ -1610,11 +1713,15 @@ object FieldActivityForm: TFieldActivityForm
         ParentCtl3D = False
         TabOrder = 3
         Visible = False
+        DesignSize = (
+          275
+          31)
         object FioComboBox: TEdit
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
           Text = 'FioComboBox'
           OnChange = FilterEditTextChange
@@ -1623,7 +1730,7 @@ object FieldActivityForm: TFieldActivityForm
       object SaldoFilterPanel: TPanel
         Left = 2
         Top = 170
-        Width = 269
+        Width = 275
         Height = 31
         Align = alTop
         Alignment = taLeftJustify
@@ -1633,11 +1740,15 @@ object FieldActivityForm: TFieldActivityForm
         ParentCtl3D = False
         TabOrder = 4
         Visible = False
+        DesignSize = (
+          275
+          31)
         object SaldoFilterEdit: TEditAlt
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
           Text = '0'
           OnChange = FilterEditTextChange
@@ -1649,7 +1760,7 @@ object FieldActivityForm: TFieldActivityForm
       object ServiceCompanyFilterPanel: TPanel
         Left = 2
         Top = 232
-        Width = 269
+        Width = 275
         Height = 31
         Align = alTop
         Alignment = taLeftJustify
@@ -1659,11 +1770,15 @@ object FieldActivityForm: TFieldActivityForm
         ParentCtl3D = False
         TabOrder = 5
         Visible = False
+        DesignSize = (
+          275
+          31)
         object ServiceCompanyFilterComboBox: TComboBox
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           TabOrder = 0
           OnChange = FilterComboBoxTextChange
@@ -1672,7 +1787,7 @@ object FieldActivityForm: TFieldActivityForm
       object FaPackIdFilterPanel: TPanel
         Left = 2
         Top = 296
-        Width = 269
+        Width = 275
         Height = 33
         Align = alTop
         Alignment = taLeftJustify
@@ -1682,11 +1797,15 @@ object FieldActivityForm: TFieldActivityForm
         ParentCtl3D = False
         TabOrder = 6
         Visible = False
+        DesignSize = (
+          275
+          33)
         object FaPackIdFilterEdit: TEditAlt
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
           Text = '0'
           OnChange = FilterEditTextChange
@@ -1696,7 +1815,7 @@ object FieldActivityForm: TFieldActivityForm
       object FaPackTypeFilterPanel: TPanel
         Left = 2
         Top = 263
-        Width = 269
+        Width = 275
         Height = 33
         Align = alTop
         Alignment = taLeftJustify
@@ -1706,11 +1825,15 @@ object FieldActivityForm: TFieldActivityForm
         ParentCtl3D = False
         TabOrder = 12
         Visible = False
+        DesignSize = (
+          275
+          33)
         object FaPackTypeFilterComboBox: TComboBox
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           TabOrder = 0
           OnChange = FilterComboBoxTextChange
@@ -1722,7 +1845,7 @@ object FieldActivityForm: TFieldActivityForm
       object PremTypeFilterPanel: TPanel
         Left = 2
         Top = 108
-        Width = 269
+        Width = 275
         Height = 31
         Align = alTop
         Alignment = taLeftJustify
@@ -1732,11 +1855,15 @@ object FieldActivityForm: TFieldActivityForm
         ParentCtl3D = False
         TabOrder = 13
         Visible = False
+        DesignSize = (
+          275
+          31)
         object PremTypeComboBox: TComboBox
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           TabOrder = 0
           OnChange = FilterComboBoxTextChange
@@ -1749,7 +1876,7 @@ object FieldActivityForm: TFieldActivityForm
       object OpAreaDescrFilterPanel: TPanel
         Left = 2
         Top = 201
-        Width = 269
+        Width = 275
         Height = 31
         Align = alTop
         Alignment = taLeftJustify
@@ -1759,11 +1886,15 @@ object FieldActivityForm: TFieldActivityForm
         ParentCtl3D = False
         TabOrder = 7
         Visible = False
+        DesignSize = (
+          275
+          31)
         object OpAreaDescrFilterComboBox: TComboBox
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           TabOrder = 0
           OnChange = FilterComboBoxTextChange
@@ -1772,13 +1903,16 @@ object FieldActivityForm: TFieldActivityForm
       object CcDttmExistsFilterPanel: TPanel
         Left = 2
         Top = 329
-        Width = 269
+        Width = 275
         Height = 56
         Align = alTop
         Alignment = taLeftJustify
         BorderWidth = 4
         TabOrder = 8
         Visible = False
+        DesignSize = (
+          275
+          56)
         object Label4: TLabel
           Left = 5
           Top = 9
@@ -1789,9 +1923,10 @@ object FieldActivityForm: TFieldActivityForm
         object CcDttmStatusComboBox: TComboBox
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
           Style = csDropDownList
+          Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           TabOrder = 0
           OnChange = CcDttmStatusComboBoxChange
@@ -1857,7 +1992,7 @@ object FieldActivityForm: TFieldActivityForm
       object TemporaryUnusedFilterPanel: TPanel
         Left = 2
         Top = 385
-        Width = 269
+        Width = 275
         Height = 32
         Align = alTop
         Alignment = taLeftJustify
@@ -1869,7 +2004,7 @@ object FieldActivityForm: TFieldActivityForm
       object ccDttmIsApprovedFilterPanel: TPanel
         Left = 2
         Top = 417
-        Width = 269
+        Width = 275
         Height = 33
         Align = alTop
         Alignment = taLeftJustify
@@ -1877,12 +2012,16 @@ object FieldActivityForm: TFieldActivityForm
         Caption = #1057#1090#1072#1090#1091#1089' '#1091#1090#1074'.'
         TabOrder = 10
         Visible = False
+        DesignSize = (
+          275
+          33)
         object ApprovedStatusComboBox: TComboBox
           Left = 96
           Top = 5
-          Width = 161
+          Width = 167
           Height = 21
           Style = csDropDownList
+          Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           ItemIndex = 0
           TabOrder = 0
@@ -1897,16 +2036,20 @@ object FieldActivityForm: TFieldActivityForm
       object RstButtonFilterPanel: TPanel
         Left = 2
         Top = 450
-        Width = 269
+        Width = 275
         Height = 59
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 11
+        DesignSize = (
+          275
+          59)
         object ResetFiltersButton: TBitBtn
-          Left = 104
+          Left = 110
           Top = 16
           Width = 153
           Height = 33
+          Anchors = [akTop, akRight]
           Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
           TabOrder = 0
           OnClick = ResetFiltersButtonClick
@@ -1914,7 +2057,7 @@ object FieldActivityForm: TFieldActivityForm
         object FilterSplitterPanel: TPanel
           Left = 0
           Top = 0
-          Width = 269
+          Width = 275
           Height = 2
           Align = alTop
           BevelOuter = bvNone
@@ -2002,7 +2145,7 @@ object FieldActivityForm: TFieldActivityForm
     end
   end
   object DocumentsPopupMenu: TPopupMenu
-    Left = 360
+    Left = 416
     Top = 152
     object N4: TMenuItem
       Action = printDocumentFaNoticesAction
@@ -2026,7 +2169,7 @@ object FieldActivityForm: TFieldActivityForm
       Action = printDocumentStopListAction
     end
     object N7: TMenuItem
-      Action = printDocumentStopActionRefuseAction
+      Action = printCancelStopAction
     end
   end
   object ActionList1: TActionList
@@ -2089,10 +2232,11 @@ object FieldActivityForm: TFieldActivityForm
       Enabled = False
       OnUpdate = createFaPackNoticeActionUpdate
     end
-    object printDocumentStopActionRefuseAction: TAction
+    object printCancelStopAction: TAction
       Category = 'Reports'
       Caption = #1055#1077#1095#1072#1090#1100' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1090#1084#1077#1085#1091' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1103
       Enabled = False
+      OnExecute = printCancelStopActionExecute
       OnUpdate = createFaPackNoticeActionUpdate
     end
     object createFaPackAction: TAction
@@ -2137,10 +2281,6 @@ object FieldActivityForm: TFieldActivityForm
       Caption = #1042#1074#1077#1089#1090#1080' '#1076#1072#1090#1091' '#1082#1086#1085#1090#1072#1082#1090#1072' '#1089' '#1072#1073#1086#1085#1077#1085#1090#1086#1084
       OnExecute = updateCcActionExecute
     end
-    object createFaCancelPackAction: TAction
-      Category = 'Actions_stop'
-      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1088#1077#1077#1089#1090#1088' '#1085#1072' '#1086#1090#1084#1077#1085#1091' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077
-    end
     object deleteFaPackAction: TAction
       Category = 'Actions_stop'
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1088#1077#1077#1089#1090#1088
@@ -2165,7 +2305,7 @@ object FieldActivityForm: TFieldActivityForm
     end
   end
   object ActionsPopupMenu: TPopupMenu
-    Left = 400
+    Left = 368
     Top = 152
     object MenuItem1: TMenuItem
       Action = createFaPackAction
@@ -2181,9 +2321,6 @@ object FieldActivityForm: TFieldActivityForm
     end
     object N10: TMenuItem
       Action = createFaPackPostAction
-    end
-    object N12: TMenuItem
-      Action = createFaCancelPackAction
     end
     object N13: TMenuItem
       Action = deleteFaPackAction

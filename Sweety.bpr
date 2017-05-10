@@ -98,7 +98,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=0
 Release=0
-Build=36
+Build=40
 Debug=0
 PreRelease=0
 Special=0
@@ -110,7 +110,7 @@ CodePage=1251
 [Version Info Keys]
 CompanyName=Central Departament
 FileDescription=
-FileVersion=1.0.0.36
+FileVersion=1.0.0.40
 InternalName=Sweety
 LegalCopyright=
 LegalTrademarks=

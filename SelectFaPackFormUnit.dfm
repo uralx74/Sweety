@@ -1,7 +1,7 @@
 object SelectFaPackForm: TSelectFaPackForm
-  Left = 205
-  Top = 190
-  Width = 1013
+  Left = 372
+  Top = 263
+  Width = 1147
   Height = 558
   Caption = #1042#1099#1073#1086#1088' '#1088#1077#1077#1089#1090#1088#1072
   Color = clBtnFace
@@ -14,17 +14,16 @@ object SelectFaPackForm: TSelectFaPackForm
   Position = poOwnerFormCenter
   OnCreate = FormCreate
   DesignSize = (
-    997
+    1131
     520)
   PixelsPerInch = 96
   TextHeight = 13
   object faListGrid: TDBGridAlt
     Left = 296
     Top = 24
-    Width = 686
+    Width = 820
     Height = 439
     Anchors = [akLeft, akTop, akRight, akBottom]
-    DataSource = MainDataModule.selectFaPackDataSource
     TabOrder = 0
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
@@ -108,10 +107,18 @@ object SelectFaPackForm: TSelectFaPackForm
         Title.Caption = #1057#1090#1072#1090#1091#1089
         Width = 100
         Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'OWNER'
+        ReadOnly = True
+        Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
+        Width = 90
+        Visible = True
       end>
   end
   object Button1: TButton
-    Left = 822
+    Left = 956
     Top = 486
     Width = 75
     Height = 25
@@ -122,7 +129,7 @@ object SelectFaPackForm: TSelectFaPackForm
     OnClick = faListGridChangeCheck
   end
   object Button2: TButton
-    Left = 910
+    Left = 1044
     Top = 486
     Width = 75
     Height = 25
@@ -135,57 +142,94 @@ object SelectFaPackForm: TSelectFaPackForm
     Left = 16
     Top = 88
     Width = 265
-    Height = 129
+    Height = 177
     Caption = #1060#1080#1083#1100#1090#1088
     TabOrder = 3
     object Label13: TLabel
       Left = 16
-      Top = 56
+      Top = 32
       Width = 56
       Height = 13
       Caption = 'ID '#1056#1077#1077#1089#1090#1088#1072
     end
     object Label1: TLabel
       Left = 16
-      Top = 32
+      Top = 56
       Width = 63
       Height = 13
       Caption = #1058#1080#1087' '#1088#1077#1077#1089#1090#1088#1072
     end
-    object FaPackIdComboBox: TComboBox
-      Left = 88
-      Top = 48
-      Width = 161
-      Height = 21
-      ItemHeight = 13
-      TabOrder = 0
-      OnChange = FilterComboBoxChange
+    object Label2: TLabel
+      Left = 16
+      Top = 80
+      Width = 78
+      Height = 13
+      Caption = #1057#1090#1072#1090#1091#1089' '#1088#1077#1077#1089#1090#1088#1072
+    end
+    object Label3: TLabel
+      Left = 16
+      Top = 104
+      Width = 49
+      Height = 13
+      Caption = #1042#1083#1072#1076#1077#1083#1077#1094
     end
     object Button3: TButton
       Left = 88
-      Top = 88
+      Top = 136
       Width = 75
       Height = 25
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100
-      TabOrder = 1
+      TabOrder = 0
     end
-    object FaPackTypeCdComboBox: TComboBox
-      Left = 88
-      Top = 24
-      Width = 161
+    object FaPackTypeDescrFilterComboBox: TComboBox
+      Left = 104
+      Top = 48
+      Width = 153
       Height = 21
       ItemHeight = 13
+      TabOrder = 1
+      OnChange = FilterComboBoxTextChange
+    end
+    object FaPackIdFilterEdit: TEdit
+      Left = 104
+      Top = 24
+      Width = 153
+      Height = 21
       TabOrder = 2
-      OnChange = FilterComboBoxChange
+      OnChange = FilterEditTextChange
+    end
+    object FaPackStatusFlgFilterComboBox: TComboBox
+      Left = 104
+      Top = 72
+      Width = 153
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      TabOrder = 3
+      OnChange = FilterComboBoxIndexChange
+      Items.Strings = (
+        #1042#1089#1077
+        #1059#1090#1074#1077#1088#1078#1076#1077#1085
+        #1054#1090#1084#1077#1085#1077#1085
+        #1048#1089#1087#1086#1083#1085#1077#1085)
+    end
+    object OwnerFilterEdit: TEdit
+      Left = 104
+      Top = 96
+      Width = 153
+      Height = 21
+      TabOrder = 4
+      OnChange = FilterEditTextChange
     end
   end
   object GroupBox2: TGroupBox
     Left = 16
-    Top = 224
+    Top = 280
     Width = 265
     Height = 105
     Caption = #1055#1086#1080#1089#1082
     TabOrder = 4
+    Visible = False
     object Label4: TLabel
       Left = 16
       Top = 32
@@ -240,7 +284,7 @@ object SelectFaPackForm: TSelectFaPackForm
   end
   object Button6: TButton
     Left = 96
-    Top = 368
+    Top = 376
     Width = 75
     Height = 25
     Caption = 'Action1'

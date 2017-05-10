@@ -30,12 +30,73 @@ typedef void __fastcall (__closure *TThreadEvent)(TThreadEventMessage, void* Dat
 
 
 
+class TOraUniObject
+{
+public:    //virtual void CopyDataSet();
+    //virtual TOraUniObject();
+    virtual TDataSet* getDataSet() {};
+    virtual void Open() {};
+    virtual ~TOraUniObject() {};
+
+};
+
+class TOraObjectQuery: public TOraUniObject
+{
+public:
+    TOraObjectQuery(TOraQuery* query)
+    {
+        oraQuery = new TOraQuery(NULL);
+    };
+    virtual ~TOraObjectQuery()
+    {
+        delete oraQuery;
+    };
+    TOraQuery* oraQuery;
+
+    virtual TDataSet* getDataSet()
+    {
+        return oraQuery;
+    }
+    virtual void Open()
+    {
+        oraQuery->Open();
+    };
+
+};
+
+class TOraObjectProc: public TOraUniObject
+{
+public:
+    TOraObjectProc(TOraStoredProc* proc)
+    {
+        oraProc = new TOraStoredProc(NULL);
+    };
+    virtual ~TOraObjectProc()
+    {
+        delete oraProc;
+    };
+    TOraStoredProc* oraProc;
+
+    virtual TDataSet* getDataSet()
+    {
+        return oraProc;
+    }
+    virtual void Open()
+    {
+        oraProc->Open();
+    };
+
+};
+
+
+
 //---------------------------------------------------------------------------
 class TThreadDataSet : public TThread
 {
 private:
 
     TOraQuery* _dataSet;
+    TOraUniObject* _uniObject;
     TOraSession* _oraSession;
 
     TThreadEvent _threadEvent;
@@ -54,7 +115,7 @@ private:
 public:
     //__fastcall ThreadSelect(bool CreateSuspended, THREADOPTIONS* threadopt, void (*f)(const String&, int));
     __fastcall TThreadDataSet(bool CreateSuspended, TOraQuery* query, TDataSet* destinationDataSet = NULL, TThreadEvent ThreadEvent = NULL);
-
+    __fastcall TThreadDataSet(bool CreateSuspended, TOraStoredProc* proc, TDataSet* destinationDataSet = NULL, TThreadEvent ThreadEvent = NULL);
 
     //__fastcall TThreadDataSet(bool CreateSuspended, TOraQuery* query, TDataSet* destinationDataSet = NULL, TDataSetNotifyEvent NotifyEvent = NULL);
     __fastcall ~TThreadDataSet();
