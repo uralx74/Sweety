@@ -1,6 +1,6 @@
 object SelectFaPackForm: TSelectFaPackForm
-  Left = 372
-  Top = 263
+  Left = 733
+  Top = 103
   Width = 1147
   Height = 558
   Caption = #1042#1099#1073#1086#1088' '#1088#1077#1077#1089#1090#1088#1072
@@ -19,9 +19,9 @@ object SelectFaPackForm: TSelectFaPackForm
   PixelsPerInch = 96
   TextHeight = 13
   object faListGrid: TDBGridAlt
-    Left = 296
+    Left = 304
     Top = 24
-    Width = 820
+    Width = 812
     Height = 439
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
@@ -141,7 +141,7 @@ object SelectFaPackForm: TSelectFaPackForm
   object GroupBox1: TGroupBox
     Left = 16
     Top = 88
-    Width = 265
+    Width = 273
     Height = 177
     Caption = #1060#1080#1083#1100#1090#1088
     TabOrder = 3
@@ -174,12 +174,13 @@ object SelectFaPackForm: TSelectFaPackForm
       Caption = #1042#1083#1072#1076#1077#1083#1077#1094
     end
     object Button3: TButton
-      Left = 88
-      Top = 136
-      Width = 75
-      Height = 25
-      Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+      Left = 104
+      Top = 128
+      Width = 153
+      Height = 33
+      Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
       TabOrder = 0
+      OnClick = Button3Click
     end
     object FaPackTypeDescrFilterComboBox: TComboBox
       Left = 104
@@ -225,11 +226,10 @@ object SelectFaPackForm: TSelectFaPackForm
   object GroupBox2: TGroupBox
     Left = 16
     Top = 280
-    Width = 265
-    Height = 105
+    Width = 281
+    Height = 145
     Caption = #1055#1086#1080#1089#1082
     TabOrder = 4
-    Visible = False
     object Label4: TLabel
       Left = 16
       Top = 32
@@ -237,20 +237,44 @@ object SelectFaPackForm: TSelectFaPackForm
       Height = 13
       Caption = 'ID '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
     end
+    object Label6: TLabel
+      Left = 16
+      Top = 56
+      Width = 69
+      Height = 13
+      Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
+    end
     object Button4: TButton
-      Left = 88
-      Top = 64
-      Width = 75
-      Height = 25
+      Left = 176
+      Top = 96
+      Width = 89
+      Height = 33
       Caption = #1053#1072#1081#1090#1080
       TabOrder = 0
+      OnClick = Button4Click
     end
-    object Edit1: TEdit
+    object FaIdFindEdit: TEdit
       Left = 112
       Top = 24
-      Width = 137
+      Width = 153
       Height = 21
       TabOrder = 1
+    end
+    object AcctIdFindEdit: TEdit
+      Left = 112
+      Top = 48
+      Width = 153
+      Height = 21
+      TabOrder = 2
+    end
+    object Button5: TButton
+      Left = 8
+      Top = 96
+      Width = 153
+      Height = 33
+      Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+      TabOrder = 3
+      OnClick = Button5Click
     end
   end
   object GroupBox3: TGroupBox
@@ -283,8 +307,8 @@ object SelectFaPackForm: TSelectFaPackForm
     end
   end
   object Button6: TButton
-    Left = 96
-    Top = 376
+    Left = 80
+    Top = 472
     Width = 75
     Height = 25
     Caption = 'Action1'
@@ -293,8 +317,8 @@ object SelectFaPackForm: TSelectFaPackForm
     OnClick = CloseWindowActionExecute
   end
   object ActionList1: TActionList
-    Left = 80
-    Top = 400
+    Left = 56
+    Top = 448
     object CloseWindowAction: TAction
       Caption = 'CloseWindowAction'
       ShortCut = 27

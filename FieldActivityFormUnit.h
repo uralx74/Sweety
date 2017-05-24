@@ -58,10 +58,11 @@ typedef enum  {
 
 typedef enum   {
     SHEET_TYPE_UNDEFINED = 0,
-    SHEET_TYPE_MAIN_NOTICES,         // Main
-    SHEET_TYPE_FULL_LIST,         // general
-    SHEET_TYPE_DEBTORS,         // general
-    SHEET_TYPE_NOTICES_PACK,    //PACK_MANUAL,
+    SHEET_TYPE_MAIN_NOTICES,        // Главная вкладка (в наст. время она общая на все режимы)
+
+    SHEET_TYPE_FULL_LIST,           // general
+    SHEET_TYPE_DEBTORS,             // general
+    SHEET_TYPE_NOTICES_PACK,        //PACK_MANUAL,
     SHEET_TYPE_APPROVE,
 
     SHEET_TYPE_POST_LIST,
@@ -71,7 +72,8 @@ typedef enum   {
     SHEET_TYPE_PACK_STOP_LIST,  // Список реестров на отключение
     SHEET_TYPE_STOP_PACK,
     SHEET_TYPE_CANCEL_STOP_LIST,
-    SHEET_TYPE_RELOAD
+    SHEET_TYPE_RECONNECT_LIST
+    //SHEET_TYPE_RELOAD
     //PACK_APPROVE_LIST
 } TSheetType;
 
@@ -172,6 +174,8 @@ public:
 
     void addAction(TAction* action);
 
+    TSheetEx* getSheetByIndex();
+
 };
 
 TModeItem::TModeItem()
@@ -245,7 +249,7 @@ void TModeItem::setCurrentSheet(TSheetEx* sheetEx)
         //hideAllActions();
 
         currentSheet = sheetEx;
-        if ( !currentSheet->sheet->Visible )
+        if ( !currentSheet->sheet->Visible)
         {
             currentSheet->sheet->Show();
         }
@@ -322,8 +326,14 @@ TModeList::TModeList()
 void TModeList::setCurrentSheet(TSheetType type)
 {
     hideAllActions();
-    _currentMode->setCurrentSheet(type);
-
+    if (_currentMode != NULL)
+    {
+        _currentMode->setCurrentSheet(type);    // Отображает вкладку, если она доступна
+    }
+    else
+    {
+        throw Exception("Error occured: Current mode is not specified.");
+    }
 }
 
 
@@ -415,11 +425,6 @@ __published:	// IDE-managed Components
     TAction *updateCcAction;
     TPanel *LeftPanel;
     TGroupBox *GroupBox7;
-    TLabel *Label2;
-    TLabel *Label6;
-    TEdit *ParamPackIdEdit;
-    TDBLookupComboBox *OtdelenComboBox;
-    TBitBtn *BitBtn1;
     TComboBox *SelectModeComboBox;
     TGroupBox *FilterGroupBox;
     TPanel *AcctIdFilterPanel;
@@ -439,7 +444,7 @@ __published:	// IDE-managed Components
     TPanel *OpAreaDescrFilterPanel;
     TComboBox *OpAreaDescrFilterComboBox;
     TPanel *CcDttmExistsFilterPanel;
-    TPanel *TemporaryUnusedFilterPanel;
+    TPanel *MrRteCdFilterPanel;
     TPanel *ccDttmIsApprovedFilterPanel;
     TPanel *RstButtonFilterPanel;
     TBitBtn *ResetFiltersButton;
@@ -464,7 +469,6 @@ __published:	// IDE-managed Components
     TPageControl *PackPageControl;
     TTabSheet *MainTabSheet;
     TGroupBox *GroupBox2;
-    TLabel *Label3;
     TTabSheet *DebtorsTabSheet;
     TDBGridAlt *DBGridAltGeneral;
     TTabSheet *PackManualTabSheet;
@@ -479,8 +483,7 @@ __published:	// IDE-managed Components
     TDBGridAlt *StopPackGrid;
     TTabSheet *FaCancelStopListTabSheet;
     TDBGridAlt *CancelStopListGrid;
-    TTabSheet *PackReloadTabSheet;
-    TDBGridAlt *FaResumptionList;
+    TTabSheet *PackReconnectTabSheet;
     TTabSheet *PostListTabSheet;
     TTabSheet *FullListTabSheet;
     TDBGridAlt *FullListGrid;
@@ -514,6 +517,20 @@ __published:	// IDE-managed Components
     TLabel *Label8;
     TLabel *Label9;
     TDBLookupComboBox *DBLookupComboBox2;
+    TComboBox *MrRteCdFilterComboBox;
+    TAction *setFaPackCancelStopStatusCompleteAction;
+    TPanel *FaPackStatusFilterPanel;
+    TComboBox *FaPackStatusFilterComboBox;
+    TMenuItem *N12;
+    TPanel *Panel4;
+    TDBLookupComboBox *OtdelenComboBox;
+    TPanel *FaPackIdParamPanel;
+    TEdit *ParamPackIdEdit;
+    TBitBtn *BitBtn1;
+    TRichEdit *RichEdit1;
+    TDBGridAlt *ReconnectListGrid;
+    TAction *printReconnectAction;
+    TMenuItem *N18;
     void __fastcall FormShow(TObject *Sender);
     void __fastcall FilterComboBoxTextChange(TObject *Sender);
     void __fastcall ParamPackIdEditClick(TObject *Sender);
@@ -575,6 +592,11 @@ __published:	// IDE-managed Components
           TObject *Sender);
     void __fastcall OnChangeCheck(TObject *Sender);
     void __fastcall Button6Click(TObject *Sender);
+    void __fastcall setFaPackCancelStopStatusCompleteActionExecute(
+          TObject *Sender);
+    void __fastcall ReconnectTabSheetShow(TObject *Sender);
+    void __fastcall FormCreate(TObject *Sender);
+    void __fastcall printReconnectActionExecute(TObject *Sender);
 private:	// User declarations
     //void __fastcall TFieldActivityForm::selectMode(int mode);
     void __fastcall OnQueryAfterExecute(TObject *Sender);
@@ -590,8 +612,8 @@ private:	// User declarations
 
     void __fastcall showMainTabSheet();
     void __fastcall showFullList();
-    void __fastcall showDebtorList();
-    void __fastcall showPostList();
+    void __fastcall showPreDebtorList();
+    void __fastcall showPrePostList();
     void __fastcall showFaPackNotices(const Variant faPackId);
     void __fastcall showFaPackStop(const Variant faPackId);
     void __fastcall showStopList();
@@ -602,7 +624,9 @@ private:	// User declarations
     void __fastcall showPackStopList(/*const String& acctOtdelen*/); // Показать список реестров на ограничение
     void __fastcall showFaPostList();
     void __fastcall showFaInspectorList();
-    void __fastcall showFaCancelList();
+    void __fastcall showCancelList();
+    void __fastcall showReconnectList();      // Список реестров реестров на отключение
+
 
 
     void __fastcall resetFilterControls();
@@ -613,6 +637,8 @@ private:	// User declarations
     void __fastcall refreshParametersControls();
     void __fastcall refreshFilterControls();
     void __fastcall refreshActionsStates();
+    void __fastcall refreshPopupMenu();
+
 
 
     ColorList _colorList;

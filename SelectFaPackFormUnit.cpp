@@ -44,26 +44,35 @@ bool __fastcall TSelectFaPackForm::execute(String acctOtdelen, int mode)
     OtdelenComboBox->KeyValue = acctOtdelen;
     _mode = mode;
 
-    switch (mode)
+    ResetFilter();
+    ResetFindFilter();
+
+    FindPackList(); // Поиск
+
+    return this->ShowModal() == mrOk;
+}
+
+/* Основная функция для поиска */
+void __fastcall TSelectFaPackForm::FindPackList()
+{
+    switch (_mode)
     {
     case 0:
     {
 
-        MainDataModule->findFaPackListNotices(OtdelenComboBox->KeyValue);
+        MainDataModule->findFaPackListNotices(OtdelenComboBox->KeyValue, FaIdFindEdit->Text, AcctIdFindEdit->Text);
         faListGrid->DataSource = MainDataModule->findFaPackListNoticesDS;
         _currentFilter = MainDataModule->findFaPackListNoticesFilter;
         break;
     }
     case 1:
     {
-        MainDataModule->findFaPackListStop(OtdelenComboBox->KeyValue);
+        MainDataModule->findFaPackListStop(OtdelenComboBox->KeyValue, FaIdFindEdit->Text, AcctIdFindEdit->Text);
         faListGrid->DataSource = MainDataModule->findFaPackListStopDS;
         _currentFilter = MainDataModule->findFaPackListStopFilter;
         break;
     }
     }
-
-    return this->ShowModal() == mrOk;
 }
 
 
@@ -131,3 +140,50 @@ void __fastcall TSelectFaPackForm::CloseWindowActionExecute(TObject *Sender)
 {
     //OtdelenComboBox2->KeyValue = otdelen;
 }*/
+void __fastcall TSelectFaPackForm::Button4Click(TObject *Sender)
+{
+    FindPackList();
+    //MainDataModule->findFaPackListNoticesProc->ParamByName("p_acct_otdelen")->Value = acctOtdelen;
+    //MainDataModule->findFaPackListNotices(OtdelenComboBox->KeyValue, FaIdFindEdit->Text, AcctIdFindEdit->Text);
+
+    /*MainDataModule->findFaPackListNoticesProc->ParamByName("p_fa_id")->Value = Edit1->Text;
+    MainDataModule->findFaPackListNoticesProc->ParamByName("p_acct_id")->Value = Edit2->Text;
+    MainDataModule->findFaPackListNoticesProc->Open();
+    MainDataModule->CopyDataSet(MainDataModule->findFaPackListNoticesProc, MainDataModule->findFaPackListNoticesFilter->DataSet);
+    MainDataModule->findFaPackListNoticesProc->Close(); */
+    //
+    //MainDataModule->
+}
+
+/**/
+void __fastcall TSelectFaPackForm::Button5Click(TObject *Sender)
+{
+    ResetFindFilter();
+    FindPackList();
+}
+
+/**/
+void __fastcall TSelectFaPackForm::ResetFindFilter()
+{
+    FaIdFindEdit->Text = "";
+    AcctIdFindEdit->Text = "";
+}
+
+/* Очистка фильтров - кнопка*/
+void __fastcall TSelectFaPackForm::Button3Click(TObject *Sender)
+{
+    ResetFilter();
+}
+
+/* Очистка фильтров */
+void __fastcall TSelectFaPackForm::ResetFilter()
+{
+    // В дальнейшем при необходимости организовать через currentFilter
+    
+    FaPackIdFilterEdit->Text = "";
+    FaPackTypeDescrFilterComboBox->Text = "";
+    FaPackStatusFlgFilterComboBox->Text = "";
+    OwnerFilterEdit->Text = "";
+}
+//---------------------------------------------------------------------------
+

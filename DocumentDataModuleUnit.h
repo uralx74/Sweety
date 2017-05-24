@@ -53,6 +53,7 @@ public:		// User declarations
     //void __fastcall getDocumentStopService(TDataSetFilter *mergeFields);
     bool __fastcall getDocumentStopRequest();
     bool __fastcall getDocumentCancelStopRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc);
+    bool __fastcall getDocumentReconnectRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc);
 
 };
 //---------------------------------------------------------------------------

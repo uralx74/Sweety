@@ -1,8 +1,8 @@
 object MainDataModule: TMainDataModule
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Left = 605
-  Top = 291
+  Left = 582
+  Top = 292
   Height = 908
   Width = 1549
   object EsaleSession: TOraSession
@@ -16,12 +16,13 @@ object MainDataModule: TMainDataModule
     AutoCommit = False
     Connected = True
     LoginPrompt = False
+    AfterDisconnect = EsaleSessionAfterDisconnect
     Left = 24
     Top = 16
     EncryptedPassword = '94FF8AFF85FF92FF9AFF93FF'
   end
-  object getDebtorsDataSource: TOraDataSource
-    DataSet = getDebtorListProc
+  object getPreDebtorListDataSource: TOraDataSource
+    DataSet = getPreDebtorListProc
     Left = 456
     Top = 8
   end
@@ -34,8 +35,8 @@ object MainDataModule: TMainDataModule
         '  :RESULT := PK_NASEL_SWEETY.CREATE_FA(:P_ACCT_ID, :P_FA_PACK_ID' +
         ');'
       'end;')
-    Left = 800
-    Top = 728
+    Left = 792
+    Top = 776
     ParamData = <
       item
         DataType = ftFixedChar
@@ -57,16 +58,16 @@ object MainDataModule: TMainDataModule
     CommandStoredProcName = 'PK_NASEL_SWEETY.CREATE_FA'
   end
   object CreateFaPackProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.CREATE_FA_PACK'
+    StoredProcName = 'PK_NASEL_SWEETY.CREATE_FP'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
       
-        '  :RESULT := PK_NASEL_SWEETY.CREATE_FA_PACK(:P_FA_PACK_TYPE_CD, ' +
-        ':P_PRNT_FA_PACK_ID, :P_ACCT_OTDELEN);'
+        '  :RESULT := PK_NASEL_SWEETY.CREATE_FP(:P_FA_PACK_TYPE_CD, :P_PR' +
+        'NT_FA_PACK_ID, :P_ACCT_OTDELEN);'
       'end;')
-    Left = 808
-    Top = 664
+    Left = 800
+    Top = 712
     ParamData = <
       item
         DataType = ftFixedChar
@@ -87,11 +88,11 @@ object MainDataModule: TMainDataModule
         HasDefault = True
       end
       item
-        DataType = ftString
+        DataType = ftFixedChar
         Name = 'P_ACCT_OTDELEN'
         ParamType = ptInput
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.CREATE_FA_PACK'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.CREATE_FP'
   end
   object getFaPackListNoticesDataSource: TOraDataSource
     DataSet = getFaPackListNoticesProc
@@ -108,9 +109,9 @@ object MainDataModule: TMainDataModule
       'select to_char(uch) value --otdeln_id'
       '   , fname  --otdelen_descr '
       'from nasel_uch')
-    MasterSource = getDebtorsDataSource
-    Left = 1072
-    Top = 648
+    MasterSource = getPreDebtorListDataSource
+    Left = 1432
+    Top = 672
   end
   object OraQuery2: TOraQuery
     Session = EsaleSession
@@ -241,8 +242,8 @@ object MainDataModule: TMainDataModule
         '850000'#39','#39'1390950000'#39')')
     FetchAll = True
     FilterOptions = [foCaseInsensitive]
-    Left = 312
-    Top = 736
+    Left = 1400
+    Top = 560
     ParamData = <
       item
         DataType = ftUnknown
@@ -305,17 +306,17 @@ object MainDataModule: TMainDataModule
     Top = 8
   end
   object addCcProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.ADD_CC'
+    StoredProcName = 'PK_NASEL_SWEETY.ADD_FA_CC'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
       
-        '  :RESULT := PK_NASEL_SWEETY.ADD_CC(:P_CC_DTTM, :P_CC_TYPE_CD, :' +
-        'P_CC_STATUS_FLG, :P_ACCT_ID, :P_DESCR, :P_SRC_ID, :P_SRC_TYPE_CD' +
-        ', :P_CALLER);'
+        '  :RESULT := PK_NASEL_SWEETY.ADD_FA_CC(:P_CC_DTTM, :P_CC_TYPE_CD' +
+        ', :P_CC_STATUS_FLG, :P_ACCT_ID, :P_DESCR, :P_SRC_ID, :P_SRC_TYPE' +
+        '_CD, :P_CALLER);'
       'end;')
-    Left = 848
-    Top = 552
+    Left = 840
+    Top = 600
     ParamData = <
       item
         DataType = ftFixedChar
@@ -364,7 +365,7 @@ object MainDataModule: TMainDataModule
         Name = 'P_CALLER'
         ParamType = ptInput
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.ADD_CC'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.ADD_FA_CC'
   end
   object setCcStatusFlgProc: TOraStoredProc
     StoredProcName = 'PK_NASEL_SWEETY.SET_CC_STATUS_FLG'
@@ -373,8 +374,8 @@ object MainDataModule: TMainDataModule
       'begin'
       '  PK_NASEL_SWEETY.SET_CC_STATUS_FLG(:P_CC_ID, :P_CC_STATUS_FLG);'
       'end;')
-    Left = 848
-    Top = 600
+    Left = 840
+    Top = 648
     ParamData = <
       item
         DataType = ftFixedChar
@@ -400,8 +401,8 @@ object MainDataModule: TMainDataModule
       'begin'
       '  PK_NASEL_SWEETY.SET_CC_APPROVAL(:P_CC_ID);'
       'end;')
-    Left = 928
-    Top = 488
+    Left = 952
+    Top = 592
     ParamData = <
       item
         DataType = ftFixedChar
@@ -430,10 +431,10 @@ object MainDataModule: TMainDataModule
     Left = 704
     Top = 112
   end
-  object getDebtorsFilter: TDataSetFilter
+  object getPreDebtorListFilter: TDataSetFilter
     OnChange = OnFilterChange
     Glue = ' AND '
-    DataSet = getDebtorsRam
+    DataSet = getPreDebtorListRam
     Left = 456
     Top = 112
   end
@@ -570,8 +571,8 @@ object MainDataModule: TMainDataModule
     FetchAll = True
     Filtered = True
     FilterOptions = [foCaseInsensitive]
-    Left = 1080
-    Top = 600
+    Left = 1424
+    Top = 616
     object FloatField4: TFloatField
       FieldName = 'ROWNUM'
     end
@@ -773,8 +774,8 @@ object MainDataModule: TMainDataModule
     FetchAll = True
     Filtered = True
     FilterOptions = [foCaseInsensitive]
-    Left = 1072
-    Top = 704
+    Left = 1432
+    Top = 728
     ParamData = <
       item
         DataType = ftUnknown
@@ -1067,8 +1068,8 @@ object MainDataModule: TMainDataModule
     OnChange = OnFilterChange
     Glue = ' AND '
     DataSet = getFaPackStopRam
-    Left = 488
-    Top = 392
+    Left = 480
+    Top = 400
   end
   object getFaPackStopInfoQuery: TOraQuery
     Session = EsaleSession
@@ -1129,15 +1130,15 @@ object MainDataModule: TMainDataModule
     Left = 608
     Top = 392
   end
-  object AddFaToPackStopProc_: TOraStoredProc
+  object AddFaToPackStopProc_old: TOraStoredProc
     StoredProcName = 'PK_NASEL_OTDEL.ADD_FA_TO_PACK_STOP'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
       '  PK_NASEL_OTDEL.ADD_FA_TO_PACK_STOP(:P_ACCT_ID, :P_FA_PACK_ID);'
       'end;')
-    Left = 848
-    Top = 776
+    Left = 1344
+    Top = 632
     ParamData = <
       item
         DataType = ftFixedChar
@@ -1151,17 +1152,17 @@ object MainDataModule: TMainDataModule
       end>
     CommandStoredProcName = 'PK_NASEL_OTDEL.ADD_FA_TO_PACK_STOP'
   end
-  object getDebtorsRam: TVirtualTable
+  object getPreDebtorListRam: TVirtualTable
     Filtered = True
     FilterOptions = [foCaseInsensitive]
     Left = 456
     Top = 176
     Data = {03000000000000000000}
   end
-  object getPostListFilter: TDataSetFilter
+  object getPrePostListFilter: TDataSetFilter
     OnChange = OnFilterChange
     Glue = ' AND '
-    DataSet = getPostListRam
+    DataSet = getPrePostListRam
     Left = 808
     Top = 112
   end
@@ -1174,8 +1175,8 @@ object MainDataModule: TMainDataModule
         '  PK_NASEL_SWEETY.UPDATE_CC(:P_CC_ID, :P_CC_DTTM, :P_CC_TYPE_CD,' +
         ' :P_CC_STATUS_FLG, :P_DESCR, :P_CALLER);'
       'end;')
-    Left = 928
-    Top = 552
+    Left = 952
+    Top = 656
     ParamData = <
       item
         DataType = ftFixedChar
@@ -1216,8 +1217,8 @@ object MainDataModule: TMainDataModule
       'begin'
       '  PK_NASEL_SWEETY.DELETE_CC(:P_CC_ID);'
       'end;')
-    Left = 1008
-    Top = 584
+    Left = 1032
+    Top = 656
     ParamData = <
       item
         DataType = ftFixedChar
@@ -1227,21 +1228,21 @@ object MainDataModule: TMainDataModule
     CommandStoredProcName = 'PK_NASEL_SWEETY.DELETE_CC'
   end
   object setFaPackStatusFlgFrozenProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.SET_FA_PACK_STATUS_FLG_FROZEN'
+    StoredProcName = 'PK_NASEL_SWEETY.SET_FP_STATUS_FLG_FROZEN'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.SET_FA_PACK_STATUS_FLG_FROZEN(:P_FA_PACK_ID);'
+      '  PK_NASEL_SWEETY.SET_FP_STATUS_FLG_FROZEN(:P_FA_PACK_ID);'
       'end;')
-    Left = 952
-    Top = 664
+    Left = 1032
+    Top = 752
     ParamData = <
       item
         DataType = ftFixedChar
         Name = 'P_FA_PACK_ID'
         ParamType = ptInput
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.SET_FA_PACK_STATUS_FLG_FROZEN'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.SET_FP_STATUS_FLG_FROZEN'
   end
   object getFullListQuery: TOraQuery
     Session = EsaleSession
@@ -1536,7 +1537,7 @@ object MainDataModule: TMainDataModule
     Data = {03000000000000000000}
   end
   object getCancelStopListDataSource: TOraDataSource
-    DataSet = getCancelStopListProc
+    DataSet = getFaPackListCancelStopProc
     Left = 784
     Top = 288
   end
@@ -1555,45 +1556,47 @@ object MainDataModule: TMainDataModule
     Data = {03000000000000000000}
   end
   object deleteFaPackProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.DELETE_FA_PACK'
+    StoredProcName = 'PK_NASEL_SWEETY.DELETE_FP'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.DELETE_FA_PACK(:P_FA_PACK_ID);'
+      '  PK_NASEL_SWEETY.DELETE_FP(:P_FA_PACK_ID);'
       'end;')
-    Left = 1056
-    Top = 496
+    Left = 1080
+    Top = 600
     ParamData = <
       item
         DataType = ftFixedChar
         Name = 'P_FA_PACK_ID'
         ParamType = ptInput
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.DELETE_FA_PACK'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.DELETE_FP'
   end
   object setFaPackStatusFlgCancelProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.SET_FA_PACK_STATUS_FLG_CANCEL'
+    StoredProcName = 'PK_NASEL_SWEETY.SET_FP_STATUS_FLG_CANCEL'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.SET_FA_PACK_STATUS_FLG_CANCEL(:P_FA_PACK_ID);'
+      '  PK_NASEL_SWEETY.SET_FP_STATUS_FLG_CANCEL(:P_FA_PACK_ID);'
       'end;')
-    Left = 952
-    Top = 728
+    Left = 912
+    Top = 736
     ParamData = <
       item
         DataType = ftFixedChar
         Name = 'P_FA_PACK_ID'
         ParamType = ptInput
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.SET_FA_PACK_STATUS_FLG_CANCEL'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.SET_FP_STATUS_FLG_CANCEL'
   end
   object updateFaPackCharRecipientProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.UPDATE_FA_PACK_CHAR_RECIPIENT'
+    StoredProcName = 'PK_NASEL_SWEETY.ADD_FA_PACK_CHAR_RECIPIENT'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.UPDATE_FA_PACK_CHAR_RECIPIENT(:P_FA_PACK_ID);'
+      
+        '  PK_NASEL_SWEETY.ADD_FA_PACK_CHAR_RECIPIENT(:P_FA_PACK_ID, :P_F' +
+        'ORCE_SELF);'
       'end;')
     Left = 632
     Top = 530
@@ -1602,8 +1605,14 @@ object MainDataModule: TMainDataModule
         DataType = ftFixedChar
         Name = 'P_FA_PACK_ID'
         ParamType = ptInput
+      end
+      item
+        DataType = ftFloat
+        Name = 'P_FORCE_SELF'
+        ParamType = ptInput
+        HasDefault = True
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.UPDATE_FA_PACK_CHAR_RECIPIENT'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.ADD_FA_PACK_CHAR_RECIPIENT'
   end
   object getOtdelenListFilter: TDataSetFilter
     OnChange = OnFilterChange
@@ -1619,12 +1628,12 @@ object MainDataModule: TMainDataModule
     Left = 144
     Top = 608
   end
-  object getDebtorListProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_DEBTOR_LIST'
+  object getPreDebtorListProc: TOraStoredProc
+    StoredProcName = 'PK_NASEL_SWEETY.GET_PRE_NOTICES_LIST'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.GET_DEBTOR_LIST(:P_ACCT_OTDELEN, :RC);'
+      '  PK_NASEL_SWEETY.GET_PRE_NOTICES_LIST(:P_ACCT_OTDELEN, :RC);'
       'end;')
     Left = 456
     Top = 64
@@ -1640,72 +1649,77 @@ object MainDataModule: TMainDataModule
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_DEBTOR_LIST'
-    object getDebtorListProcROWNUM: TFloatField
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_PRE_NOTICES_LIST'
+    object getPreDebtorListProcROWNUM: TFloatField
       FieldName = 'ROWNUM'
     end
-    object getDebtorListProcCHECK_DATA: TFloatField
+    object getPreDebtorListProcCHECK_DATA: TFloatField
       FieldName = 'CHECK_DATA'
     end
-    object getDebtorListProcACCT_ID: TStringField
+    object getPreDebtorListProcACCT_ID: TStringField
       FieldName = 'ACCT_ID'
       FixedChar = True
       Size = 10
     end
-    object getDebtorListProcFIO: TStringField
+    object getPreDebtorListProcFIO: TStringField
       FieldName = 'FIO'
       Size = 254
     end
-    object getDebtorListProcCITY: TStringField
+    object getPreDebtorListProcCITY: TStringField
       FieldName = 'CITY'
       Size = 60
     end
-    object getDebtorListProcADDRESS: TStringField
+    object getPreDebtorListProcADDRESS: TStringField
       FieldName = 'ADDRESS'
       Size = 315
     end
-    object getDebtorListProcPREM_TYPE_DESCR: TStringField
+    object getPreDebtorListProcPREM_TYPE_DESCR: TStringField
       FieldName = 'PREM_TYPE_DESCR'
       Size = 60
     end
-    object getDebtorListProcSALDO_UCH: TFloatField
+    object getPreDebtorListProcSALDO_UCH: TFloatField
       FieldName = 'SALDO_UCH'
     end
-    object getDebtorListProcSALDO_M3: TFloatField
+    object getPreDebtorListProcSALDO_M3: TFloatField
       FieldName = 'SALDO_M3'
     end
-    object getDebtorListProcCC_DTTM: TDateTimeField
+    object getPreDebtorListProcCC_DTTM: TDateTimeField
       FieldName = 'CC_DTTM'
     end
-    object getDebtorListProcFA_ID: TStringField
+    object getPreDebtorListProcFA_ID: TStringField
       FieldName = 'FA_ID'
       FixedChar = True
       Size = 10
     end
-    object getDebtorListProcFA_PACK_ID: TStringField
+    object getPreDebtorListProcFA_PACK_ID: TStringField
       FieldName = 'FA_PACK_ID'
       FixedChar = True
       Size = 10
     end
-    object getDebtorListProcCRE_DTTM: TDateTimeField
+    object getPreDebtorListProcCRE_DTTM: TDateTimeField
       FieldName = 'CRE_DTTM'
     end
-    object getDebtorListProcACCT_OTDELEN: TStringField
+    object getPreDebtorListProcACCT_OTDELEN: TStringField
       FieldName = 'ACCT_OTDELEN'
       FixedChar = True
       Size = 7
     end
-    object getDebtorListProcSERVICE_ORG: TStringField
+    object getPreDebtorListProcSERVICE_ORG: TStringField
       FieldName = 'SERVICE_ORG'
       Size = 50
     end
-    object getDebtorListProcOP_AREA_DESCR: TStringField
+    object getPreDebtorListProcOP_AREA_DESCR: TStringField
       FieldName = 'OP_AREA_DESCR'
       Size = 60
     end
+    object getPreDebtorListProcMR_RTE_CD: TStringField
+      FieldName = 'MR_RTE_CD'
+      FixedChar = True
+      Size = 8
+    end
   end
   object OraDataSource1: TOraDataSource
-    DataSet = getDebtorListProc
+    DataSet = getPreDebtorListProc
     Left = 1312
     Top = 544
   end
@@ -1715,24 +1729,24 @@ object MainDataModule: TMainDataModule
     Top = 496
     Data = {03000000000000000000}
   end
-  object getPostListDataSource: TOraDataSource
-    DataSet = getPostListProc
+  object getPrePostListDataSource: TOraDataSource
+    DataSet = getPrePostListProc
     Left = 816
     Top = 8
   end
-  object getPostListRam: TVirtualTable
+  object getPrePostListRam: TVirtualTable
     Filtered = True
     FilterOptions = [foCaseInsensitive]
     Left = 808
     Top = 176
     Data = {03000000000000000000}
   end
-  object getPostListProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_POST_LIST'
+  object getPrePostListProc: TOraStoredProc
+    StoredProcName = 'PK_NASEL_SWEETY.GET_PRE_POST_LIST'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.GET_POST_LIST(:P_ACCT_OTDELEN, :RC);'
+      '  PK_NASEL_SWEETY.GET_PRE_POST_LIST(:P_ACCT_OTDELEN, :RC);'
       'end;')
     Left = 808
     Top = 64
@@ -1748,14 +1762,14 @@ object MainDataModule: TMainDataModule
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_POST_LIST'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_PRE_POST_LIST'
   end
   object getFaPackNoticesProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_NOTICES'
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_NOTICES_CONTENT'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.GET_FA_PACK_NOTICES(:P_FA_PACK_ID, :RC);'
+      '  PK_NASEL_SWEETY.GET_FP_NOTICES_CONTENT(:P_FA_PACK_ID, :RC);'
       'end;')
     Left = 568
     Top = 64
@@ -1771,7 +1785,7 @@ object MainDataModule: TMainDataModule
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_NOTICES'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_NOTICES_CONTENT'
     object getFaPackNoticesProcROWNUM: TFloatField
       FieldName = 'ROWNUM'
     end
@@ -1887,6 +1901,11 @@ object MainDataModule: TMainDataModule
     object getFaPackNoticesProcAPPROVAL_DTTM: TDateTimeField
       FieldName = 'APPROVAL_DTTM'
     end
+    object getFaPackNoticesProcMR_RTE_CD: TStringField
+      FieldName = 'MR_RTE_CD'
+      FixedChar = True
+      Size = 8
+    end
   end
   object getApprovalListProc: TOraStoredProc
     StoredProcName = 'PK_NASEL_SWEETY.GET_APPROVAL_LIST'
@@ -1895,7 +1914,7 @@ object MainDataModule: TMainDataModule
       'begin'
       '  PK_NASEL_SWEETY.GET_APPROVAL_LIST(:P_ACCT_OTDELEN, :RC);'
       'end;')
-    Left = 696
+    Left = 704
     Top = 64
     ParamData = <
       item
@@ -1966,11 +1985,11 @@ object MainDataModule: TMainDataModule
     end
   end
   object getStopListProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_STOP_LIST'
+    StoredProcName = 'PK_NASEL_SWEETY.GET_PRE_STOP_LIST'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.GET_STOP_LIST(:P_ACCT_OTDELEN, :RC);'
+      '  PK_NASEL_SWEETY.GET_PRE_STOP_LIST(:P_ACCT_OTDELEN, :RC);'
       'end;')
     Left = 352
     Top = 344
@@ -1986,7 +2005,7 @@ object MainDataModule: TMainDataModule
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_STOP_LIST'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_PRE_STOP_LIST'
     object getStopListProcROWNUM: TFloatField
       FieldName = 'ROWNUM'
     end
@@ -2048,11 +2067,11 @@ object MainDataModule: TMainDataModule
     end
   end
   object getFaPackStopProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_STOP'
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_STOP_CONTENT'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.GET_FA_PACK_STOP(:P_FA_PACK_ID, :RC);'
+      '  PK_NASEL_SWEETY.GET_FP_STOP_CONTENT(:P_FA_PACK_ID, :RC);'
       'end;')
     Left = 480
     Top = 344
@@ -2068,7 +2087,7 @@ object MainDataModule: TMainDataModule
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_STOP'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_STOP_CONTENT'
     object getFaPackStopProcROWNUM: TFloatField
       FieldName = 'ROWNUM'
     end
@@ -2169,13 +2188,23 @@ object MainDataModule: TMainDataModule
     object getFaPackStopProcSA_END_DT: TDateTimeField
       FieldName = 'SA_END_DT'
     end
+    object getFaPackStopProcNOTICE_FA_ID: TStringField
+      FieldName = 'NOTICE_FA_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object getFaPackStopProcNOTICE_CRE_DTTM: TDateTimeField
+      FieldName = 'NOTICE_CRE_DTTM'
+    end
   end
   object getFaPackListStopProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_STOP_LIST'
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_STOP_LIST'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.GET_FA_PACK_STOP_LIST(:P_ACCT_OTDELEN, :RC);'
+      
+        '  PK_NASEL_SWEETY.GET_FP_STOP_LIST(:P_ACCT_OTDELEN, :P_FA_ID, :P' +
+        '_ACCT_ID, :RC);'
       'end;')
     Left = 600
     Top = 344
@@ -2186,12 +2215,22 @@ object MainDataModule: TMainDataModule
         ParamType = ptInput
       end
       item
+        DataType = ftFixedChar
+        Name = 'P_FA_ID'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftFixedChar
+        Name = 'P_ACCT_ID'
+        ParamType = ptInput
+      end
+      item
         DataType = ftCursor
         Name = 'RC'
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_STOP_LIST'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_STOP_LIST'
     object getFaPackListStopProcROWNUM: TFloatField
       FieldName = 'ROWNUM'
     end
@@ -2236,13 +2275,22 @@ object MainDataModule: TMainDataModule
     object getFaPackListStopProcFA_CNT: TFloatField
       FieldName = 'FA_CNT'
     end
+    object getFaPackListStopProcFA_PACK_STATUS_FLG: TStringField
+      FieldName = 'FA_PACK_STATUS_FLG'
+      FixedChar = True
+      Size = 2
+    end
+    object getFaPackListStopProcFA_PACK_TYPE_DESCR: TStringField
+      FieldName = 'FA_PACK_TYPE_DESCR'
+      Size = 60
+    end
   end
-  object getCancelStopListProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_CANCEL_LIST'
+  object getFaPackListCancelStopProc: TOraStoredProc
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_CANCEL_LIST'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.GET_CANCEL_LIST(:P_ACCT_OTDELEN, :RC);'
+      '  PK_NASEL_SWEETY.GET_FP_CANCEL_LIST(:P_ACCT_OTDELEN, :RC);'
       'end;')
     Left = 784
     Top = 344
@@ -2258,74 +2306,76 @@ object MainDataModule: TMainDataModule
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_CANCEL_LIST'
-    object getCancelStopListProcROWNUM: TFloatField
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_CANCEL_LIST'
+    object getFaPackListCancelStopProcROWNUM: TFloatField
       FieldName = 'ROWNUM'
     end
-    object getCancelStopListProcCHECK_DATA: TFloatField
+    object getFaPackListCancelStopProcCHECK_DATA: TFloatField
       FieldName = 'CHECK_DATA'
     end
-    object getCancelStopListProcFA_PACK_ID: TStringField
+    object getFaPackListCancelStopProcFA_PACK_ID: TStringField
       FieldName = 'FA_PACK_ID'
       FixedChar = True
       Size = 10
     end
-    object getCancelStopListProcCRE_DTTM: TDateTimeField
+    object getFaPackListCancelStopProcCRE_DTTM: TDateTimeField
       FieldName = 'CRE_DTTM'
     end
-    object getCancelStopListProcFA_PACK_STATUS_FLG: TStringField
+    object getFaPackListCancelStopProcFA_PACK_STATUS_DESCR: TStringField
+      FieldName = 'FA_PACK_STATUS_DESCR'
+      Size = 60
+    end
+    object getFaPackListCancelStopProcFA_PACK_STATUS_FLG: TStringField
       FieldName = 'FA_PACK_STATUS_FLG'
       FixedChar = True
       Size = 2
     end
-    object getCancelStopListProcPRNT_FA_ID: TStringField
+    object getFaPackListCancelStopProcPRNT_FA_ID: TStringField
       FieldName = 'PRNT_FA_ID'
       Size = 10
     end
-    object getCancelStopListProcFA_ID: TStringField
+    object getFaPackListCancelStopProcFA_ID: TStringField
       FieldName = 'FA_ID'
       FixedChar = True
       Size = 10
     end
-    object getCancelStopListProcRT_SPR: TStringField
+    object getFaPackListCancelStopProcRT_SPR: TStringField
       FieldName = 'RT_SPR'
       Size = 255
     end
-    object getCancelStopListProcRT_ADDR: TStringField
+    object getFaPackListCancelStopProcRT_ADDR: TStringField
       FieldName = 'RT_ADDR'
       Size = 255
     end
-    object getCancelStopListProcRT_POST: TStringField
+    object getFaPackListCancelStopProcRT_POST: TStringField
       FieldName = 'RT_POST'
       Size = 255
     end
-    object getCancelStopListProcRT_NAME: TStringField
+    object getFaPackListCancelStopProcRT_NAME: TStringField
       FieldName = 'RT_NAME'
       Size = 255
     end
-    object getCancelStopListProcACCT_ID_CNT: TFloatField
+    object getFaPackListCancelStopProcACCT_ID_CNT: TFloatField
       FieldName = 'ACCT_ID_CNT'
     end
-    object getCancelStopListProcOWNER: TStringField
+    object getFaPackListCancelStopProcOWNER: TStringField
       FieldName = 'OWNER'
       Size = 22
     end
   end
   object getFaPackListNoticesProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_NOTICES_LIST'
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_NOTICES_CONTENT'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      
-        '  PK_NASEL_SWEETY.GET_FA_PACK_NOTICES_LIST(:P_ACCT_OTDELEN, :RC)' +
-        ';'
+      '  PK_NASEL_SWEETY.GET_FP_NOTICES_CONTENT(:P_FA_PACK_ID, :RC);'
       'end;')
     Left = 984
     Top = 64
     ParamData = <
       item
         DataType = ftFixedChar
-        Name = 'P_ACCT_OTDELEN'
+        Name = 'P_FA_PACK_ID'
         ParamType = ptInput
       end
       item
@@ -2334,7 +2384,7 @@ object MainDataModule: TMainDataModule
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_NOTICES_LIST'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_NOTICES_CONTENT'
     object getFaPackListNoticesProcROWNUM: TFloatField
       FieldName = 'ROWNUM'
     end
@@ -2400,13 +2450,13 @@ object MainDataModule: TMainDataModule
     Top = 128
   end
   object findFaPackListNoticesProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_NOTICES_LIST'
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_NOTICES_LIST'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
       
-        '  PK_NASEL_SWEETY.GET_FA_PACK_NOTICES_LIST(:P_ACCT_OTDELEN, :RC)' +
-        ';'
+        '  PK_NASEL_SWEETY.GET_FP_NOTICES_LIST(:P_ACCT_OTDELEN, :P_FA_ID,' +
+        ' :P_ACCT_ID, :RC);'
       'end;')
     Left = 1312
     Top = 80
@@ -2417,12 +2467,22 @@ object MainDataModule: TMainDataModule
         ParamType = ptInput
       end
       item
+        DataType = ftFixedChar
+        Name = 'P_FA_ID'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftFixedChar
+        Name = 'P_ACCT_ID'
+        ParamType = ptInput
+      end
+      item
         DataType = ftCursor
         Name = 'RC'
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_NOTICES_LIST'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_NOTICES_LIST'
     object findFaPackListNoticesProcROWNUM: TFloatField
       FieldName = 'ROWNUM'
     end
@@ -2462,9 +2522,6 @@ object MainDataModule: TMainDataModule
       FixedChar = True
       Size = 8
     end
-    object findFaPackListNoticesProcCNT: TFloatField
-      FieldName = 'CNT'
-    end
     object findFaPackListNoticesProcFA_PACK_STATUS_DESCR: TStringField
       FieldName = 'FA_PACK_STATUS_DESCR'
       Size = 60
@@ -2476,6 +2533,9 @@ object MainDataModule: TMainDataModule
     object findFaPackListNoticesProcOWNER: TStringField
       FieldName = 'OWNER'
       Size = 22
+    end
+    object findFaPackListNoticesProcFA_CNT: TFloatField
+      FieldName = 'FA_CNT'
     end
   end
   object findFaPackListNoticesRam: TVirtualTable
@@ -2497,11 +2557,13 @@ object MainDataModule: TMainDataModule
     Top = 128
   end
   object findFaPackListStopProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_STOP_LIST'
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_STOP_LIST'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.GET_FA_PACK_STOP_LIST(:P_ACCT_OTDELEN, :RC);'
+      
+        '  PK_NASEL_SWEETY.GET_FP_STOP_LIST(:P_ACCT_OTDELEN, :P_FA_ID, :P' +
+        '_ACCT_ID, :RC);'
       'end;')
     Left = 1440
     Top = 80
@@ -2512,12 +2574,22 @@ object MainDataModule: TMainDataModule
         ParamType = ptInput
       end
       item
+        DataType = ftFixedChar
+        Name = 'P_FA_ID'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftFixedChar
+        Name = 'P_ACCT_ID'
+        ParamType = ptInput
+      end
+      item
         DataType = ftCursor
         Name = 'RC'
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_STOP_LIST'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_STOP_LIST'
     object findFaPackListStopProcROWNUM: TFloatField
       FieldName = 'ROWNUM'
     end
@@ -2579,16 +2651,16 @@ object MainDataModule: TMainDataModule
     Top = 192
     Data = {03000000000000000000}
   end
-  object getFaPackCancelStopProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_CANCEL_STOP_LIST'
+  object getFpCancelStopContentProc: TOraStoredProc
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_CANCEL_STOP_CONTENT'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
       
-        '  PK_NASEL_SWEETY.GET_FA_PACK_CANCEL_STOP_LIST(:P_FA_PACK_ID, :R' +
-        'C);'
+        '  PK_NASEL_SWEETY.GET_FP_CANCEL_STOP_CONTENT(:P_FA_PACK_ID, :RC)' +
+        ';'
       'end;')
-    Left = 960
+    Left = 936
     Top = 344
     ParamData = <
       item
@@ -2602,54 +2674,54 @@ object MainDataModule: TMainDataModule
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_CANCEL_STOP_LIST'
-    object getFaPackCancelStopProcACCT_ID: TStringField
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_CANCEL_STOP_CONTENT'
+    object getFpCancelStopContentProcACCT_ID: TStringField
       FieldName = 'ACCT_ID'
       FixedChar = True
       Size = 10
     end
-    object getFaPackCancelStopProcFIO: TStringField
+    object getFpCancelStopContentProcFIO: TStringField
       FieldName = 'FIO'
       Size = 254
     end
-    object getFaPackCancelStopProcSTOP_FA_ID: TStringField
+    object getFpCancelStopContentProcSTOP_FA_ID: TStringField
       FieldName = 'STOP_FA_ID'
       FixedChar = True
       Size = 10
     end
-    object getFaPackCancelStopProcSTOP_PACK_ID: TStringField
-      FieldName = 'STOP_PACK_ID'
+    object getFpCancelStopContentProcSTOP_FA_PACK_ID: TStringField
+      FieldName = 'STOP_FA_PACK_ID'
       FixedChar = True
       Size = 10
     end
-    object getFaPackCancelStopProcSTOP_CRE_DTTM: TDateTimeField
+    object getFpCancelStopContentProcSTOP_CRE_DTTM: TDateTimeField
       FieldName = 'STOP_CRE_DTTM'
     end
-    object getFaPackCancelStopProcNOTICE_FA_ID: TStringField
+    object getFpCancelStopContentProcNOTICE_FA_ID: TStringField
       FieldName = 'NOTICE_FA_ID'
       FixedChar = True
       Size = 10
     end
-    object getFaPackCancelStopProcNOTICE_PACK_ID: TStringField
-      FieldName = 'NOTICE_PACK_ID'
+    object getFpCancelStopContentProcNOTICE_FA_PACK_ID: TStringField
+      FieldName = 'NOTICE_FA_PACK_ID'
       FixedChar = True
       Size = 10
     end
-    object getFaPackCancelStopProcNOTICE_CRE_DTTM: TDateTimeField
+    object getFpCancelStopContentProcNOTICE_CRE_DTTM: TDateTimeField
       FieldName = 'NOTICE_CRE_DTTM'
     end
-    object getFaPackCancelStopProcST_P_DT: TDateTimeField
+    object getFpCancelStopContentProcST_P_DT: TDateTimeField
       FieldName = 'ST_P_DT'
     end
-    object getFaPackCancelStopProcCITY: TStringField
+    object getFpCancelStopContentProcCITY: TStringField
       FieldName = 'CITY'
       Size = 60
     end
-    object getFaPackCancelStopProcADDRESS: TStringField
+    object getFpCancelStopContentProcADDRESS: TStringField
       FieldName = 'ADDRESS'
       Size = 315
     end
-    object getFaPackCancelStopProcPREM_TYPE_DESCR: TStringField
+    object getFpCancelStopContentProcPREM_TYPE_DESCR: TStringField
       FieldName = 'PREM_TYPE_DESCR'
       Size = 60
     end
@@ -2827,15 +2899,18 @@ object MainDataModule: TMainDataModule
     object getConfigProcALLOWED: TFloatField
       FieldName = 'ALLOWED'
     end
+    object getConfigProcTODAY: TDateTimeField
+      FieldName = 'TODAY'
+    end
   end
   object getFaPackTypeListProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_TYPE_LIST'
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_TYPE_LIST'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.GET_FA_PACK_TYPE_LIST(:RC);'
+      '  PK_NASEL_SWEETY.GET_FP_TYPE_LIST(:RC);'
       'end;')
-    Left = 48
+    Left = 40
     Top = 544
     ParamData = <
       item
@@ -2844,7 +2919,7 @@ object MainDataModule: TMainDataModule
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_TYPE_LIST'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_TYPE_LIST'
     object getFaPackTypeListProcFA_PACK_TYPE_CD: TStringField
       FieldName = 'FA_PACK_TYPE_CD'
       FixedChar = True
@@ -2856,11 +2931,11 @@ object MainDataModule: TMainDataModule
     end
   end
   object getFaPackInfProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_INF'
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_INF'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.GET_FA_PACK_INF(:P_FA_PACK_ID, :RC);'
+      '  PK_NASEL_SWEETY.GET_FP_INF(:P_FA_PACK_ID, :RC);'
       'end;')
     Left = 40
     Top = 608
@@ -2876,7 +2951,7 @@ object MainDataModule: TMainDataModule
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FA_PACK_INF'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_INF'
     object getFaPackInfProcCRE_DTTM: TDateTimeField
       FieldName = 'CRE_DTTM'
     end
@@ -2916,5 +2991,245 @@ object MainDataModule: TMainDataModule
         Value = 'Object'
       end>
     CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FA_CC_INF'
+  end
+  object setFaPackStatSentPerformerProc: TOraStoredProc
+    StoredProcName = 'PK_NASEL_SWEETY.SET_FP_STAT_SENT_PERF'
+    Session = EsaleSession
+    SQL.Strings = (
+      'begin'
+      '  PK_NASEL_SWEETY.SET_FP_STAT_SENT_PERF(:P_FA_PACK_ID);'
+      'end;')
+    Left = 1168
+    Top = 736
+    ParamData = <
+      item
+        DataType = ftFixedChar
+        Name = 'P_FA_PACK_ID'
+        ParamType = ptInput
+      end>
+    CommandStoredProcName = 'PK_NASEL_SWEETY.SET_FP_STAT_SENT_PERF'
+  end
+  object getFaPackStatsProc: TOraStoredProc
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_STATS'
+    Session = EsaleSession
+    SQL.Strings = (
+      'begin'
+      
+        '  PK_NASEL_SWEETY.GET_FP_STATS(:P_ACCT_OTDELEN, :P_START_DT, :P_' +
+        'END_DT, :RC);'
+      'end;')
+    Left = 40
+    Top = 728
+    ParamData = <
+      item
+        DataType = ftFixedChar
+        Name = 'P_ACCT_OTDELEN'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftDateTime
+        Name = 'P_START_DT'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftDateTime
+        Name = 'P_END_DT'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftCursor
+        Name = 'RC'
+        ParamType = ptOutput
+        Value = 'Object'
+      end>
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_STATS'
+    object getFaPackStatsProcACCT_OTDELEN: TStringField
+      FieldName = 'ACCT_OTDELEN'
+      Size = 7
+    end
+    object getFaPackStatsProcACCT_OTDELEN_DESCR: TStringField
+      FieldName = 'ACCT_OTDELEN_DESCR'
+      Size = 25
+    end
+    object getFaPackStatsProcFA_NOTICES_SELF: TFloatField
+      FieldName = 'FA_NOTICES_SELF'
+    end
+    object getFaPackStatsProcFA_NOTICES_POST: TFloatField
+      FieldName = 'FA_NOTICES_POST'
+    end
+    object getFaPackStatsProcFA_PACK_STOP: TFloatField
+      FieldName = 'FA_PACK_STOP'
+    end
+    object getFaPackStatsProcFA_PACK_CANCEL: TFloatField
+      FieldName = 'FA_PACK_CANCEL'
+    end
+    object getFaPackStatsProcFA_PACK_RECONNECT: TFloatField
+      FieldName = 'FA_PACK_RECONNECT'
+    end
+  end
+  object getReconnectListDataSource: TOraDataSource
+    DataSet = getReconnectListProc
+    Left = 1088
+    Top = 296
+  end
+  object getReconnectListFilter: TDataSetFilter
+    OnChange = OnFilterChange
+    Glue = ' AND '
+    DataSet = getReconnectListRam
+    Left = 1088
+    Top = 400
+  end
+  object getReconnectListRam: TVirtualTable
+    Filtered = True
+    FilterOptions = [foCaseInsensitive]
+    Left = 1088
+    Top = 464
+    Data = {03000000000000000000}
+  end
+  object getReconnectListProc: TOraStoredProc
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_RECONNECT_LIST'
+    Session = EsaleSession
+    SQL.Strings = (
+      'begin'
+      '  PK_NASEL_SWEETY.GET_FP_RECONNECT_LIST(:P_ACCT_OTDELEN, :RC);'
+      'end;')
+    Left = 1088
+    Top = 352
+    ParamData = <
+      item
+        DataType = ftFixedChar
+        Name = 'P_ACCT_OTDELEN'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftCursor
+        Name = 'RC'
+        ParamType = ptOutput
+        Value = 'Object'
+      end>
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_RECONNECT_LIST'
+    object getReconnectListProcROWNUM: TFloatField
+      FieldName = 'ROWNUM'
+    end
+    object getReconnectListProcCHECK_DATA: TFloatField
+      FieldName = 'CHECK_DATA'
+    end
+    object getReconnectListProcFA_PACK_ID: TStringField
+      FieldName = 'FA_PACK_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object getReconnectListProcCRE_DTTM: TDateTimeField
+      FieldName = 'CRE_DTTM'
+    end
+    object getReconnectListProcFA_PACK_STATUS_FLG: TStringField
+      FieldName = 'FA_PACK_STATUS_FLG'
+      FixedChar = True
+      Size = 2
+    end
+    object getReconnectListProcPRNT_FA_ID: TStringField
+      FieldName = 'PRNT_FA_ID'
+      Size = 10
+    end
+    object getReconnectListProcRT_SPR: TStringField
+      FieldName = 'RT_SPR'
+      Size = 255
+    end
+    object getReconnectListProcRT_ADDR: TStringField
+      FieldName = 'RT_ADDR'
+      Size = 255
+    end
+    object getReconnectListProcRT_POST: TStringField
+      FieldName = 'RT_POST'
+      Size = 255
+    end
+    object getReconnectListProcRT_NAME: TStringField
+      FieldName = 'RT_NAME'
+      Size = 255
+    end
+    object getReconnectListProcFA_PACK_STATUS_DESCR: TStringField
+      FieldName = 'FA_PACK_STATUS_DESCR'
+      Size = 60
+    end
+    object getReconnectListProcACCT_ID_CNT: TFloatField
+      FieldName = 'ACCT_ID_CNT'
+    end
+    object getReconnectListProcOWNER: TStringField
+      FieldName = 'OWNER'
+      Size = 22
+    end
+  end
+  object getFpReconnectContentProc: TOraStoredProc
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_RECONNECT_CONTENT'
+    Session = EsaleSession
+    SQL.Strings = (
+      'begin'
+      '  PK_NASEL_SWEETY.GET_FP_RECONNECT_CONTENT(:P_FA_PACK_ID, :RC);'
+      'end;')
+    Left = 1240
+    Top = 352
+    ParamData = <
+      item
+        DataType = ftFixedChar
+        Name = 'P_FA_PACK_ID'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftCursor
+        Name = 'RC'
+        ParamType = ptOutput
+        Value = 'Object'
+      end>
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_RECONNECT_CONTENT'
+    object StringField1: TStringField
+      FieldName = 'ACCT_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object StringField2: TStringField
+      FieldName = 'FIO'
+      Size = 254
+    end
+    object StringField3: TStringField
+      FieldName = 'STOP_FA_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object StringField4: TStringField
+      FieldName = 'STOP_FA_PACK_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object DateTimeField1: TDateTimeField
+      FieldName = 'STOP_CRE_DTTM'
+    end
+    object StringField21: TStringField
+      FieldName = 'NOTICE_FA_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object StringField22: TStringField
+      FieldName = 'NOTICE_FA_PACK_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object DateTimeField8: TDateTimeField
+      FieldName = 'NOTICE_CRE_DTTM'
+    end
+    object DateTimeField9: TDateTimeField
+      FieldName = 'ST_P_DT'
+    end
+    object StringField23: TStringField
+      FieldName = 'CITY'
+      Size = 60
+    end
+    object StringField24: TStringField
+      FieldName = 'ADDRESS'
+      Size = 315
+    end
+    object StringField25: TStringField
+      FieldName = 'PREM_TYPE_DESCR'
+      Size = 60
+    end
   end
 end

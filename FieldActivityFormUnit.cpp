@@ -63,6 +63,7 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     /* Раздел Уведомления*/
     // Главная вкладка
     TUserRole::TRoleTypes Access_MainTabSheet_Notices;
+    Access_MainTabSheet_Notices.insert(TUserRole::USER_BASE);
     Access_MainTabSheet_Notices.insert(TUserRole::OPERATOR);
     Access_MainTabSheet_Notices.insert(TUserRole::ADMINISTRATOR);
     Access_MainTabSheet_Notices.insert(TUserRole::VIEWER);
@@ -93,6 +94,7 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     Access_ApprovalListTabSheet.insert(TUserRole::OPERATOR);
     Access_ApprovalListTabSheet.insert(TUserRole::ADMINISTRATOR);
     Access_ApprovalListTabSheet.insert(TUserRole::VIEWER);
+    Access_ApprovalListTabSheet.insert(TUserRole::APPROVER);
 
     // Список на почту
     TUserRole::TRoleTypes Access_PostListTabSheet;
@@ -139,11 +141,11 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     AccessPackRefuseStopTabSheet.insert(TUserRole::TESTER);
 
     // Реестр на возобновление
-    TUserRole::TRoleTypes AccessPackReloadTabSheet;
-    AccessPackReloadTabSheet.insert(TUserRole::OPERATOR);
-    AccessPackReloadTabSheet.insert(TUserRole::ADMINISTRATOR);
-    AccessPackReloadTabSheet.insert(TUserRole::VIEWER);
-    AccessPackReloadTabSheet.insert(TUserRole::TESTER);
+    TUserRole::TRoleTypes AccessReconnectTabSheet;
+    AccessReconnectTabSheet.insert(TUserRole::OPERATOR);
+    AccessReconnectTabSheet.insert(TUserRole::ADMINISTRATOR);
+    AccessReconnectTabSheet.insert(TUserRole::VIEWER);
+    AccessReconnectTabSheet.insert(TUserRole::TESTER);
 
     //AccessPackReloadTabSheet<<TUserRole::APPROVER;
     //TUserRole::TRoleTypes AccessPackRefuseStopTabSheet;
@@ -181,6 +183,7 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     printDocumentStopListAction->Enabled =  bRoleAdministrator || bRoleOperator;
     printDocumentFaNoticesListForPostOfficeAction->Enabled =  bRoleAdministrator || bRoleOperator;
     printCancelStopAction->Enabled =  bRoleAdministrator || bRoleOperator;
+    printReconnectAction->Enabled =  bRoleAdministrator || bRoleOperator;
 
     createFaPackAction->Enabled = bRoleAdministrator || bRoleOperator;
     createFaPackPostAction->Enabled  = bRoleAdministrator || bRoleOperator;
@@ -191,7 +194,7 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     deleteFaPackAction->Enabled = bRoleAdministrator || bRoleTester;  // временное значение
     setFaPackStatusIncompleteAction->Enabled = bRoleAdministrator || bRoleTester;  // временное значение
     setFaPackStatusFrozenAction->Enabled = bRoleAdministrator || bRoleTester;
-
+    setFaPackCancelStopStatusCompleteAction->Enabled = bRoleAdministrator || bRoleTester;
 
 
     // Главная вкладка в разделе Уведомления
@@ -311,18 +314,20 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp->packModeId = SHEET_TYPE_CANCEL_STOP_LIST;
     sheetTemp->addAction(checkAllAction);
     sheetTemp->addAction(checkNoneAction);
-    sheetTemp->addAction(checkWithoutCcAction);
-    sheetTemp->addAction(checkWithCcLess3MonthAction);
     sheetTemp->addAction(printCancelStopAction);
+    sheetTemp->addAction(setFaPackCancelStopStatusCompleteAction); // Установить статус Отправлен исполнителю
 
-    //
-    sheetTemp = item->addSheet(PackReloadTabSheet);
-    sheetTemp->accessible = isRoleAllowed(AccessPackReloadTabSheet, MainDataModule->userRole);
-    sheetTemp->packModeId = SHEET_TYPE_RELOAD;
+    // Список на возобновление
+    sheetTemp = item->addSheet(PackReconnectTabSheet);
+    sheetTemp->accessible = isRoleAllowed(AccessReconnectTabSheet, MainDataModule->userRole);
+    sheetTemp->packModeId = SHEET_TYPE_RECONNECT_LIST;
     sheetTemp->addAction(checkAllAction);
     sheetTemp->addAction(checkNoneAction);
-    sheetTemp->addAction(checkWithoutCcAction);
-    sheetTemp->addAction(checkWithCcLess3MonthAction);
+    sheetTemp->addAction(printReconnectAction);
+    //sheetTemp->addAction(setFaPackReconnectCompleteAction); // Установить статус Отправлен исполнителю
+
+    //sheetTemp->addAction(checkWithoutCcAction);
+    //sheetTemp->addAction(checkWithCcLess3MonthAction);
 
 
 
@@ -331,12 +336,20 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     item.sheets.push_back( TSheetEx(PackRefuseStopTabSheet, !(AccessPackRefuseStopTabSheet * MainDataModule->userRole).Empty()) );
     item.sheets.push_back( TSheetEx(PackReloadTabSheet, !(AccessPackReloadTabSheet * MainDataModule->userRole).Empty()) );
     */
-    
+
     //_modeList.push_back(item);
 
 
     //SelectModeComboBox->Items->AddObject(item->caption, (TObject*)item);
     //SelectModeComboBox->Items->AddObject(item.caption, (TObject*)item);
+
+    // modePageList - список всех режимов
+    // _modeList - список вкладок, присоединенных к режиму
+    /*TSheetEx* s1 = modePageList._modeList[0]->getSheetByType(SHEET_TYPE_NOTICES_PACK);
+    TSheetEx* s2 = modePageList._modeList[0]->getSheetByType(SHEET_TYPE_MAIN_NOTICES);
+    bool b1 = s1->accessible;
+    bool b2 = s2->accessible;*/
+    //SHEET_TYPE_NOTICES_PACK
 
     // Заполняем контрол со списком режимов
     for (std::vector<TModeItem*>::iterator it = modePageList._modeList.begin(); it != modePageList._modeList.end(); it++ )
@@ -351,13 +364,6 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
 
         }
     }
-
-      
-    SelectModeComboBox->ItemIndex = 0;
-
-    refreshParametersControls();
-
-    setMode(0);     // Активируем первый доступный режим работы
 }
 
 /**/
@@ -400,6 +406,9 @@ void __fastcall TFieldActivityForm::FormShow(TObject *Sender)
     // при увеличенном масштабе текста
     PackPageControl->Align = alNone;
     PackPageControl->Align = alClient;
+
+
+    RichEdit1->Text = MainDataModule->getFaPackStats();
 }
 
 
@@ -482,7 +491,7 @@ void __fastcall TFieldActivityForm::setCurPackMode()
     case SHEET_TYPE_DEBTORS:
     {
 
-        _currentFilter = MainDataModule->getDebtorsFilter;;
+        _currentFilter = MainDataModule->getPreDebtorListFilter;;
         _currentDbGrid = DBGridAltGeneral;
 
         break;
@@ -505,7 +514,7 @@ void __fastcall TFieldActivityForm::setCurPackMode()
     }
     case SHEET_TYPE_POST_LIST:
     {                        // Список на почту
-        _currentFilter = MainDataModule->getPostListFilter;
+        _currentFilter = MainDataModule->getPrePostListFilter;
         _currentDbGrid = PostListGrid;
 
         break;
@@ -525,13 +534,19 @@ void __fastcall TFieldActivityForm::setCurPackMode()
 
         break;
     }
-    case SHEET_TYPE_CANCEL_STOP_LIST:
+    case SHEET_TYPE_CANCEL_STOP_LIST:   // Список реестров на отмену остановки
     {
         _currentFilter = MainDataModule->getFaPackListCancelStopFilter;
         _currentDbGrid = CancelStopListGrid;
         break;
     }
-    case SHEET_TYPE_PACK_STOP_LIST:
+    case SHEET_TYPE_RECONNECT_LIST:   // Список реестров на возобновление
+    {
+        _currentFilter = MainDataModule->getReconnectListFilter;
+        _currentDbGrid = ReconnectListGrid;
+        break;
+    }
+    case SHEET_TYPE_PACK_STOP_LIST:         // Реестр на остановку
     {
         _currentFilter = MainDataModule->getPackListStopFilter;
         _currentDbGrid = PackStopListGrid;
@@ -542,6 +557,8 @@ void __fastcall TFieldActivityForm::setCurPackMode()
     refreshFilterControls();    // Обновляем состояние элементов управления для фильтров
 
     refreshCheckedCount();      // Обновляем статистику по выбранным элементам
+
+    refreshPopupMenu();
 }
 
 /* Универсальный фильтр для TComboBox
@@ -666,11 +683,20 @@ void __fastcall TFieldActivityForm::ParamPackIdEditClick(TObject *Sender)
     {
     case MODE_NOTICES:
     {
+        if (!modePageList._currentMode->getSheetByType(SHEET_TYPE_NOTICES_PACK)->accessible)    // ДОДЕЛАТЬ. ПЕРЕНЕСТИ ЭТОТ КОД В ОБНОВЛЕНИЕ ИНТЕРФЕЙСА П
+        {
+            return;
+        }
+
         mode = TSelectFaPackForm::TM_NOTICES;
         break;
     }
     case MODE_STOP:
     {
+        if (!modePageList._currentMode->getSheetByType(SHEET_TYPE_STOP_PACK)->accessible)
+        {
+            return;
+        }
         mode = TSelectFaPackForm::TM_STOP;
         break;
     }
@@ -683,7 +709,6 @@ void __fastcall TFieldActivityForm::ParamPackIdEditClick(TObject *Sender)
         case MODE_NOTICES:
         {
             showFaPackNotices( SelectFaPackForm->getFaPackId() );
-
             break;
         }
         case MODE_STOP:
@@ -741,7 +766,7 @@ void __fastcall TFieldActivityForm::ShowActionsMenuButtonMouseDown(TObject *Send
     showPopupSubMenu(dynamic_cast<TWinControl*>(Sender), ActionsPopupMenu);
 }
 
-/**/
+/* Сбрасывает значение фильтра на значение по умолчанию */
 void __fastcall TFieldActivityForm::ResetFiltersButtonClick(
       TObject *Sender)
 {
@@ -749,9 +774,36 @@ void __fastcall TFieldActivityForm::ResetFiltersButtonClick(
     refreshFilterControls();
 }
 
+/* Обновляет состояние элементов управления, связанных с выбором текущего участка, реестра и тп. */
 void __fastcall TFieldActivityForm::refreshParametersControls()
 {
     OtdelenComboBox->KeyValue = MainDataModule->getAcctOtdelen();
+
+    switch(modePageList._currentMode->mode)
+    {
+    case MODE_NOTICES:
+    {
+        FaPackIdParamPanel->Visible = modePageList._currentMode->getSheetByType(SHEET_TYPE_NOTICES_PACK)->accessible;
+        /*if (!modePageList._currentMode->getSheetByType(SHEET_TYPE_NOTICES_PACK)->accessible)    // ДОДЕЛАТЬ. ПЕРЕНЕСТИ ЭТОТ КОД В ОБНОВЛЕНИЕ ИНТЕРФЕЙСА П
+        {
+            return;
+        } */
+        break;
+    }
+    case MODE_STOP:
+    {
+        ParamPackIdEdit->Visible = modePageList._currentMode->getSheetByType(SHEET_TYPE_STOP_PACK)->accessible;
+        /*if (!modePageList._currentMode->getSheetByType(SHEET_TYPE_STOP_PACK)->accessible)
+        {
+            return;
+        }
+        mode = TSelectFaPackForm::TM_STOP;  */
+        break;
+    }
+    }
+
+
+
 }
 
 void __fastcall TFieldActivityForm::refreshActionsStates()
@@ -772,10 +824,7 @@ void __fastcall TFieldActivityForm::refreshFilterControls()
         if ( _currentFilter != NULL)
         {
             ccDttmIsApprovedFilterPanel->Visible = _currentFilter->isFilterExists(ApprovedStatusComboBox->Name);
-
-            TemporaryUnusedFilterPanel->Visible = false;
             CcDttmExistsFilterPanel->Visible = _currentFilter->isFilterExists(CcDttmStatusComboBox->Name);
-
             FaPackIdFilterPanel->Visible = _currentFilter->isFilterExists(FaPackIdFilterEdit->Name);
             OpAreaDescrFilterPanel->Visible = _currentFilter->isFilterExists(OpAreaDescrFilterComboBox->Name);
             SaldoFilterPanel->Visible = _currentFilter->isFilterExists(SaldoFilterEdit->Name);
@@ -786,11 +835,12 @@ void __fastcall TFieldActivityForm::refreshFilterControls()
             AcctIdFilterPanel->Visible = _currentFilter->isFilterExists(AcctIdComboBox->Name);
             PremTypeFilterPanel->Visible = _currentFilter->isFilterExists(PremTypeComboBox->Name);
             FaPackTypeFilterPanel->Visible = _currentFilter->isFilterExists(FaPackTypeFilterComboBox->Name);
+            MrRteCdFilterPanel->Visible = _currentFilter->isFilterExists(MrRteCdFilterComboBox->Name);
+            FaPackStatusFilterPanel->Visible = _currentFilter->isFilterExists(FaPackStatusFilterComboBox->Name);
         }
         else
         {
             ccDttmIsApprovedFilterPanel->Visible = false;
-            TemporaryUnusedFilterPanel->Visible = false;
             CcDttmExistsFilterPanel->Visible = false;
             FaPackIdFilterPanel->Visible = false;
             OpAreaDescrFilterPanel->Visible = false;
@@ -802,6 +852,8 @@ void __fastcall TFieldActivityForm::refreshFilterControls()
             AcctIdFilterPanel->Visible = false;
             PremTypeFilterPanel->Visible = false;
             FaPackTypeFilterPanel->Visible = false;
+            MrRteCdFilterPanel->Visible = false;
+            FaPackStatusFilterPanel->Visible = false;
         }
 
         // Порядок панелей
@@ -809,13 +861,15 @@ void __fastcall TFieldActivityForm::refreshFilterControls()
         HackCtrl::RealignControls(FilterGroupBox);
         if (RstButtonFilterPanel->Top == 15)
         {
-            RstButtonFilterPanel->Caption = "В данном режиме фильтр не предусмотрен";
-            ResetFiltersButton->Visible = false;
+            FilterGroupBox->Visible = false;
+            //RstButtonFilterPanel->Caption = "В данном режиме фильтр не предусмотрен";
+            //ResetFiltersButton->Visible = false;
         }
         else
         {
-            RstButtonFilterPanel->Caption = "";
-            ResetFiltersButton->Visible = true;
+            FilterGroupBox->Visible = true;
+            //RstButtonFilterPanel->Caption = "";
+            //ResetFiltersButton->Visible = true;
         }
         FilterGroupBox->Height = RstButtonFilterPanel->Top + RstButtonFilterPanel->Height + 2;
 
@@ -839,6 +893,12 @@ void __fastcall TFieldActivityForm::refreshFilterControls()
                 ApprovedStatusComboBox->ItemIndex = StrToInt( _currentFilter->getValue(ApprovedStatusComboBox->Name, "param") );
             }
 
+            // Фильтр по типу реестра
+            if (_currentFilter->isFilterExists(FaPackStatusFilterComboBox->Name))
+            {
+                FaPackStatusFilterComboBox->ItemIndex = StrToInt( _currentFilter->getValue(FaPackStatusFilterComboBox->Name, "param") );
+            }
+
             // Фильтр по дате контакта
             if ( _currentFilter->isFilterExists(CcDttmStatusComboBox->Name) )
             {
@@ -858,15 +918,22 @@ void __fastcall TFieldActivityForm::refreshFilterControls()
     }
 }
 
+/* Обновляет состояние элементов управления связанных с меню */
+void __fastcall TFieldActivityForm::refreshPopupMenu()
+{
+    ShowActionsMenuButton->Enabled = popupmenutools::PopupMenuVisibleConsists(ActionsPopupMenu);
+    ShowDocumentsMenuButton->Enabled = popupmenutools::PopupMenuVisibleConsists(DocumentsPopupMenu);
+    
+}
+
 /* Реакция на выбор учатка из списка ComboBox */
 void __fastcall TFieldActivityForm::OtdelenComboBoxClick(TObject *Sender)
 {
-    MainDataModule->setAcctOtdelen(OtdelenComboBox->KeyValue);  // Задаем текущий филиал (участок)
     switch(modePageList._currentMode->currentSheet->packModeId)
     {
     case SHEET_TYPE_DEBTORS:
     {
-        showDebtorList();
+        showPreDebtorList();
         break;
     }
     case SHEET_TYPE_STOP:
@@ -920,7 +987,7 @@ void __fastcall TFieldActivityForm::createFaPackActionExecute(TObject *Sender)
         WaitForm->Execute(2);
         //String faPackId = MainDataModule->createPack(_currentFilter, TPackTypeCd::PACK_MANUAL, MainDataModule->getAcctOtdelen());
         showFaPackNotices(faPackId);
-        MainDataModule->closeDebtorsQuery();
+        MainDataModule->closePreDebtorList();
         //MessageBoxInf("Создан реестр с номером " + faPackId + ".\nНе забудьте ввести даты контактов.");
         WaitForm->StopWait();
     }
@@ -942,19 +1009,24 @@ void __fastcall TFieldActivityForm::checkWithoutCcActionExecute(
       TObject *Sender)
 {
     MainDataModule->selectCcDttmIsNull(_currentFilter);
-
 }
 
 /* Пометить отфильтрованные */
 void __fastcall TFieldActivityForm::checkAllActionExecute(TObject *Sender)
 {
-    _currentDbGrid->setCheckFiltered(true);
+    if (_currentDbGrid != NULL)
+    {
+        _currentDbGrid->setCheckFiltered(true);
+    }
 }
 
 /* Снять пометки */
 void __fastcall TFieldActivityForm::checkNoneActionExecute(TObject *Sender)
 {
-    _currentDbGrid->setCheckFiltered(false);
+    if (_currentDbGrid != NULL)
+    {
+        _currentDbGrid->setCheckFiltered(false);
+    }
 }
 
 /* Отображает окно создания/редактирования контакта */
@@ -973,7 +1045,15 @@ void __fastcall TFieldActivityForm::setMode(int index)
     PackPageControl->Visible = false; // В будущем попробовать с отключением OnChange
 
     // Отображаем только вкладки активного режима и доступные текущему пользователю по его роли
-    modePageList.setMode((TModeItem*)SelectModeComboBox->Items->Objects[index]);
+
+    if (index < SelectModeComboBox->Items->Count )
+    {
+        modePageList.setMode((TModeItem*)SelectModeComboBox->Items->Objects[index]);
+    }
+    else
+    {
+        throw Exception("Out of index");
+    }
 
     PackPageControl->Visible = true;
 }
@@ -991,7 +1071,7 @@ void __fastcall TFieldActivityForm::createFaPackStopActionExecute(
         MainDataModule->createPackStop(false);   // Без использования признака группировки по разным реестрам (будет создан один реестр)
     }
 
-    MainDataModule->closePackStopList();    // Так как необходимо обновить список реестров
+    MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
     MainDataModule->closeStopList();        // Так как необходимо обновить список на ограничение
 
     showPackStopList();
@@ -1053,6 +1133,13 @@ void __fastcall TFieldActivityForm::OnChangeCheck(
 */
 void __fastcall TFieldActivityForm::showFaPackNotices(const Variant faPackId)
 {
+    static bool mutex_ = false;  // Защита от двойного вызова
+    if ( mutex_ )
+    {
+        return;
+    }
+    mutex_ = true;
+
 
     // Здесь нужно переделать
     // так как уже есть два реестра Manual и Stop
@@ -1061,38 +1148,57 @@ void __fastcall TFieldActivityForm::showFaPackNotices(const Variant faPackId)
     {
     case MODE_NOTICES:
     {
-        MainDataModule->setFaPackId_Notice(faPackId);
-        modePageList.setCurrentSheet(SHEET_TYPE_NOTICES_PACK);
+        try
+        {
+            modePageList.setCurrentSheet(SHEET_TYPE_NOTICES_PACK);
+            MainDataModule->setFaPackId_Notice(faPackId);
+        }
+        catch (Exception &e)
+        {
+            MessageBoxStop("" + e.Message);
+        }
+
         break;
     }
     case MODE_STOP:
     {
-        MainDataModule->setFaPackId_Stop(faPackId);
-        modePageList.setCurrentSheet(SHEET_TYPE_STOP_PACK);
+        try
+        {
+            modePageList.setCurrentSheet(SHEET_TYPE_STOP_PACK);
+            MainDataModule->setFaPackId_Stop(faPackId);
+        }
+        catch (Exception &e)
+        {
+            MessageBoxStop("" + e.Message);
+        }
         break;
     }
     }
 
-    refreshParametersControls();
 
     //_currentMode->showSheet(1);
     setCurPackMode();
+
+    refreshParametersControls();
+    refreshPopupMenu(); // Обновляем элементы, связанные с меню // переименовать и возможно перенести
+
+    mutex_ = false;
 }
 
 /* Отображает список должников
    Возможно следует удалить эту функцию
 */
-void __fastcall TFieldActivityForm::showDebtorList()
+void __fastcall TFieldActivityForm::showPreDebtorList()
 {
-    MainDataModule->getDebtorList();
+    MainDataModule->getPreDebtorList();
     modePageList.setCurrentSheet(SHEET_TYPE_DEBTORS);
     setCurPackMode();
 }
 
 /* Отображает список на почту*/
-void __fastcall TFieldActivityForm::showPostList()
+void __fastcall TFieldActivityForm::showPrePostList()
 {
-    MainDataModule->getPostList();
+    MainDataModule->getPrePostList();
     modePageList.setCurrentSheet(SHEET_TYPE_POST_LIST);
     setCurPackMode();
 }
@@ -1103,9 +1209,9 @@ void __fastcall TFieldActivityForm::showFaPackStop(const Variant faPackId)
     MainDataModule->setFaPackId_Stop(faPackId);
     modePageList.setCurrentSheet(SHEET_TYPE_STOP_PACK);
 
-    refreshParametersControls();
-
     setCurPackMode();
+
+    refreshParametersControls();
 }
 
 /* Отобразить список абонентов-кандидатов на ограничение*/
@@ -1120,8 +1226,17 @@ void __fastcall TFieldActivityForm::showStopList()
 /* Отобразить список реестров на ограничение */
 void __fastcall TFieldActivityForm::showPackStopList()
 {
-    MainDataModule->getPackStopList();
+    MainDataModule->getFaPackStopList();
     modePageList.setCurrentSheet(SHEET_TYPE_PACK_STOP_LIST);
+
+    setCurPackMode();
+}
+
+/* Отобразить список реестров на переподключение (возобновление) */
+void __fastcall TFieldActivityForm::showReconnectList()
+{
+    MainDataModule->getReconnectList();
+    modePageList.setCurrentSheet(SHEET_TYPE_RECONNECT_LIST);
 
     setCurPackMode();
 }
@@ -1154,9 +1269,9 @@ void __fastcall TFieldActivityForm::showFaInspectorList()
 
 /* Отображает список на отмену ограничения
 */
-void __fastcall TFieldActivityForm::showFaCancelList()
+void __fastcall TFieldActivityForm::showCancelList()
 {
-    MainDataModule->getFaCancelStopList();
+    MainDataModule->getCancelStopList();
     modePageList.setCurrentSheet(SHEET_TYPE_CANCEL_STOP_LIST);
     setCurPackMode();
 
@@ -1170,7 +1285,7 @@ void __fastcall TFieldActivityForm::createFaPackPostActionExecute(
     {
         WaitForm->Execute(2);
         showFaPackNotices(faPackId);
-        MainDataModule->closeDebtorsQuery();
+        MainDataModule->closePreDebtorList();
         //MessageBoxInf("Создан реестр с номером " + faPackId + ".\nНе забудьте ввести даты контактов.");
         WaitForm->StopWait();
     }
@@ -1217,13 +1332,13 @@ void __fastcall TFieldActivityForm::FullListTabSheetShow(TObject *Sender)
 /* Отображает список должников */
 void __fastcall TFieldActivityForm::DebtorsTabSheetShow(TObject *Sender)
 {
-    showDebtorList();
+    showPreDebtorList();
 }
 
 /* Отображает список на почту */
 void __fastcall TFieldActivityForm::PostListTabSheetShow(TObject *Sender)
 {
-    showPostList();
+    showPrePostList();
 }
 
 /* Отображает реестр уведомлений */
@@ -1256,7 +1371,7 @@ void __fastcall TFieldActivityForm::PackStopTabSheetShow(
 void __fastcall TFieldActivityForm::FaCancelStopListTabSheetShow(
       TObject *Sender)
 {
-    showFaCancelList();
+    showCancelList();
 }
 
 /* Отображает список на Утверждение */
@@ -1279,34 +1394,42 @@ void __fastcall TFieldActivityForm::deleteFaPackActionExecute(TObject *Sender)
 {
     MainDataModule->deleteFaPack();
 
+    MessageBoxInf("Выполнено.");
+
     MainDataModule->closeStopList();
-    MainDataModule->closePackStopList();    // Так как необходимо обновить список реестров
-    MainDataModule->getPackStopList();
+    MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
+    MainDataModule->getFaPackStopList();
 }
 
 /* Перевести реестр в статус Не завершен */
 void __fastcall TFieldActivityForm::setFaPackStatusIncompleteActionExecute(
       TObject *Sender)
 {
-    MainDataModule->setFaPackStatusIncomplete();
+    if ( MainDataModule->setFaPackStatusIncomplete() )
+    {
+        MessageBoxInf("Выполнено.");
+    }
 
-    MainDataModule->closePackStopList();    // Так как необходимо обновить список реестров
-    MainDataModule->getPackStopList();
+    MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
+    MainDataModule->getFaPackStopList();
 }
 
 /* Перевести реестр в статус Утвержден */
 void __fastcall TFieldActivityForm::setFaPackStatusFrozenActionExecute(
       TObject *Sender)
 {
-    MainDataModule->setFaPackStatusFrozen();
-
-    MainDataModule->closePackStopList();    // Так как необходимо обновить список реестров
-    MainDataModule->getPackStopList();
+    if (MainDataModule->setFaPackStatusFrozen())
+    {
+        MessageBoxInf("Выполнено.");
+    }
+    MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
+    MainDataModule->getFaPackStopList();
 }
 
 /* Отображает главную вкладку */
 void __fastcall TFieldActivityForm::showMainTabSheet()
 {
+    //if ( modePageList.
     modePageList.setCurrentSheet(SHEET_TYPE_MAIN_NOTICES);
     setCurPackMode();
 }
@@ -1347,16 +1470,72 @@ void __fastcall TFieldActivityForm::printDocumentFaNoticesListForPostOfficeActio
 void __fastcall TFieldActivityForm::printCancelStopActionExecute(
       TObject *Sender)
 {
-    if (DocumentDataModule->getDocumentCancelStopRequest(MainDataModule->getOtdelenListFilter, MainDataModule->getFaPackListCancelStopFilter, MainDataModule->getFaPackCancelStopProc))  // Здесь доделать, вставить параметры всех датасетов. Это кажется удобно
+    if (DocumentDataModule->getDocumentCancelStopRequest(MainDataModule->getOtdelenListFilter, MainDataModule->getFaPackListCancelStopFilter, MainDataModule->getFpCancelStopContentProc))  // Здесь доделать, вставить параметры всех датасетов. Это кажется удобно
     {
         MessageBoxInf("Заявки на отмену ограничений сформированы.");
     }
 }
 
+
 /**/
 void __fastcall TFieldActivityForm::Button6Click(TObject *Sender)
 {
-//    MainDataModule->getOtdelenListProc->Close();
+//
+}
+
+
+//---------------------------------------------------------------------------
+/* Задает статус для реестра на отмену ограничения [Отправлен исполнителю]*/
+void __fastcall TFieldActivityForm::setFaPackCancelStopStatusCompleteActionExecute(
+      TObject *Sender)
+{
+//
+    if ( MainDataModule->setFaPackCancelStopStatusComplete() )
+    {
+        MessageBoxInf("Выполнено.");
+    }
+    //MainDataModule->closePackStopList();    // Так как необходимо обновить список реестров
+    //MainDataModule->getPackStopList();
+    //MainDataModule->getFaCancelStopList();
+    MainDataModule->closeFaPackListCancelStop();
+    showCancelList();
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFieldActivityForm::ReconnectTabSheetShow(
+      TObject *Sender)
+{
+    showReconnectList();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFieldActivityForm::FormCreate(TObject *Sender)
+{
+    /*if (SelectModeComboBox->Items->Count <= 0)
+    {
+        this->Close();
+        this->Visible = false;
+        PackPageControl->Visible = false;
+        Application->Terminate();
+        return;
+    } */
+
+    //MainTabSheet->Show();   // На всякий случай
+    SelectModeComboBox->ItemIndex = 0;
+    setMode(0);     // Активируем первый доступный режим работы
+    refreshParametersControls();
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFieldActivityForm::printReconnectActionExecute(
+      TObject *Sender)
+{
+    if (DocumentDataModule->getDocumentReconnectRequest(MainDataModule->getOtdelenListFilter, MainDataModule->getReconnectListFilter, MainDataModule->getFpReconnectContentProc))  // Здесь доделать, вставить параметры всех датасетов. Это кажется удобно
+    {
+        MessageBoxInf("Заявки на возобновление созданы.");
+    }
 }
 //---------------------------------------------------------------------------
 

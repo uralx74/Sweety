@@ -1,6 +1,6 @@
 object FieldActivityForm: TFieldActivityForm
-  Left = 200
-  Top = 127
+  Left = 415
+  Top = 141
   Width = 1418
   Height = 884
   Caption = #1044#1086#1083#1078#1085#1080#1082#1080#1060
@@ -11,7 +11,9 @@ object FieldActivityForm: TFieldActivityForm
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  ShowHint = True
   Visible = True
+  OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
     1402
@@ -69,6 +71,8 @@ object FieldActivityForm: TFieldActivityForm
         ActivePage = PackManualTabSheet
         Align = alClient
         OwnerDraw = True
+        ParentShowHint = False
+        ShowHint = True
         Style = tsFlatButtons
         TabHeight = 25
         TabIndex = 2
@@ -88,42 +92,37 @@ object FieldActivityForm: TFieldActivityForm
             1099
             771)
           object GroupBox2: TGroupBox
-            Left = 7
+            Left = 0
             Top = 7
-            Width = 802
-            Height = 754
+            Width = 1097
+            Height = 762
             Anchors = [akLeft, akTop, akRight, akBottom]
             Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072
             Color = clBtnFace
             ParentColor = False
             TabOrder = 0
             DesignSize = (
-              802
-              754)
-            object Label3: TLabel
-              Left = 48
-              Top = 32
-              Width = 227
-              Height = 13
-              Caption = #1069#1090#1072' '#1087#1072#1085#1077#1083#1100' '#1085#1072#1093#1086#1076#1080#1090#1089#1103' '#1085#1072' '#1089#1090#1072#1076#1080#1080' '#1088#1072#1079#1088#1072#1073#1086#1090#1082#1080
-            end
+              1097
+              762)
             object Label8: TLabel
-              Left = 16
-              Top = 176
+              Left = 24
+              Top = 608
               Width = 146
               Height = 13
+              Anchors = [akLeft, akBottom]
               Caption = #1055#1086#1076#1087#1080#1089#1072#1085#1090' '#1076#1083#1103' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081
             end
             object Label9: TLabel
-              Left = 16
-              Top = 208
+              Left = 24
+              Top = 640
               Width = 193
               Height = 13
+              Anchors = [akLeft, akBottom]
               Caption = #1055#1086#1076#1087#1080#1089#1072#1085#1090' '#1076#1083#1103' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
             end
             object Memo1: TMemo
               Left = 16
-              Top = 672
+              Top = 680
               Width = 281
               Height = 73
               Anchors = [akLeft, akBottom]
@@ -142,19 +141,22 @@ object FieldActivityForm: TFieldActivityForm
               TabOrder = 0
             end
             object Button6: TButton
-              Left = 14
-              Top = 135
+              Left = 22
+              Top = 567
               Width = 75
               Height = 25
+              Anchors = [akLeft, akBottom]
               Caption = 'TestButton'
               TabOrder = 1
+              Visible = False
               OnClick = Button6Click
             end
             object DBLookupComboBox1: TDBLookupComboBox
-              Left = 224
-              Top = 168
+              Left = 232
+              Top = 600
               Width = 166
               Height = 21
+              Anchors = [akLeft, akBottom]
               DropDownRows = 11
               KeyField = 'ACCT_OTDELEN'
               ListField = 'ACCT_OTDELEN; OTDELEN_DESCR'
@@ -164,10 +166,11 @@ object FieldActivityForm: TFieldActivityForm
               OnClick = OtdelenComboBoxClick
             end
             object DBLookupComboBox2: TDBLookupComboBox
-              Left = 224
-              Top = 200
+              Left = 232
+              Top = 632
               Width = 166
               Height = 21
+              Anchors = [akLeft, akBottom]
               DropDownRows = 11
               KeyField = 'ACCT_OTDELEN'
               ListField = 'ACCT_OTDELEN; OTDELEN_DESCR'
@@ -176,10 +179,29 @@ object FieldActivityForm: TFieldActivityForm
               TabOrder = 3
               OnClick = OtdelenComboBoxClick
             end
+            object RichEdit1: TRichEdit
+              Left = 16
+              Top = 32
+              Width = 1057
+              Height = 505
+              Anchors = [akLeft, akTop, akRight, akBottom]
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -12
+              Font.Name = 'Courier'
+              Font.Style = []
+              Lines.Strings = (
+                'RichEdit1')
+              ParentFont = False
+              ReadOnly = True
+              ScrollBars = ssBoth
+              TabOrder = 4
+              WordWrap = False
+            end
           end
         end
         object DebtorsTabSheet: TTabSheet
-          Caption = #1044#1086#1083#1078#1085#1080#1082#1080
+          Caption = #1057#1087#1080#1089#1086#1082' '#1076#1086#1083#1078#1085#1080#1082#1086#1074
           OnShow = DebtorsTabSheetShow
           object DBGridAltGeneral: TDBGridAlt
             Left = 0
@@ -187,7 +209,7 @@ object FieldActivityForm: TFieldActivityForm
             Width = 1099
             Height = 771
             Align = alClient
-            DataSource = MainDataModule.getDebtorsDataSource
+            DataSource = MainDataModule.getPreDebtorListDataSource
             ReadOnly = True
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
@@ -275,9 +297,9 @@ object FieldActivityForm: TFieldActivityForm
               end
               item
                 Expanded = False
-                FieldName = 'SERVICE_ORG'
-                Title.Caption = #1054#1073#1089#1083#1091#1078#1080#1074#1072#1102#1097#1072#1103' '#1086#1088#1075'-'#1103
-                Width = 100
+                FieldName = 'MR_RTE_CD'
+                Title.Caption = #1052#1072#1088#1096#1088#1091#1090
+                Width = 60
                 Visible = True
               end
               item
@@ -292,6 +314,13 @@ object FieldActivityForm: TFieldActivityForm
                 FieldName = 'CC_DTTM'
                 Title.Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1072#1082#1090#1072
                 Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'SERVICE_ORG'
+                Title.Caption = #1054#1073#1089#1083#1091#1078#1080#1074#1072#1102#1097#1072#1103' '#1086#1088#1075'-'#1103
+                Width = 140
                 Visible = True
               end
               item
@@ -318,7 +347,7 @@ object FieldActivityForm: TFieldActivityForm
           end
         end
         object PackManualTabSheet: TTabSheet
-          Caption = #1056#1077#1077#1089#1090#1088' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081
+          Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
           ImageIndex = 1
           OnShow = PackManualTabSheetShow
           object DBGridAltManual: TDBGridAlt
@@ -444,6 +473,13 @@ object FieldActivityForm: TFieldActivityForm
               end
               item
                 Expanded = False
+                FieldName = 'MR_RTE_CD'
+                Title.Caption = #1052#1072#1088#1096#1088#1091#1090
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
                 FieldName = 'OP_AREA_DESCR'
                 Title.Caption = #1050#1086#1085#1090#1088#1086#1083#1077#1088
                 Width = 100
@@ -452,8 +488,11 @@ object FieldActivityForm: TFieldActivityForm
           end
         end
         object ApprovalListTabSheet: TTabSheet
-          Caption = #1057#1087#1080#1089#1086#1082' '#1085#1072' '#1091#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+          Hint = #1057#1087#1080#1089#1086#1082' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081' '#1085#1072' '#1091#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1084' '#1083#1080#1094#1086#1084
+          Caption = #1057#1087#1080#1089#1086#1082' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081' '#1085#1072' '#1091#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
           ImageIndex = 4
+          ParentShowHint = False
+          ShowHint = True
           OnShow = ApprovalListTabSheetShow
           object ApproveListGrid: TDBGridAlt
             Left = 0
@@ -559,7 +598,7 @@ object FieldActivityForm: TFieldActivityForm
           end
         end
         object StopListTabSheet: TTabSheet
-          Caption = #1042#1074#1077#1076#1077#1085#1080#1077' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103
+          Caption = #1057#1087#1080#1089#1086#1082' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
           ImageIndex = 2
           OnShow = StopListTabSheetShow
           object StopListGrid: TDBGridAlt
@@ -604,6 +643,11 @@ object FieldActivityForm: TFieldActivityForm
                 FieldName = 'ROWNUM'
                 Title.Caption = 'N'
                 Width = 50
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'GRP_DATA'
                 Visible = True
               end
               item
@@ -685,7 +729,7 @@ object FieldActivityForm: TFieldActivityForm
           end
         end
         object PackStopListTabSheet: TTabSheet
-          Caption = #1057#1087#1080#1089#1086#1082' '#1088#1077#1077#1089#1090#1088#1086#1074' '#1085#1072' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077
+          Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
           ImageIndex = 8
           OnShow = PackStopListTabSheetShow
           object PackStopListGrid: TDBGridAlt
@@ -747,7 +791,7 @@ object FieldActivityForm: TFieldActivityForm
               end
               item
                 Expanded = False
-                FieldName = 'ACCT_ID_CNT'
+                FieldName = 'FA_CNT'
                 Title.Caption = #1050#1086#1083'-'#1074#1086' '#1072#1073#1086#1085#1077#1085#1090#1086#1074
                 Width = 100
                 Visible = True
@@ -775,13 +819,6 @@ object FieldActivityForm: TFieldActivityForm
               end
               item
                 Expanded = False
-                FieldName = 'FA_CNT'
-                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082
-                Width = 80
-                Visible = True
-              end
-              item
-                Expanded = False
                 FieldName = 'OWNER'
                 Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
                 Visible = True
@@ -790,7 +827,7 @@ object FieldActivityForm: TFieldActivityForm
         end
         object PackStopTabSheet: TTabSheet
           Tag = 1
-          Caption = #1056#1077#1077#1089#1090#1088' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077
+          Caption = #1057#1087#1080#1089#1086#1082' '#1072#1073#1086#1085#1077#1085#1090#1086#1074' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
           ImageIndex = 4
           OnShow = PackStopTabSheetShow
           object StopPackGrid: TDBGridAlt
@@ -840,6 +877,13 @@ object FieldActivityForm: TFieldActivityForm
                 FieldName = 'FA_ID'
                 ReadOnly = True
                 Title.Caption = 'ID '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'NOTICE_FA_ID'
+                Title.Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
                 Width = 90
                 Visible = True
               end
@@ -898,6 +942,13 @@ object FieldActivityForm: TFieldActivityForm
               end
               item
                 Expanded = False
+                FieldName = 'PREM_TYPE_DESCR'
+                Title.Caption = #1058#1080#1087' '#1054#1054
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
                 FieldName = 'CITY'
                 ReadOnly = True
                 Title.Caption = #1043#1086#1088#1086#1076
@@ -933,16 +984,12 @@ object FieldActivityForm: TFieldActivityForm
                 Title.Caption = #1054#1073#1089#1083#1091#1078#1080#1074#1072#1102#1097#1072#1103' '#1086#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103
                 Width = 64
                 Visible = True
-              end
-              item
-                Expanded = False
-                Visible = True
               end>
           end
         end
         object FaCancelStopListTabSheet: TTabSheet
           Tag = 1
-          Caption = #1054#1090#1079#1099#1074' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077
+          Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1090#1084#1077#1085#1091' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1103
           ImageIndex = 5
           OnShow = FaCancelStopListTabSheetShow
           object CancelStopListGrid: TDBGridAlt
@@ -1005,21 +1052,9 @@ object FieldActivityForm: TFieldActivityForm
               end
               item
                 Expanded = False
-                FieldName = 'FA_PACK_STATUS_FLG'
+                FieldName = 'FA_PACK_STATUS_DESCR'
                 Title.Caption = #1057#1090#1072#1090#1091#1089
-                Width = 80
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'PRNT_FA_ID'
-                Width = 80
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'FA_ID'
-                Width = 80
+                Width = 140
                 Visible = True
               end
               item
@@ -1031,8 +1066,8 @@ object FieldActivityForm: TFieldActivityForm
               item
                 Expanded = False
                 FieldName = 'ACCT_ID_CNT'
-                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082
-                Width = 80
+                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1072#1073#1086#1085#1077#1085#1090#1086#1074
+                Width = 100
                 Visible = True
               end
               item
@@ -1044,17 +1079,18 @@ object FieldActivityForm: TFieldActivityForm
               end>
           end
         end
-        object PackReloadTabSheet: TTabSheet
+        object PackReconnectTabSheet: TTabSheet
           Tag = 1
           Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1074#1086#1079#1086#1073#1085#1086#1074#1083#1077#1085#1080#1077
           ImageIndex = 7
-          object FaResumptionList: TDBGridAlt
+          OnShow = ReconnectTabSheetShow
+          object ReconnectListGrid: TDBGridAlt
             Left = 0
             Top = 0
             Width = 1099
             Height = 771
             Align = alClient
-            DataSource = MainDataModule.getFaPackStopDataSource
+            DataSource = MainDataModule.getReconnectListDataSource
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
             TitleFont.Color = clWindowText
@@ -1082,7 +1118,10 @@ object FieldActivityForm: TFieldActivityForm
               item
                 Expanded = False
                 FieldName = 'ROWNUM'
-                Visible = False
+                ReadOnly = True
+                Title.Caption = 'N'
+                Width = 40
+                Visible = True
               end
               item
                 Expanded = False
@@ -1092,100 +1131,48 @@ object FieldActivityForm: TFieldActivityForm
               end
               item
                 Expanded = False
-                FieldName = 'FA_ID'
-                ReadOnly = True
-                Title.Caption = 'ID '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-                Width = 90
+                FieldName = 'FA_PACK_ID'
+                Title.Caption = #1056#1077#1077#1089#1090#1088
+                Width = 80
                 Visible = True
               end
               item
-                ButtonStyle = cbsEllipsis
                 Expanded = False
-                FieldName = 'CC_DTTM'
-                Title.Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1072#1082#1090#1072
+                FieldName = 'CRE_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1088#1077#1077#1089#1090#1088#1072
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_STATUS_DESCR'
+                Title.Caption = #1057#1090#1072#1090#1091#1089
+                Width = 140
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'RT_SPR'
                 Width = 100
                 Visible = True
               end
               item
                 Expanded = False
-                FieldName = 'ST_P_DT'
-                Title.Caption = #1044#1072#1090#1072' '#1086#1075#1088'.'
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ACCT_ID'
-                ReadOnly = True
-                Title.Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
-                Width = 90
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'SALDO_UCH'
-                ReadOnly = True
-                Title.Caption = #1057#1072#1083#1100#1076#1086
+                FieldName = 'ACCT_ID_CNT'
+                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1072#1073#1086#1085#1077#1085#1090#1086#1074
                 Width = 100
                 Visible = True
               end
               item
                 Expanded = False
-                FieldName = 'END_REG_READING1'
-                ReadOnly = True
-                Title.Caption = #1055#1086#1082#1072#1079#1072#1085#1080#1103' '#1076#1077#1085#1100
-                Width = 64
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'END_REG_READING2'
-                ReadOnly = True
-                Title.Caption = #1055#1086#1082#1072#1079#1072#1085#1080#1103' '#1085#1086#1095#1100
-                Width = 64
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'CITY'
-                ReadOnly = True
-                Title.Caption = #1043#1086#1088#1086#1076
-                Width = 120
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ADDRESS'
-                ReadOnly = True
-                Title.Caption = #1059#1083#1080#1094#1072', '#1076#1086#1084', '#1082#1074#1072#1088#1090#1080#1088#1072', '#1082#1086#1088#1087#1091#1089
-                Width = 200
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'FIO'
-                ReadOnly = True
-                Title.Caption = #1060#1048#1054
-                Width = 200
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'OP_AREA_DESCR'
-                Title.Caption = #1050#1086#1085#1090#1088#1086#1083#1077#1088
-                Width = 64
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'SPR_DESCR'
-                Title.Caption = #1054#1073#1089#1083#1091#1078#1080#1074#1072#1102#1097#1072#1103' '#1086#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103
-                Width = 64
+                FieldName = 'OWNER'
+                Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
+                Width = 100
                 Visible = True
               end>
           end
         end
         object PostListTabSheet: TTabSheet
-          Caption = #1057#1087#1080#1089#1086#1082' '#1085#1072' '#1087#1086#1095#1090#1091
+          Caption = #1057#1087#1080#1089#1086#1082' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081' '#1085#1072' '#1087#1086#1095#1090#1091
           ImageIndex = 9
           OnShow = PostListTabSheetShow
           object PostListGrid: TDBGridAlt
@@ -1194,7 +1181,7 @@ object FieldActivityForm: TFieldActivityForm
             Width = 1099
             Height = 771
             Align = alClient
-            DataSource = MainDataModule.getPostListDataSource
+            DataSource = MainDataModule.getPrePostListDataSource
             ReadOnly = True
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
@@ -1312,7 +1299,7 @@ object FieldActivityForm: TFieldActivityForm
           end
         end
         object FullListTabSheet: TTabSheet
-          Caption = #1042#1089#1077' '#1072#1073#1086#1085#1077#1085#1090#1099
+          Caption = #1057#1087#1080#1089#1086#1082' '#1072#1073#1086#1085#1077#1085#1090#1086#1074
           ImageIndex = 10
           OnShow = FullListTabSheetShow
           object FullListGrid: TDBGridAlt
@@ -1483,6 +1470,7 @@ object FieldActivityForm: TFieldActivityForm
           Top = 4
           Width = 17
           Height = 17
+          Hint = #1042#1099#1073#1088#1072#1090#1100' '#1074#1089#1077' '#1080#1083#1080' '#1085#1080#1095#1077#1075#1086
           AllowGrayed = True
           Caption = 'SelectAllCheckBox'
           Checked = True
@@ -1524,68 +1512,83 @@ object FieldActivityForm: TFieldActivityForm
       289
       846)
     object GroupBox7: TGroupBox
-      Left = 6
+      Left = 5
       Top = 40
-      Width = 278
-      Height = 73
+      Width = 279
+      Height = 79
       Anchors = [akLeft, akTop, akRight]
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
       Color = clBtnFace
       ParentColor = False
       TabOrder = 0
-      DesignSize = (
-        278
-        73)
-      object Label2: TLabel
-        Left = 16
-        Top = 24
-        Width = 42
-        Height = 13
+      object Panel4: TPanel
+        Left = 2
+        Top = 15
+        Width = 275
+        Height = 31
+        Align = alTop
+        Alignment = taLeftJustify
+        BorderWidth = 4
         Caption = #1059#1095#1072#1089#1090#1086#1082
-      end
-      object Label6: TLabel
-        Left = 16
-        Top = 48
-        Width = 56
-        Height = 13
-        Caption = 'ID '#1056#1077#1077#1089#1090#1088#1072
-      end
-      object ParamPackIdEdit: TEdit
-        Left = 96
-        Top = 40
-        Width = 134
-        Height = 21
-        Anchors = [akLeft, akTop, akRight]
-        Color = clBtnFace
+        Ctl3D = True
+        ParentCtl3D = False
         TabOrder = 0
-        Text = 'ParamPackIdEdit'
-        OnDblClick = ParamPackIdEditClick
-        OnKeyPress = ParamPackIdEditKeyPress
+        DesignSize = (
+          275
+          31)
+        object OtdelenComboBox: TDBLookupComboBox
+          Left = 96
+          Top = 5
+          Width = 167
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          DropDownRows = 11
+          KeyField = 'ACCT_OTDELEN'
+          ListField = 'ACCT_OTDELEN; OTDELEN_DESCR'
+          ListFieldIndex = 1
+          ListSource = MainDataModule.getOtdelenListDataSource
+          ParentColor = True
+          TabOrder = 0
+          OnClick = OtdelenComboBoxClick
+        end
       end
-      object OtdelenComboBox: TDBLookupComboBox
-        Left = 96
-        Top = 16
-        Width = 166
-        Height = 21
-        Anchors = [akLeft, akTop, akRight]
-        DropDownRows = 11
-        KeyField = 'ACCT_OTDELEN'
-        ListField = 'ACCT_OTDELEN; OTDELEN_DESCR'
-        ListFieldIndex = 1
-        ListSource = MainDataModule.getOtdelenListDataSource
-        ParentColor = True
+      object FaPackIdParamPanel: TPanel
+        Left = 2
+        Top = 46
+        Width = 275
+        Height = 31
+        Align = alTop
+        Alignment = taLeftJustify
+        BorderWidth = 4
+        Caption = #1056#1077#1077#1089#1090#1088
+        Ctl3D = True
+        ParentCtl3D = False
         TabOrder = 1
-        OnClick = OtdelenComboBoxClick
-      end
-      object BitBtn1: TBitBtn
-        Left = 237
-        Top = 40
-        Width = 25
-        Height = 21
-        Anchors = [akTop, akRight]
-        Caption = '...'
-        TabOrder = 2
-        OnClick = ParamPackIdEditClick
+        DesignSize = (
+          275
+          31)
+        object ParamPackIdEdit: TEdit
+          Left = 96
+          Top = 5
+          Width = 135
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          Color = clBtnFace
+          TabOrder = 0
+          Text = 'ParamPackIdEdit'
+          OnDblClick = ParamPackIdEditClick
+          OnKeyPress = ParamPackIdEditKeyPress
+        end
+        object BitBtn1: TBitBtn
+          Left = 238
+          Top = 5
+          Width = 25
+          Height = 21
+          Anchors = [akTop, akRight]
+          Caption = '...'
+          TabOrder = 1
+          OnClick = ParamPackIdEditClick
+        end
       end
     end
     object SelectModeComboBox: TComboBox
@@ -1593,6 +1596,7 @@ object FieldActivityForm: TFieldActivityForm
       Top = 8
       Width = 273
       Height = 28
+      Hint = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099
       Style = csDropDownList
       Anchors = [akLeft, akTop, akRight]
       Color = 4194304
@@ -1902,7 +1906,7 @@ object FieldActivityForm: TFieldActivityForm
       end
       object CcDttmExistsFilterPanel: TPanel
         Left = 2
-        Top = 329
+        Top = 362
         Width = 275
         Height = 56
         Align = alTop
@@ -1989,21 +1993,67 @@ object FieldActivityForm: TFieldActivityForm
           end
         end
       end
-      object TemporaryUnusedFilterPanel: TPanel
+      object MrRteCdFilterPanel: TPanel
         Left = 2
-        Top = 385
+        Top = 418
         Width = 275
         Height = 32
         Align = alTop
         Alignment = taLeftJustify
         BorderWidth = 4
-        Caption = #1053#1077' '#1080#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103
+        Caption = #1052#1072#1088#1096#1088#1091#1090
         TabOrder = 9
         Visible = False
+        DesignSize = (
+          275
+          32)
+        object MrRteCdFilterComboBox: TComboBox
+          Left = 96
+          Top = 5
+          Width = 167
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          ItemHeight = 13
+          TabOrder = 0
+          OnChange = FilterComboBoxTextChange
+        end
+      end
+      object FaPackStatusFilterPanel: TPanel
+        Left = 2
+        Top = 329
+        Width = 275
+        Height = 33
+        Align = alTop
+        Alignment = taLeftJustify
+        BorderWidth = 4
+        Caption = #1057#1090#1072#1090#1091#1089' '#1088#1077#1077#1089#1090#1088#1072
+        TabOrder = 14
+        Visible = False
+        DesignSize = (
+          275
+          33)
+        object FaPackStatusFilterComboBox: TComboBox
+          Left = 96
+          Top = 5
+          Width = 167
+          Height = 21
+          Style = csDropDownList
+          Anchors = [akLeft, akTop, akRight]
+          ItemHeight = 13
+          TabOrder = 0
+          OnChange = FilterComboBoxIndexChange
+          Items.Strings = (
+            #1042#1089#1077
+            #1054#1090#1084#1077#1085#1077#1085
+            #1059#1090#1074#1077#1088#1078#1076#1077#1085
+            #1048#1089#1087#1086#1083#1085#1077#1085
+            #1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1080#1089#1087#1086#1083#1085#1080#1090#1077#1083#1102
+            #1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1072#1073#1086#1085#1077#1085#1090#1091)
+        end
       end
       object ccDttmIsApprovedFilterPanel: TPanel
         Left = 2
-        Top = 417
+        Top = 450
         Width = 275
         Height = 33
         Align = alTop
@@ -2035,7 +2085,7 @@ object FieldActivityForm: TFieldActivityForm
       end
       object RstButtonFilterPanel: TPanel
         Left = 2
-        Top = 450
+        Top = 483
         Width = 275
         Height = 59
         Align = alTop
@@ -2049,6 +2099,7 @@ object FieldActivityForm: TFieldActivityForm
           Top = 16
           Width = 153
           Height = 33
+          Hint = #1057#1073#1088#1086#1089#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1092#1080#1083#1100#1090#1088#1072' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
           Anchors = [akTop, akRight]
           Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
           TabOrder = 0
@@ -2171,6 +2222,9 @@ object FieldActivityForm: TFieldActivityForm
     object N7: TMenuItem
       Action = printCancelStopAction
     end
+    object N18: TMenuItem
+      Action = printReconnectAction
+    end
   end
   object ActionList1: TActionList
     Left = 320
@@ -2206,6 +2260,13 @@ object FieldActivityForm: TFieldActivityForm
       OnExecute = createFaPackPostActionExecute
       OnUpdate = createFaPackNoticeActionUpdate
     end
+    object printReconnectAction: TAction
+      Category = 'Reports'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1074#1086#1079#1086#1073#1085#1086#1074#1083#1077#1085#1080#1077
+      Enabled = False
+      OnExecute = printReconnectActionExecute
+      OnUpdate = createFaPackNoticeActionUpdate
+    end
     object printDocumentStopAction: TAction
       Category = 'Reports'
       Caption = #1055#1077#1095#1072#1090#1100' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
@@ -2215,7 +2276,7 @@ object FieldActivityForm: TFieldActivityForm
     end
     object createFaPackStopAction: TAction
       Category = 'Actions_stop'
-      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1088#1077#1077#1089#1090#1088' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1088#1077#1077#1089#1090#1088' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' ('#1072#1074#1090#1086')'
       OnExecute = createFaPackStopActionExecute
       OnUpdate = createFaPackNoticeActionUpdate
     end
@@ -2285,22 +2346,31 @@ object FieldActivityForm: TFieldActivityForm
       Category = 'Actions_stop'
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1088#1077#1077#1089#1090#1088
       OnExecute = deleteFaPackActionExecute
+      OnUpdate = createFaPackNoticeActionUpdate
     end
     object setFaPackStatusIncompleteAction: TAction
       Category = 'Actions_stop'
       Caption = #1055#1077#1088#1077#1074#1077#1089#1090#1080' '#1088#1077#1077#1089#1090#1088' '#1074' '#1089#1090#1072#1090#1091#1089' ['#1053#1077' '#1079#1072#1074#1077#1088#1096#1077#1085']'
       OnExecute = setFaPackStatusIncompleteActionExecute
+      OnUpdate = createFaPackNoticeActionUpdate
     end
     object setFaPackStatusFrozenAction: TAction
       Category = 'Actions_stop'
       Caption = #1055#1077#1088#1077#1074#1077#1089#1090#1080' '#1088#1077#1077#1089#1090#1088' '#1074' '#1089#1090#1072#1090#1091#1089' ['#1059#1090#1074#1077#1088#1078#1076#1077#1085']'
       OnExecute = setFaPackStatusFrozenActionExecute
+      OnUpdate = createFaPackNoticeActionUpdate
     end
     object printDocumentFaNoticesListForPostOfficeAction: TAction
       Category = 'Reports'
       Caption = #1055#1077#1095#1072#1090#1100' '#1089#1087#1080#1089#1082#1072' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081' '#1076#1083#1103' '#1087#1086#1095#1090#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1077#1085#1080#1103
       Enabled = False
       OnExecute = printDocumentFaNoticesListForPostOfficeActionExecute
+      OnUpdate = createFaPackNoticeActionUpdate
+    end
+    object setFaPackCancelStopStatusCompleteAction: TAction
+      Category = 'Actions_stop'
+      Caption = #1055#1077#1088#1077#1074#1077#1089#1090#1080' '#1074' '#1089#1090#1072#1090#1091#1089' ['#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1080#1089#1087#1086#1083#1085#1080#1090#1077#1083#1102']'
+      OnExecute = setFaPackCancelStopStatusCompleteActionExecute
       OnUpdate = createFaPackNoticeActionUpdate
     end
   end
@@ -2330,6 +2400,9 @@ object FieldActivityForm: TFieldActivityForm
     end
     object N15: TMenuItem
       Action = setFaPackStatusFrozenAction
+    end
+    object N12: TMenuItem
+      Action = setFaPackCancelStopStatusCompleteAction
     end
   end
   object ActionList2: TActionList

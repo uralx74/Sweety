@@ -36,7 +36,7 @@ __published:	// IDE-managed Components
     TGroupBox *GroupBox2;
     TLabel *Label4;
     TButton *Button4;
-    TEdit *Edit1;
+    TEdit *FaIdFindEdit;
     TGroupBox *GroupBox3;
     TLabel *Label5;
     TDBLookupComboBox *OtdelenComboBox;
@@ -48,6 +48,9 @@ __published:	// IDE-managed Components
     TComboBox *FaPackStatusFlgFilterComboBox;
     TLabel *Label3;
     TEdit *OwnerFilterEdit;
+    TEdit *AcctIdFindEdit;
+    TLabel *Label6;
+    TButton *Button5;
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall faListGridChangeCheck(TObject *Sender);
     void __fastcall FilterComboBoxTextChange(TObject *Sender);
@@ -55,26 +58,26 @@ __published:	// IDE-managed Components
     void __fastcall FilterEditTextChange(TObject *Sender);
     void __fastcall OtdelenComboBoxClick(TObject *Sender);
     void __fastcall CloseWindowActionExecute(TObject *Sender);
+    void __fastcall Button4Click(TObject *Sender);
+    void __fastcall Button5Click(TObject *Sender);
+    void __fastcall Button3Click(TObject *Sender);
 public:
     typedef enum {TM_NOTICES, TM_STOP} TMode;
 
-private:	// User declarations
+private:
     TMode _mode;
     String _faPackId;
     TDataSetFilter* _currentFilter; // Текущий фильтр
+    void __fastcall FindPackList();     // Функция для поиска реестров
+    void __fastcall ResetFindFilter();
+    void __fastcall ResetFilter();
 
-    //String _faPackType;
-    //FaPack _faPack;
-    //TDataSetFilter _filter;   // Фильтр
 
-public:		// User declarations
+public:
     __fastcall TSelectFaPackForm(TComponent* Owner);
     bool __fastcall execute(String acctOtdelen, int mode/*String faPackTypeCd*/);
     FaPack getFaPack();
     String __fastcall getFaPackId();
-    //FaTypes::PackTypeId __fastcall getFaPackTypeId();
-    //void  __fastcall setCurOtdelen(const String& otdelen);
-    //FaTypes::PackTypeId _fastcall getFaPackType();
 
 };
 //---------------------------------------------------------------------------
