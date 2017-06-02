@@ -430,7 +430,7 @@ void __fastcall TFieldActivityForm::OnThreadBegin(TObject *Sender)
 */
 void __fastcall TFieldActivityForm::showFullList()
 {
-    MainDataModule->getFullList();
+    MainDataModule->getAcctFullList();
     modePageList.setCurrentSheet(SHEET_TYPE_FULL_LIST);
     setCurPackMode();
 }
@@ -482,7 +482,7 @@ void __fastcall TFieldActivityForm::setCurPackMode()
     case SHEET_TYPE_FULL_LIST:
     {
 
-        _currentFilter = MainDataModule->getFullListFilter;
+        _currentFilter = MainDataModule->getAcctFullListFilter;
         _currentDbGrid = FullListGrid;
 
         break;
@@ -491,7 +491,7 @@ void __fastcall TFieldActivityForm::setCurPackMode()
     case SHEET_TYPE_DEBTORS:
     {
 
-        _currentFilter = MainDataModule->getPreDebtorListFilter;;
+        _currentFilter = MainDataModule->getPreDebtorListFilter;
         _currentDbGrid = DBGridAltGeneral;
 
         break;
@@ -965,8 +965,11 @@ void __fastcall TFieldActivityForm::OtdelenBoxChange(TObject *Sender)
 void __fastcall TFieldActivityForm::printDocumentFaNoticesActionExecute(
       TObject *Sender)
 {
-    DocumentDataModule->getDocumentFaNotices(_currentFilter);
-    MessageBoxInf("Уведомления сформированы.");
+    //DocumentDataModule->getDocumentFaNotices(_currentFilter);
+    if (DocumentDataModule->getDocumentFaNotices(MainDataModule->getOtdelenListFilter, MainDataModule->getFaPackInfoFilter, MainDataModule->getFaPackNoticesFilter) )
+    {
+        MessageBoxInf("Уведомления сформированы.");
+    }
 }
 
 
@@ -1448,21 +1451,29 @@ void __fastcall TFieldActivityForm::printFaNoticeEnvelopeActionExecute(
     //    
 }
 
-/* Печать заявок на ограничение */
-void __fastcall TFieldActivityForm::printDocumentStopActionExecute(
-      TObject *Sender)
-{
-    DocumentDataModule->getDocumentStopRequest();
-    MessageBoxInf("Заявки на ограничение сформированы.");
-}
-
-/* Создать реестр заявок на ограничение*/
+/* Создать реестр уведомлений на почту*/
 void __fastcall TFieldActivityForm::printDocumentFaNoticesListForPostOfficeActionExecute(
       TObject *Sender)
 {
     if (DocumentDataModule->getDocumentFaNoticesListForPostOffice(MainDataModule->getOtdelenListFilter, MainDataModule->getFaPackInfoFilter, MainDataModule->getFaPackNoticesFilter))
     {
         MessageBoxInf("Список уведомлений сформирован.");
+    }
+}
+
+/* Печать заявок на ограничение */
+void __fastcall TFieldActivityForm::printDocumentStopActionExecute(
+      TObject *Sender)
+{
+
+    //wordExportParams.addSingleTextDataSet(MainDataModule->getOtdelenListQuery, "otdelen_");     // Общая информация по участку
+    //wordExportParams.addSingleTextDataSet(MainDataModule->getPackListStopFilter->DataSet, "rec_");  // Информация по реестру
+    //wordExportParams.addTableDataSet(MainDataModule->getFaPackStopProc, 3, "table_");                  // Информация для таблицы
+
+
+    if ( DocumentDataModule->getDocumentStopRequest(MainDataModule->getOtdelenListFilter, MainDataModule->getPackListStopFilter, MainDataModule->getFaPackStopProc))
+    {
+        MessageBoxInf("Заявки на ограничение сформированы.");
     }
 }
 
@@ -1483,13 +1494,11 @@ void __fastcall TFieldActivityForm::Button6Click(TObject *Sender)
 //
 }
 
-
-//---------------------------------------------------------------------------
 /* Задает статус для реестра на отмену ограничения [Отправлен исполнителю]*/
 void __fastcall TFieldActivityForm::setFaPackCancelStopStatusCompleteActionExecute(
       TObject *Sender)
 {
-//
+    //
     if ( MainDataModule->setFaPackCancelStopStatusComplete() )
     {
         MessageBoxInf("Выполнено.");

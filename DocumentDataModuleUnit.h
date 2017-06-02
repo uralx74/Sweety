@@ -46,12 +46,9 @@ public:		// User declarations
     __fastcall TDocumentDataModule(TComponent* Owner);
     __fastcall ~TDocumentDataModule();
     void __fastcall getDocumentFaNoticesList(TDataSetFilter *mergeFields);
+    bool __fastcall getDocumentFaNotices(TDataSetFilter* otdelenData, TDataSetFilter* faPackData, TDataSetFilter* faData);
     bool __fastcall getDocumentFaNoticesListForPostOffice(TDataSetFilter* otdelenDsF, TDataSetFilter* recDsF, TDataSetFilter* tableDsF);
-
-    void __fastcall getDocumentFaNotices(TDataSetFilter* mergeFields);
-    //void __fastcall getDocumentFaNotices(TDataSet *mergeFields, TDataSet* formFields);
-    //void __fastcall getDocumentStopService(TDataSetFilter *mergeFields);
-    bool __fastcall getDocumentStopRequest();
+    bool __fastcall getDocumentStopRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc);
     bool __fastcall getDocumentCancelStopRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc);
     bool __fastcall getDocumentReconnectRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc);
 

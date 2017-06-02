@@ -3,8 +3,8 @@ object EditCcForm: TEditCcForm
   Top = 124
   BorderStyle = bsDialog
   Caption = #1050#1086#1085#1090#1072#1082#1090' '#1089' '#1072#1073#1086#1085#1077#1085#1090#1086#1084
-  ClientHeight = 392
-  ClientWidth = 443
+  ClientHeight = 379
+  ClientWidth = 442
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,16 +14,17 @@ object EditCcForm: TEditCcForm
   OldCreateOrder = False
   Position = poMainFormCenter
   Scaled = False
+  OnClose = FormClose
   OnCreate = FormCreate
   DesignSize = (
-    443
-    392)
+    442
+    379)
   PixelsPerInch = 96
   TextHeight = 13
   object GroupBox1: TGroupBox
     Left = 8
     Top = 8
-    Width = 425
+    Width = 424
     Height = 81
     Anchors = [akLeft, akTop, akRight]
     Caption = #1040#1073#1086#1085#1077#1085#1090
@@ -59,20 +60,20 @@ object EditCcForm: TEditCcForm
   end
   object Button2: TButton
     Left = 360
-    Top = 360
+    Top = 347
     Width = 75
     Height = 25
-    Anchors = [akRight, akBottom]
+    Anchors = [akRight]
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
     TabOrder = 1
   end
   object Button3: TButton
     Left = 280
-    Top = 360
+    Top = 347
     Width = 73
     Height = 25
-    Anchors = [akRight, akBottom]
+    Anchors = [akRight]
     Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
     ModalResult = 1
     TabOrder = 2
@@ -81,14 +82,14 @@ object EditCcForm: TEditCcForm
   object GroupBox2: TGroupBox
     Left = 8
     Top = 96
-    Width = 425
-    Height = 259
+    Width = 424
+    Height = 240
     Anchors = [akLeft, akTop, akRight, akBottom]
     Caption = #1050#1086#1085#1090#1072#1082#1090
     TabOrder = 3
     DesignSize = (
-      425
-      259)
+      424
+      240)
     object Label24: TLabel
       Left = 16
       Top = 32
@@ -105,7 +106,7 @@ object EditCcForm: TEditCcForm
     end
     object Label26: TLabel
       Left = 16
-      Top = 168
+      Top = 128
       Width = 70
       Height = 13
       Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
@@ -119,14 +120,13 @@ object EditCcForm: TEditCcForm
     end
     object Label28: TLabel
       Left = 16
-      Top = 128
+      Top = 104
       Width = 130
       Height = 13
       Caption = #1048#1089#1087#1086#1083#1085#1080#1090#1077#1083#1100' ('#1050#1086#1085#1090#1088#1086#1083#1077#1088')'
-      Visible = False
     end
     object LockCcDttmButton: TSpeedButton
-      Left = 386
+      Left = 385
       Top = 24
       Width = 23
       Height = 22
@@ -135,7 +135,7 @@ object EditCcForm: TEditCcForm
       GroupIndex = 101
     end
     object LockCcTypeCdButton: TSpeedButton
-      Left = 386
+      Left = 385
       Top = 48
       Width = 23
       Height = 22
@@ -144,7 +144,7 @@ object EditCcForm: TEditCcForm
       GroupIndex = 102
     end
     object LockCcStatusFlgButton: TSpeedButton
-      Left = 386
+      Left = 385
       Top = 72
       Width = 23
       Height = 22
@@ -153,7 +153,7 @@ object EditCcForm: TEditCcForm
       GroupIndex = 103
     end
     object LockCallerButton: TSpeedButton
-      Left = 386
+      Left = 385
       Top = 96
       Width = 23
       Height = 22
@@ -162,8 +162,8 @@ object EditCcForm: TEditCcForm
       GroupIndex = 104
     end
     object LockDescrButton: TSpeedButton
-      Left = 386
-      Top = 160
+      Left = 385
+      Top = 120
       Width = 23
       Height = 22
       AllowAllUp = True
@@ -172,9 +172,9 @@ object EditCcForm: TEditCcForm
     end
     object DescrEdit: TRichEdit
       Left = 16
-      Top = 184
-      Width = 393
-      Height = 41
+      Top = 144
+      Width = 392
+      Height = 81
       Anchors = [akLeft, akTop, akRight]
       PlainText = True
       TabOrder = 0
@@ -182,7 +182,7 @@ object EditCcForm: TEditCcForm
     object CcDttmDateTimePicker: TDateTimePicker
       Left = 192
       Top = 24
-      Width = 193
+      Width = 192
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       CalAlignment = dtaLeft
@@ -197,7 +197,7 @@ object EditCcForm: TEditCcForm
     object CallerEdit: TEdit
       Left = 192
       Top = 96
-      Width = 193
+      Width = 192
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 2
@@ -205,7 +205,7 @@ object EditCcForm: TEditCcForm
     object CcTypeCdComboBox: TDBLookupComboBox
       Left = 192
       Top = 48
-      Width = 193
+      Width = 192
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       DropDownRows = 8
@@ -217,7 +217,7 @@ object EditCcForm: TEditCcForm
     object CcStatusFlgComboBox: TDBLookupComboBox
       Left = 192
       Top = 72
-      Width = 193
+      Width = 192
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       DropDownRows = 10
@@ -226,27 +226,13 @@ object EditCcForm: TEditCcForm
       ListSource = MainDataModule.getCcStatusFlgListDataSource
       TabOrder = 4
     end
-    object DBLookupComboBox1: TDBLookupComboBox
-      Left = 192
-      Top = 120
-      Width = 193
-      Height = 21
-      Anchors = [akLeft, akTop, akRight]
-      DropDownRows = 10
-      KeyField = 'OP_AREA_CD'
-      ListField = 'OP_AREA_CD;OP_AREA_DESCR'
-      ListFieldIndex = 1
-      ListSource = MainDataModule.OraDataSourceTEST
-      TabOrder = 5
-      Visible = False
-    end
   end
   object DeleteCcButton: TButton
     Left = 8
-    Top = 360
+    Top = 347
     Width = 75
     Height = 25
-    Anchors = [akRight, akBottom]
+    Anchors = [akRight]
     Caption = #1059#1076#1072#1083#1080#1090#1100
     TabOrder = 4
     OnClick = DeleteCcButtonClick

@@ -1,8 +1,8 @@
 object MainDataModule: TMainDataModule
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Left = 582
-  Top = 292
+  Left = 414
+  Top = 227
   Height = 908
   Width = 1549
   object EsaleSession: TOraSession
@@ -98,207 +98,6 @@ object MainDataModule: TMainDataModule
     DataSet = getFaPackListNoticesProc
     Left = 984
     Top = 8
-  end
-  object getOtdelenList_old: TOraQuery
-    Session = EsaleSession
-    SQL.Strings = (
-      'select null value'
-      '  , '#39#1042#1089#1077#39' descr '
-      'from dual'
-      'union all'
-      'select to_char(uch) value --otdeln_id'
-      '   , fname  --otdelen_descr '
-      'from nasel_uch')
-    MasterSource = getPreDebtorListDataSource
-    Left = 1432
-    Top = 672
-  end
-  object OraQuery2: TOraQuery
-    Session = EsaleSession
-    SQL.Strings = (
-      'select'
-      '  rownum  '
-      '  , acct_id  '
-      '  , fio   '
-      '  , city'
-      '  , address '
-      '  , saldo_uch '
-      '  , saldo_m3 '
-      '  , cc_dttm  '
-      '  , fa_id'
-      '  , fa_pack_id'
-      '  , cre_dttm '
-      '  , acct_otdelen'
-      '  , service_org'
-      ''
-      'from ('
-      '  select'
-      '    nasel_ccb_prem.acct_id  '
-      '    , nasel_ccb_prem.acct_otdelen'
-      '    , nasel_ccb_prem.fio   '
-      '    , nasel_ccb_prem.city'
-      '    , nasel_ccb_prem.address'
-      
-        '    , nvl(nasel_ccb_ft.saldo_bt_uch, 0) + nvl(nasel_ccb_ft.saldo' +
-        '_odn_uch, 0) + nvl(nasel_ccb_ft.saldo_act_uch, 0) saldo_uch'
-      
-        '    , nvl(nasel_ccb_ft_hist.saldo_bt_uch, 0) + nvl(nasel_ccb_ft_' +
-        'hist.saldo_odn_uch, 0) + nvl(nasel_ccb_ft_hist.saldo_act_uch, 0)' +
-        ' saldo_m3'
-      '    --, nasel_ccb_ft_hist.saldo_odn_uch'
-      '    , case '
-      
-        '       --when nasel_ccb_sp.sa_nal_enu = '#39'1'#39' then m_ust_en * 24 *' +
-        ' 30  '
-      
-        '        when /*nasel_ccb_sp.sa_nal_enu = '#39'0'#39' and*/ nasel_ccb_pre' +
-        'm.square < 100 and nasel_ccb_prem.kol_prop <= 1 then decode(nase' +
-        'l_ccb_sp.sa_tip_papr, 1, 180, 100) '
-      
-        '        when /*nasel_ccb_sp.sa_nal_enu = '#39'0'#39' and*/ nasel_ccb_pre' +
-        'm.square < 100 and nasel_ccb_prem.kol_prop > 1 then nasel_ccb_pr' +
-        'em.kol_prop * decode(nasel_ccb_sp.sa_tip_papr, 1, 130, 90)  '
-      
-        '        when /*nasel_ccb_sp.sa_nal_enu = '#39'0'#39' and*/ nasel_ccb_pre' +
-        'm.prem_type_cd in ('#39'CD'#39', '#39'DCA'#39') and nasel_ccb_prem.square betwee' +
-        'n 100 and 200 and nasel_ccb_prem.kol_prop <= 1 then decode(nasel' +
-        '_ccb_sp.sa_tip_papr, 1, 300, 220) '
-      
-        '        when /*nasel_ccb_sp.sa_nal_enu = '#39'0'#39' and*/ nasel_ccb_pre' +
-        'm.prem_type_cd in ('#39'CD'#39', '#39'DCA'#39') and nasel_ccb_prem.square betwee' +
-        'n 100 and 200 and nasel_ccb_prem.kol_prop > 1 then nasel_ccb_pre' +
-        'm.kol_prop * decode(nasel_ccb_sp.sa_tip_papr, 1, 240, 200)  '
-      
-        '        when /*nasel_ccb_sp.sa_nal_enu = '#39'0'#39' and*/ nasel_ccb_pre' +
-        'm.prem_type_cd in ('#39'CD'#39', '#39'DCA'#39') and nasel_ccb_prem.square > 200 ' +
-        'and nasel_ccb_prem.kol_prop <= 1 then decode(nasel_ccb_sp.sa_tip' +
-        '_papr, 1, 350, 270) '
-      
-        '        when /*nasel_ccb_sp.sa_nal_enu = '#39'0'#39' and*/ nasel_ccb_pre' +
-        'm.prem_type_cd in ('#39'CD'#39', '#39'DCA'#39') and nasel_ccb_prem.square > 200 ' +
-        'and nasel_ccb_prem.kol_prop > 1 then nasel_ccb_prem.kol_prop * d' +
-        'ecode(nasel_ccb_sp.sa_tip_papr, 1, 280, 240)  '
-      '      end normativ '
-      '      '
-      '    , last_fa.cc_dttm'
-      '    , last_fa.fa_id'
-      '    , last_fa.fa_pack_id'
-      '    , nasel_fa_pack.cre_dttm '
-      '    , nasel_ccb_spr.descr service_org'
-      '  from nasel_ccb_prem'
-      ''
-      
-        '  inner join nasel_ccb_sp on nasel_ccb_sp.acct_id = nasel_ccb_pr' +
-        'em.acct_id and nasel_ccb_sp.sa_status_flg in ('#39'20'#39')'
-      
-        '  left join nasel_ccb_ft on nasel_ccb_ft.acct_id = nasel_ccb_pre' +
-        'm.acct_id --and nasel_ccb_ft_hist.calc_dt = trunc(add_months(sys' +
-        'date,-1), '#39'mm'#39')'
-      
-        '  left join nasel_ccb_ft_hist on nasel_ccb_ft_hist.acct_id = nas' +
-        'el_ccb_prem.acct_id and nasel_ccb_ft_hist.calc_dt = trunc(add_mo' +
-        'nths(sysdate,-2), '#39'mm'#39')'
-      '    '
-      '  left join ('
-      '    select '
-      '      nasel_fa.acct_id  '
-      '      , nasel_fa.cc_dttm'
-      '      , nasel_fa.fa_id'
-      '      , nasel_fa.fa_pack_id'
-      
-        '      , row_number() over (partition by nasel_fa.acct_id order b' +
-        'y nasel_fa.cc_dttm) n'
-      '    from nasel_fa        '
-      ''
-      
-        '  ) last_fa on last_fa.acct_id = nasel_ccb_prem.acct_id and last' +
-        '_fa.n = 1'
-      
-        '  left join nasel_fa_pack on nasel_fa_pack.fa_pack_id = last_fa.' +
-        'fa_pack_id'
-      ''
-      '  left join ('
-      '    select nasel_ccb_sa_rel.acct_id'
-      '      , nasel_ccb_sa_rel.spr_cd'
-      
-        '      , row_number() over (partition by  nasel_ccb_sa_rel.acct_i' +
-        'd order by nasel_ccb_sa_rel.sa_rel_type_cd desc) n'
-      '    from nasel_ccb_sa_rel '
-      '    --where acct_id in ('#39'0129250000'#39')'
-      
-        '  ) sa_rel on sa_rel.acct_id = nasel_ccb_prem.acct_id and sa_rel' +
-        '.n = 1'
-      
-        '  left join nasel_ccb_spr on nasel_ccb_spr.spr_cd = sa_rel.spr_c' +
-        'd'
-      ''
-      ') where saldo_uch > normativ * 2 and saldo_m3 > normativ * 2'
-      '    and (:otdelen is null or acct_otdelen = :otdelen)'
-      
-        '    --and acct_id in ('#39'0000070000'#39','#39'5030270000'#39','#39'2301960000'#39','#39'04' +
-        '82721000'#39')'
-      
-        '    and acct_id in ('#39'7474750000'#39','#39'7204750000'#39','#39'4006750000'#39','#39'6333' +
-        '850000'#39','#39'1390950000'#39')')
-    FetchAll = True
-    FilterOptions = [foCaseInsensitive]
-    Left = 1400
-    Top = 560
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'otdelen'
-      end>
-    object OraQuery2ROWNUM: TFloatField
-      FieldName = 'ROWNUM'
-    end
-    object OraQuery2ACCT_ID: TStringField
-      FieldName = 'ACCT_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object OraQuery2FIO: TStringField
-      FieldName = 'FIO'
-      Size = 254
-    end
-    object OraQuery2CITY: TStringField
-      FieldName = 'CITY'
-      Size = 60
-    end
-    object OraQuery2ADDRESS: TStringField
-      FieldName = 'ADDRESS'
-      Size = 254
-    end
-    object OraQuery2SALDO_UCH: TFloatField
-      FieldName = 'SALDO_UCH'
-    end
-    object OraQuery2SALDO_M3: TFloatField
-      FieldName = 'SALDO_M3'
-    end
-    object OraQuery2CC_DTTM: TDateTimeField
-      FieldName = 'CC_DTTM'
-    end
-    object OraQuery2FA_ID: TStringField
-      FieldName = 'FA_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object OraQuery2FA_PACK_ID: TStringField
-      FieldName = 'FA_PACK_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object OraQuery2CRE_DTTM: TDateTimeField
-      FieldName = 'CRE_DTTM'
-    end
-    object OraQuery2ACCT_OTDELEN: TStringField
-      FieldName = 'ACCT_OTDELEN'
-      Size = 6
-    end
-    object OraQuery2SERVICE_ORG: TStringField
-      FieldName = 'SERVICE_ORG'
-      Size = 50
-    end
   end
   object getFaPackDataSource: TOraDataSource
     DataSet = getFaPackNoticesProc
@@ -512,332 +311,9 @@ object MainDataModule: TMainDataModule
     Top = 392
   end
   object getOtdelenListDataSource: TOraDataSource
-    DataSet = getOtdelenListQuery
+    DataSet = getOtdelenListProc
     Left = 128
     Top = 224
-  end
-  object OraQuery3_old: TOraQuery
-    Session = EsaleSession
-    SQL.Strings = (
-      'select r.* '
-      '  --, '#39'/**:reg_dt**/'#39' reg_dt'
-      '  --, substr(ccb_acct_char_val,4,2) file_infix'
-      
-        '  --, '#39#1055#1086' '#1089#1086#1089#1090#1086#1103#1085#1080#1102' '#1085#1072': '#39' || to_char(sysdate,'#39'dd.mm.yyyy hh24.mi' +
-        '.ss'#39') param_rep_dttm'
-      '  --, '#39#1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1087#1080#1089#1077#1084': '#39' || '#39'/**:reg_dt**/'#39' reg_dt_param'
-      
-        '  --, '#39#1059#1095#1072#1089#1090#1086#1082': '#39' || nvl2('#39'/**:uchastok**/'#39', FRAION1,'#39#1042#1089#1077' '#1091#1095#1072#1089#1090#1082 +
-        #1080#39') filial_userparam'
-      '  --, '#39#1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090':/** :city**/'#39' city_userparam'
-      '  --, '#39#1059#1083#1080#1094#1072':/** :street**/'#39' street_userparam'
-      '  --, '#39#1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' '#1086#1090':/** :min_dolg**/'#39' min_dolg_userparam'
-      'from ( '
-      '  select'
-      '    trim(fname) || '#39' '#1091#1095#1072#1089#1090#1086#1082#39' AS FRAION'
-      
-        '    , substr( trim(FNAME), 1, length(trim(FNAME))-2 ) || '#39#1086#1075#1086' '#1091#1095 +
-        #1072#1089#1090#1082#1072#39'  post'
-      '    , NACHALNIK'
-      '    , address '
-      '    , PHONE'
-      '    , ADR1'
-      '    , PRIEM1'
-      '    , ADR2'
-      '    , PRIEM2'
-      '    , phone2 '
-      '    , ADR1 || '#39'. '#1063#1072#1089#1099' '#1087#1088#1080#1077#1084#1072': '#39'||PRIEM1 || '#39', '#1090#1077#1083'.: '#39' || PHONE'
-      
-        '      || decode(priem2, null, '#39#39', '#39'; '#39'|| ADR2 || '#39'. '#1063#1072#1089#1099' '#1087#1088#1080#1077#1084#1072':' +
-        ' '#39'|| PRIEM2 || '#39', '#1090#1077#1083'.: '#39' || phone2) uch_address'
-      '    , '#39'report\visa\'#39'|| nachalnik || '#39'.png'#39' visa'
-      '    --, /**'#39':reg_dt'#39'**/ reg_dt'
-      '   '
-      '    , raion.id'
-      
-        '    , substr(replace(raion.ccb_acct_char_val,'#39'.*'#39','#39#39'),(l-1)*6+1,' +
-        '5) ccb_acct_otdelen'
-      '  from raion'
-      '  left join ('
-      '    select level l from dual'
-      '    connect by level <= 2  '
-      '  ) dt on null is null'
-      '  --where raion.ssp_dolg is not null'
-      ') r where r.ccb_acct_otdelen is not null'
-      
-        ' -- and ccb_acct_char_val like '#39'%02-'#39' || '#39'/**:uchastok**/'#39' || '#39'%' +
-        #39
-      'order by r.ccb_acct_otdelen')
-    FetchAll = True
-    Filtered = True
-    FilterOptions = [foCaseInsensitive]
-    Left = 1424
-    Top = 616
-    object FloatField4: TFloatField
-      FieldName = 'ROWNUM'
-    end
-    object StringField5: TStringField
-      FieldName = 'ACCT_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object StringField6: TStringField
-      FieldName = 'FIO'
-      Size = 254
-    end
-    object StringField7: TStringField
-      FieldName = 'CITY'
-      Size = 60
-    end
-    object StringField8: TStringField
-      FieldName = 'ADDRESS'
-      Size = 254
-    end
-    object FloatField5: TFloatField
-      FieldName = 'SALDO_UCH'
-    end
-    object FloatField6: TFloatField
-      FieldName = 'SALDO_M3'
-    end
-    object DateTimeField2: TDateTimeField
-      FieldName = 'CC_DTTM'
-    end
-    object StringField9: TStringField
-      FieldName = 'FA_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object StringField10: TStringField
-      FieldName = 'FA_PACK_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object DateTimeField3: TDateTimeField
-      FieldName = 'CRE_DTTM'
-    end
-    object StringField11: TStringField
-      FieldName = 'ACCT_OTDELEN'
-      Size = 6
-    end
-    object StringField12: TStringField
-      FieldName = 'SERVICE_ORG'
-      Size = 50
-    end
-    object FloatField7: TFloatField
-      FieldName = 'CHECK_DATA'
-    end
-  end
-  object getOtdelenListQuery: TOraQuery
-    KeyFields = 'ACCT_OTDELEN'
-    Session = EsaleSession
-    SQL.Strings = (
-      '-- '#1054#1073#1097#1072#1103' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1091#1095#1072#1089#1090#1082#1072#1084
-      ''
-      'select nasel_uch.fname otdelen_descr '
-      '  , nasel_uch.acct_otdelen'
-      '  , raion.address'
-      '  , raion.nachalnik'
-      '  , raion.phone'
-      '  , raion.ccb_acct_char_val'
-      '  , :app_path || '#39'report\visa\'#39'|| raion.nachalnik || '#39'.png'#39' visa'
-      
-        '  , substr(trim(raion.FNAME),1,length(trim(raion.FNAME))-2) || '#39 +
-        #1086#1075#1086' '#1091#1095#1072#1089#1090#1082#1072#39'  post'
-      '  , nasel_uch.descr_l '
-      ' '
-      'from acc_grp_dar'
-      
-        'inner join spr_users on spr_users.access_grp_cd = acc_grp_dar.ac' +
-        'cess_grp_cd'
-      'inner join nasel_uch on nasel_uch.dar_cd = acc_grp_dar.dar_cd'
-      ''
-      'inner join raion on raion.id = nasel_uch.id_rn'
-      '--where name_u = '#39'U062000'#39
-      'where name_u = sys_context('#39'USERENV'#39','#39'SESSION_USER'#39')')
-    FetchAll = True
-    Filtered = True
-    FilterOptions = [foCaseInsensitive]
-    Left = 1408
-    Top = 496
-    ParamData = <
-      item
-        DataType = ftString
-        Name = 'app_path'
-      end>
-    object getOtdelenListQueryOTDELEN_DESCR: TStringField
-      FieldName = 'OTDELEN_DESCR'
-      Size = 25
-    end
-    object getOtdelenListQueryACCT_OTDELEN: TStringField
-      FieldName = 'ACCT_OTDELEN'
-      FixedChar = True
-      Size = 7
-    end
-    object getOtdelenListQueryADDRESS: TStringField
-      FieldName = 'ADDRESS'
-      Size = 100
-    end
-    object getOtdelenListQueryNACHALNIK: TStringField
-      FieldName = 'NACHALNIK'
-      Size = 30
-    end
-    object getOtdelenListQueryPHONE: TStringField
-      FieldName = 'PHONE'
-      Size = 50
-    end
-    object getOtdelenListQueryCCB_ACCT_CHAR_VAL: TStringField
-      FieldName = 'CCB_ACCT_CHAR_VAL'
-      Size = 30
-    end
-    object getOtdelenListQueryVISA: TStringField
-      FieldName = 'VISA'
-      Size = 2046
-    end
-    object getOtdelenListQueryPOST: TStringField
-      FieldName = 'POST'
-      Size = 36
-    end
-    object getOtdelenListQueryDESCR_L: TStringField
-      FieldName = 'DESCR_L'
-      Size = 25
-    end
-  end
-  object getApprovalListQuery_old: TOraQuery
-    Session = EsaleSession
-    SQL.Strings = (
-      'select'
-      '  rownum'
-      '  , 0 CHECK_DATA'
-      '  , t.*'
-      'from ('
-      'select '
-      '  --row_number() over() rownum'
-      '  nasel_fa.fa_id'
-      '  , nasel_fa.acct_id'
-      '  , cc.cc_id'
-      '  , cc.cc_dttm   '
-      '  , cc.src_type_cd'
-      '  , cc.approval_dttm'
-      '  , nasel_ccb_prem.address'
-      '  , nasel_ccb_prem.city'
-      '  , nasel_ccb_prem.fio '
-      '  , nasel_ccb_ft.saldo_bt_uch saldo'
-      ''
-      '  , nasel_ccb_spr.descr service_org'
-      '  '
-      '   '
-      'from nasel_fa_pack'
-      
-        'inner join nasel_fa on nasel_fa.fa_pack_id = nasel_fa_pack.fa_pa' +
-        'ck_id'
-      
-        'inner join nasel_ccb_prem on nasel_ccb_prem.acct_id = nasel_fa.a' +
-        'cct_id'
-      
-        'inner join nasel_ccb_ft on nasel_ccb_ft.acct_id = nasel_fa.acct_' +
-        'id'
-      'left join ('
-      '  select nasel_ccb_sa_rel.acct_id'
-      '    , nasel_ccb_sa_rel.spr_cd'
-      
-        '    , row_number() over (partition by  nasel_ccb_sa_rel.acct_id ' +
-        'order by nasel_ccb_sa_rel.sa_rel_type_cd desc) n'
-      '  from nasel_ccb_sa_rel '
-      '  --where acct_id in ('#39'0129250000'#39')'
-      
-        ') sa_rel on sa_rel.acct_id = nasel_ccb_prem.acct_id and sa_rel.n' +
-        ' = 1'
-      'left join nasel_ccb_spr on nasel_ccb_spr.spr_cd = sa_rel.spr_cd'
-      ''
-      'left join ('
-      '  select '
-      '    nasel_cc.src_id'
-      '    , nasel_cc.cc_id'
-      '    , nasel_cc.cc_dttm'
-      '    , nasel_cc.descr'
-      '    , nasel_cc.src_type_cd '
-      '    , nasel_cc.approval_dttm'
-      
-        '    , row_number() over (partition by nasel_cc.src_id, nasel_cc.' +
-        'src_type_cd  order by nasel_cc.cc_dttm desc) n'
-      '  from nasel_cc    '
-      '  where nasel_cc.src_type_cd = '#39'10'#39
-      ') cc on cc.src_id = nasel_fa.fa_id and cc.n = 1'
-      ''
-      
-        'where nasel_fa_pack.cre_dttm > add_months(sysdate,-12) -- '#1087#1086#1083#1100#1079#1086 +
-        #1074#1072#1090#1077#1083#1102' '#1076#1086#1089#1090#1091#1087#1085#1099' '#1076#1083#1103' '#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1072#1085#1085#1099#1077' '#1079#1072' 1 '#1075#1086#1076
-      '  and nasel_fa_pack.acct_otdelen = :acct_otdelen'
-      ''
-      'order by nasel_ccb_prem.address'
-      ') t')
-    FetchAll = True
-    Filtered = True
-    FilterOptions = [foCaseInsensitive]
-    Left = 1432
-    Top = 728
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'acct_otdelen'
-      end>
-    object FloatField8: TFloatField
-      FieldName = 'ROWNUM'
-      ReadOnly = True
-    end
-    object FloatField9: TFloatField
-      FieldName = 'CHECK_DATA'
-    end
-    object StringField13: TStringField
-      FieldName = 'FA_ID'
-      ReadOnly = True
-      FixedChar = True
-      Size = 10
-    end
-    object StringField14: TStringField
-      FieldName = 'ACCT_ID'
-      ReadOnly = True
-      FixedChar = True
-      Size = 10
-    end
-    object StringField15: TStringField
-      FieldName = 'ADDRESS'
-      ReadOnly = True
-      Size = 254
-    end
-    object StringField16: TStringField
-      FieldName = 'FIO'
-      ReadOnly = True
-      Size = 254
-    end
-    object FloatField10: TFloatField
-      FieldName = 'SALDO'
-      ReadOnly = True
-    end
-    object DateTimeField4: TDateTimeField
-      FieldName = 'CC_DTTM'
-    end
-    object StringField17: TStringField
-      FieldName = 'CC_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object StringField18: TStringField
-      FieldName = 'SRC_TYPE_CD'
-      FixedChar = True
-      Size = 10
-    end
-    object DateTimeField5: TDateTimeField
-      FieldName = 'APPROVAL_DTTM'
-    end
-    object StringField19: TStringField
-      FieldName = 'CITY'
-      Size = 60
-    end
-    object StringField20: TStringField
-      FieldName = 'SERVICE_ORG'
-      Size = 50
-    end
   end
   object getConfigQuery: TOraQuery
     KeyFields = 'ACCT_OTDELEN'
@@ -919,146 +395,6 @@ object MainDataModule: TMainDataModule
       Size = 2000
     end
   end
-  object OraQuery33333333333333: TOraQuery
-    Session = EsaleSession
-    SQL.Strings = (
-      '-- '#1059#1089#1083#1086#1074#1080#1103
-      '-- '#1085#1077' '#1087#1086#1079#1076#1085#1077#1077' 10 '#1076#1086' '#1076#1072#1090#1099' '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
-      '-- '#1079#1072#1103#1074#1082#1080' '#1092#1086#1088#1084#1080#1088#1091#1102#1090#1089#1103' '#1076#1083#1103' '#1089#1077#1090#1077#1074#1099#1093' '#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' prem_type_cd = '#39'CD'#39
-      '-- '#1076#1083#1103' '#1076#1088#1091#1075#1080#1093' prem_type_cd '#1079#1072#1103#1074#1082#1080' '#1092#1086#1088#1084#1080#1088#1091#1102#1090#1089#1103' '#1076#1083#1103' '#1091#1095#1072#1089#1090#1082#1072
-      ''
-      'select '
-      '  rownum   '
-      '      '
-      '  , nasel_ccb_prem.prem_type_cd '
-      '  , dense_rank () over (order by nasel_ccb_spr.descr) '
-      '  , case when nasel_ccb_prem.prem_type_cd in ('#39'CD'#39') then'
-      '      dense_rank () over (order by nasel_ccb_spr.descr)'
-      '    else'
-      '      0'
-      '    end grp_code'
-      '  --, count(*) over (partition by nasel_ccb_spr.descr) grp_count'
-      ''
-      ''
-      '  , 0 CHECK_DATA  '
-      '  , nasel_cc.acct_id'
-      '  , nasel_cc.approval_dttm'
-      '  , nasel_cc.cc_dttm'
-      '  , nasel_ccb_prem.fio '
-      '  , nasel_ccb_prem.postal '
-      '  , nasel_ccb_prem.city '
-      '  , nasel_ccb_prem.address     '
-      '  , trim(nasel_ccb_prem.acct_otdelen) acct_otdelen'
-      '  , nasel_ccb_ft.saldo_bt_uch saldo_uch'
-      '  , nasel_ccb_spr.descr '
-      '  '
-      '  '
-      'from nasel_ccb_prem'
-      
-        'inner join nasel_cc on nasel_cc.acct_id = nasel_ccb_prem.acct_id' +
-        ' and '
-      
-        '  nasel_cc.approval_dttm is not null and sysdate between nasel_c' +
-        'c.cc_dttm and nasel_cc.cc_dttm + 20 '
-      
-        'inner join nasel_ccb_ft on nasel_ccb_ft.acct_id = nasel_ccb_prem' +
-        '.acct_id'
-      '  and nasel_ccb_ft.saldo_bt_uch > 500  '
-      '  '
-      '  '
-      'left join ('
-      '  select nasel_ccb_sa_rel.acct_id'
-      '    , nasel_ccb_sa_rel.spr_cd'
-      
-        '    , row_number() over (partition by  nasel_ccb_sa_rel.acct_id ' +
-        'order by nasel_ccb_sa_rel.sa_rel_type_cd desc) n'
-      '  from nasel_ccb_sa_rel '
-      '  --where acct_id in ('#39'0129250000'#39')'
-      
-        ') sa_rel on sa_rel.acct_id = nasel_ccb_prem.acct_id and sa_rel.n' +
-        ' = 1'
-      
-        'left join nasel_ccb_spr on nasel_ccb_spr.spr_cd = sa_rel.spr_cd ' +
-        ' '
-      '  '
-      '  '
-      'where nasel_ccb_prem.acct_otdelen = :acct_otdelen'
-      '  -- and saldo_uch > normativ * 2 and saldo_m3 > normativ * 2'
-      '  -- nasel_ccb_prem.acct_otdelen = 62   '
-      
-        '  --(:otdelen is null or nasel_ccb_prem.acct_otdelen = :acct_otd' +
-        'elen)'
-      
-        '  --and nasel_ccb_prem.acct_id in ('#39'1426650000'#39','#39'5426650000'#39','#39'55' +
-        '26650000'#39','#39'7526650000'#39','#39'9926650000'#39', '#39'0000070000'#39')')
-    FetchAll = True
-    Filtered = True
-    FilterOptions = [foCaseInsensitive]
-    Left = 1408
-    Top = 464
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'acct_otdelen'
-      end>
-    object FloatField3: TFloatField
-      FieldName = 'ROWNUM'
-    end
-    object StringField27: TStringField
-      FieldName = 'ACCT_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object StringField28: TStringField
-      FieldName = 'FIO'
-      Size = 254
-    end
-    object StringField29: TStringField
-      FieldName = 'CITY'
-      Size = 60
-    end
-    object StringField30: TStringField
-      FieldName = 'ADDRESS'
-      Size = 254
-    end
-    object FloatField11: TFloatField
-      FieldName = 'SALDO_UCH'
-    end
-    object FloatField12: TFloatField
-      FieldName = 'SALDO_M3'
-    end
-    object DateTimeField6: TDateTimeField
-      FieldName = 'CC_DTTM'
-    end
-    object StringField31: TStringField
-      FieldName = 'FA_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object StringField32: TStringField
-      FieldName = 'FA_PACK_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object DateTimeField7: TDateTimeField
-      FieldName = 'CRE_DTTM'
-    end
-    object StringField33: TStringField
-      FieldName = 'ACCT_OTDELEN'
-      Size = 6
-    end
-    object StringField34: TStringField
-      FieldName = 'SERVICE_ORG'
-      Size = 50
-    end
-    object FloatField13: TFloatField
-      FieldName = 'CHECK_DATA'
-    end
-    object StringField35: TStringField
-      FieldName = 'OP_AREA_DESCR'
-      Size = 60
-    end
-  end
   object getFaPackStopDataSource: TOraDataSource
     DataSet = getFaPackStopProc
     Left = 488
@@ -1129,28 +465,6 @@ object MainDataModule: TMainDataModule
     DataSet = getPackListStopRam
     Left = 608
     Top = 392
-  end
-  object AddFaToPackStopProc_old: TOraStoredProc
-    StoredProcName = 'PK_NASEL_OTDEL.ADD_FA_TO_PACK_STOP'
-    Session = EsaleSession
-    SQL.Strings = (
-      'begin'
-      '  PK_NASEL_OTDEL.ADD_FA_TO_PACK_STOP(:P_ACCT_ID, :P_FA_PACK_ID);'
-      'end;')
-    Left = 1344
-    Top = 632
-    ParamData = <
-      item
-        DataType = ftFixedChar
-        Name = 'P_ACCT_ID'
-        ParamType = ptInput
-      end
-      item
-        DataType = ftFixedChar
-        Name = 'P_FA_PACK_ID'
-        ParamType = ptInput
-      end>
-    CommandStoredProcName = 'PK_NASEL_OTDEL.ADD_FA_TO_PACK_STOP'
   end
   object getPreDebtorListRam: TVirtualTable
     Filtered = True
@@ -1244,260 +558,17 @@ object MainDataModule: TMainDataModule
       end>
     CommandStoredProcName = 'PK_NASEL_SWEETY.SET_FP_STATUS_FLG_FROZEN'
   end
-  object getFullListQuery: TOraQuery
-    Session = EsaleSession
-    SQL.Strings = (
-      '-- '#1042#1089#1077' '#1072#1073#1086#1085#1077#1085#1090#1099
-      '-- 2017-02-16'
-      '-- '#1072#1074#1090#1086#1088': '#1042#1057#1054#1074#1095#1080#1085#1085#1080#1082#1086#1074
-      '--'
-      '-- '#1059#1089#1083#1086#1074#1080#1103
-      '-- 1. '#1058#1086#1095#1082#1072' '#1091#1095#1077#1090#1072' '#1074' '#1089#1090#1072#1090#1091#1089#1077' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1072' (20)'
-      '-- 2. saldo_uch > normativ * 2 and saldo_m3 > normativ * 2'
-      
-        '-- 3. '#1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1091#1090#1074#1077#1088#1078#1076#1077#1085#1085#1086#1075#1086' '#1082#1086#1085#1090#1072#1082#1090#1072' '#1073#1086#1083#1077#1077' 6 '#1084#1077#1089#1103#1094#1077#1074' '#1080#1083#1080 +
-        ' '#1087#1091#1089#1090#1072#1103
-      '-- 4. '#1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103' '#1073#1086#1083#1077#1077' 2 '#1084#1077#1089#1103#1094#1077#1074' '#1080#1083#1080' '#1087#1091#1089#1090#1072#1103
-      ''
-      'select'
-      '  rownum '
-      '  , 0 CHECK_DATA '
-      '  , acct_id  '
-      '  , initcap(fio) fio   '
-      '  , city'
-      '  , address '
-      '  , prem_type_descr'
-      ''
-      '  , saldo_uch '
-      '  , saldo_m3 '
-      '  , cc_dttm  '
-      '  , fa_id'
-      '  , fa_pack_id'
-      '  , cre_dttm '
-      '  , acct_otdelen'
-      '  , service_org'
-      ''
-      '  , op_area_descr '
-      ''
-      
-        '  , case when saldo_uch - bill_otch > norm_amt * 2 * fl_tar11 an' +
-        'd saldo_m3 > norm_amt * 2 * fl_tar11 and saldo_uch > norm_amt * ' +
-        '2 * fl_tar11 '
-      
-        '        and (cc_dttm is null or months_between(cc_dttm, sysdate)' +
-        ' > 6) '
-      
-        '        and (cre_dttm is null or months_between(cre_dttm, sysdat' +
-        'e) > 2)'
-      '    then 1 else 0 end debtor_flg'
-      ''
-      '   '
-      'from ('
-      'select'
-      '  *'
-      'from ('
-      '  select'
-      '    nasel_ccb_prem.acct_id  '
-      '    , nasel_ccb_prem.acct_otdelen'
-      '    , nasel_ccb_prem.fio   '
-      '    , nasel_ccb_prem.city'
-      '    , nasel_ccb_prem.address'
-      
-        '    , (select descr from nasel_lookup_val where field_name = '#39'PR' +
-        'EM_TYPE_CD'#39' and field_value = nasel_ccb_prem.prem_type_cd) prem_' +
-        'type_descr'
-      '    '
-      
-        '    , nvl(nasel_ccb_ft.bill_bt_otch,0) + nvl(nasel_ccb_ft.bill_o' +
-        'dn_otch,0) bill_otch'
-      
-        '    , nvl(nasel_ccb_ft.saldo_bt_uch, 0) + nvl(nasel_ccb_ft.saldo' +
-        '_odn_uch, 0) + nvl(nasel_ccb_ft.saldo_act_uch, 0) saldo_uch'
-      
-        '    , nvl(nasel_ccb_ft_hist.saldo_bt_uch, 0) + nvl(nasel_ccb_ft_' +
-        'hist.saldo_odn_uch, 0) + nvl(nasel_ccb_ft_hist.saldo_act_uch, 0)' +
-        ' saldo_m3'
-      '    --, nasel_ccb_ft_hist.saldo_odn_uch'
-      '      '
-      '    , last_cc.cc_dttm'
-      '    , last_cc.cc_id'
-      '    , last_fa.fa_id'
-      '    , last_fa.fa_pack_id'
-      '    , last_fa.cre_dttm '
-      '    , nasel_ccb_spr.descr service_org'
-      '    , nasel_ccb_sp.op_area_descr'
-      '    , nasel_ccb_sp.fl_tar11'
-      '    , nasel_calc.norm_amt'
-      '  '
-      ''
-      '  from nasel_ccb_prem'
-      ''
-      
-        '  inner join nasel_ccb_sp on nasel_ccb_sp.acct_id = nasel_ccb_pr' +
-        'em.acct_id and nasel_ccb_sp.sa_status_flg in ('#39'20'#39')'
-      
-        '  left join nasel_ccb_ft on nasel_ccb_ft.acct_id = nasel_ccb_pre' +
-        'm.acct_id --and nasel_ccb_ft_hist.calc_dt = trunc(add_months(sys' +
-        'date,-1), '#39'mm'#39')'
-      
-        '  left join nasel_ccb_ft_hist on nasel_ccb_ft_hist.acct_id = nas' +
-        'el_ccb_prem.acct_id and nasel_ccb_ft_hist.uch_begin_dt = trunc(a' +
-        'dd_months((select char_val_dttm from cfg_task where char_type_cd' +
-        ' = '#39'REP_DTTM'#39' and task_name = '#39'P_UPDATE_NASEL_JOB_DAY'#39'),-3), '#39'mm' +
-        #39')'
-      '    '
-      '  left join ('
-      '    select '
-      '      nasel_cc.acct_id  '
-      '      , nasel_cc.cc_dttm '
-      '      , nasel_cc.src_id'
-      '      , nasel_cc.cc_id'
-      
-        '      , row_number() over (partition by nasel_cc.acct_id order b' +
-        'y nasel_cc.cc_dttm desc) n'
-      '    from nasel_cc        '
-      
-        '    where nasel_cc.src_type_cd = '#39'10'#39' and nasel_cc.approval_dttm' +
-        ' is not null  '
-      
-        '  ) last_cc on last_cc.acct_id = nasel_ccb_prem.acct_id and last' +
-        '_cc.n = 1    '
-      '  '
-      '  left join ('
-      '    select'
-      '      nasel_fa.acct_id  '
-      '      , nasel_fa.fa_id'
-      '      , nasel_fa.fa_pack_id     '
-      '      , nasel_fa_pack.cre_dttm'
-      
-        '      , row_number() over (partition by nasel_fa.acct_id order b' +
-        'y nasel_fa_pack.cre_dttm desc nulls last) n'
-      '    from nasel_fa'
-      
-        '    inner join nasel_fa_pack on nasel_fa_pack.fa_pack_id = nasel' +
-        '_fa.fa_pack_id'
-      
-        '  ) last_fa on last_fa.acct_id = nasel_ccb_prem.acct_id and last' +
-        '_fa.n = 1    '
-      '     '
-      '  left join ('
-      '    select nasel_ccb_sa_rel.acct_id'
-      '      , nasel_ccb_sa_rel.spr_cd'
-      
-        '      , row_number() over (partition by  nasel_ccb_sa_rel.acct_i' +
-        'd order by nasel_ccb_sa_rel.sa_rel_type_cd desc) n'
-      '    from nasel_ccb_sa_rel '
-      
-        '  ) sa_rel on sa_rel.acct_id = nasel_ccb_prem.acct_id and sa_rel' +
-        '.n = 1'
-      
-        '  left join nasel_ccb_spr on nasel_ccb_spr.spr_cd = sa_rel.spr_c' +
-        'd'
-      '  '
-      
-        '  left join nasel_calc on nasel_calc.acct_id = nasel_ccb_prem.ac' +
-        'ct_id'
-      ''
-      ''
-      '  where acct_otdelen = :acct_otdelen'
-      
-        '    /*and acct_id in ('#39'4015250000'#39', '#39'4046250000'#39', '#39'6046250000'#39','#39 +
-        '1441170000'#39','#39'0000003304'#39', '#39'7474750000'#39','#39'7204750000'#39','#39'4006750000'#39 +
-        ','#39'6333850000'#39','#39'1390950000'#39', '#39'6326650000'#39', '#39'3043850000'#39', '#39'9226650' +
-        '000'#39', '
-      
-        '      '#39'0408650000'#39', '#39'1608650000'#39', '#39'1783850000'#39' , '#39'4595850000'#39') /' +
-        '**/'
-      '  '
-      ')     '
-      'order by city, address'
-      ')')
-    FetchAll = True
-    Filtered = True
-    FilterOptions = [foCaseInsensitive]
-    Left = 360
-    Top = 64
-    ParamData = <
-      item
-        DataType = ftString
-        Name = 'acct_otdelen'
-      end>
-    object FloatField19: TFloatField
-      FieldName = 'ROWNUM'
-    end
-    object FloatField20: TFloatField
-      FieldName = 'CHECK_DATA'
-    end
-    object StringField50: TStringField
-      FieldName = 'ACCT_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object StringField51: TStringField
-      FieldName = 'FIO'
-      Size = 254
-    end
-    object StringField52: TStringField
-      FieldName = 'CITY'
-      Size = 60
-    end
-    object StringField53: TStringField
-      FieldName = 'ADDRESS'
-      Size = 254
-    end
-    object FloatField21: TFloatField
-      FieldName = 'SALDO_UCH'
-    end
-    object FloatField22: TFloatField
-      FieldName = 'SALDO_M3'
-    end
-    object DateTimeField10: TDateTimeField
-      FieldName = 'CC_DTTM'
-    end
-    object StringField54: TStringField
-      FieldName = 'FA_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object StringField55: TStringField
-      FieldName = 'FA_PACK_ID'
-      FixedChar = True
-      Size = 10
-    end
-    object DateTimeField11: TDateTimeField
-      FieldName = 'CRE_DTTM'
-    end
-    object StringField56: TStringField
-      FieldName = 'ACCT_OTDELEN'
-      Size = 6
-    end
-    object StringField57: TStringField
-      FieldName = 'SERVICE_ORG'
-      Size = 50
-    end
-    object StringField58: TStringField
-      FieldName = 'OP_AREA_DESCR'
-      Size = 60
-    end
-    object StringField59: TStringField
-      FieldName = 'PREM_TYPE_DESCR'
-      Size = 60
-    end
-    object getFullListQueryDEBTOR_FLG: TFloatField
-      FieldName = 'DEBTOR_FLG'
-    end
-  end
-  object getFullListFilter: TDataSetFilter
+  object getAcctFullListFilter: TDataSetFilter
     OnChange = OnFilterChange
     Glue = ' AND '
-    DataSet = getFullListRam
-    Left = 360
+    DataSet = getAcctFullListRam
+    Left = 352
     Top = 112
   end
-  object getFullListRam: TVirtualTable
+  object getAcctFullListRam: TVirtualTable
     Filtered = True
     FilterOptions = [foCaseInsensitive]
-    Left = 360
+    Left = 352
     Top = 176
     Data = {03000000000000000000}
   end
@@ -1590,13 +661,13 @@ object MainDataModule: TMainDataModule
     CommandStoredProcName = 'PK_NASEL_SWEETY.SET_FP_STATUS_FLG_CANCEL'
   end
   object updateFaPackCharRecipientProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.ADD_FA_PACK_CHAR_RECIPIENT'
+    StoredProcName = 'PK_NASEL_SWEETY.ADD_FP_CHAR_RECIPIENT'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
       
-        '  PK_NASEL_SWEETY.ADD_FA_PACK_CHAR_RECIPIENT(:P_FA_PACK_ID, :P_F' +
-        'ORCE_SELF);'
+        '  PK_NASEL_SWEETY.ADD_FP_CHAR_RECIPIENT(:P_FA_PACK_ID, :P_FORCE_' +
+        'SELF);'
       'end;')
     Left = 632
     Top = 530
@@ -1612,12 +683,12 @@ object MainDataModule: TMainDataModule
         ParamType = ptInput
         HasDefault = True
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.ADD_FA_PACK_CHAR_RECIPIENT'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.ADD_FP_CHAR_RECIPIENT'
   end
   object getOtdelenListFilter: TDataSetFilter
     OnChange = OnFilterChange
     Glue = ' AND '
-    DataSet = getOtdelenListQuery
+    DataSet = getOtdelenListProc
     Left = 120
     Top = 360
   end
@@ -1717,17 +788,6 @@ object MainDataModule: TMainDataModule
       FixedChar = True
       Size = 8
     end
-  end
-  object OraDataSource1: TOraDataSource
-    DataSet = getPreDebtorListProc
-    Left = 1312
-    Top = 544
-  end
-  object VirtualTable1: TVirtualTable
-    MasterSource = OraDataSource1
-    Left = 1312
-    Top = 496
-    Data = {03000000000000000000}
   end
   object getPrePostListDataSource: TOraDataSource
     DataSet = getPrePostListProc
@@ -2284,6 +1344,14 @@ object MainDataModule: TMainDataModule
       FieldName = 'FA_PACK_TYPE_DESCR'
       Size = 60
     end
+    object getFaPackListStopProcRT_SPR_CD: TStringField
+      FieldName = 'RT_SPR_CD'
+      Size = 255
+    end
+    object getFaPackListStopProcRT_TYPE: TStringField
+      FieldName = 'RT_TYPE'
+      Size = 255
+    end
   end
   object getFaPackListCancelStopProc: TOraStoredProc
     StoredProcName = 'PK_NASEL_SWEETY.GET_FP_CANCEL_LIST'
@@ -2428,13 +1496,11 @@ object MainDataModule: TMainDataModule
     Top = 176
     Data = {03000000000000000000}
   end
-  object getFullListDataSource: TOraDataSource
-    DataSet = getFullListQuery
+  object getAcctFullListDataSource: TOraDataSource
     Left = 352
-    Top = 16
+    Top = 8
   end
   object MainDataSource: TOraDataSource
-    DataSet = getFullListQuery
     Left = 112
     Top = 16
   end
@@ -2774,38 +1840,42 @@ object MainDataModule: TMainDataModule
         Value = 'Object'
       end>
     CommandStoredProcName = 'PK_NASEL_SWEETY.GET_ACCT_OTDELEN_LIST'
-    object getOtdelenListProcOTDELEN_DESCR: TStringField
-      FieldName = 'OTDELEN_DESCR'
-      Size = 25
-    end
     object getOtdelenListProcACCT_OTDELEN: TStringField
       FieldName = 'ACCT_OTDELEN'
       FixedChar = True
       Size = 7
     end
-    object getOtdelenListProcADDRESS: TStringField
-      FieldName = 'ADDRESS'
-      Size = 100
+    object getOtdelenListProcDESCR: TStringField
+      FieldName = 'DESCR'
+      Size = 25
     end
-    object getOtdelenListProcNACHALNIK: TStringField
-      FieldName = 'NACHALNIK'
-      Size = 30
+    object getOtdelenListProcMAILING_ADDRESS: TStringField
+      FieldName = 'MAILING_ADDRESS'
+      Size = 62
+    end
+    object getOtdelenListProcACTING_NAME: TStringField
+      FieldName = 'ACTING_NAME'
+      Size = 60
+    end
+    object getOtdelenListProcACTING_POST: TStringField
+      FieldName = 'ACTING_POST'
+      Size = 22
+    end
+    object getOtdelenListProcDESCR_L_GENITIVE: TStringField
+      FieldName = 'DESCR_L_GENITIVE'
+      Size = 25
     end
     object getOtdelenListProcPHONE: TStringField
       FieldName = 'PHONE'
       Size = 50
     end
-    object getOtdelenListProcCCB_ACCT_CHAR_VAL: TStringField
-      FieldName = 'CCB_ACCT_CHAR_VAL'
-      Size = 30
-    end
-    object getOtdelenListProcPOST: TStringField
-      FieldName = 'POST'
-      Size = 36
-    end
     object getOtdelenListProcDESCR_L: TStringField
       FieldName = 'DESCR_L'
       Size = 25
+    end
+    object getOtdelenListProcADDRESS: TStringField
+      FieldName = 'ADDRESS'
+      Size = 62
     end
   end
   object getOpAreaCdProc: TOraStoredProc
@@ -2901,6 +1971,11 @@ object MainDataModule: TMainDataModule
     end
     object getConfigProcTODAY: TDateTimeField
       FieldName = 'TODAY'
+    end
+    object getConfigProcSTOP_ALLERT: TStringField
+      FieldName = 'STOP_ALLERT'
+      FixedChar = True
+      Size = 34
     end
   end
   object getFaPackTypeListProc: TOraStoredProc
@@ -3230,6 +2305,100 @@ object MainDataModule: TMainDataModule
     object StringField25: TStringField
       FieldName = 'PREM_TYPE_DESCR'
       Size = 60
+    end
+    object getFpReconnectContentProcPHONES: TStringField
+      FieldName = 'PHONES'
+      Size = 254
+    end
+  end
+  object getAcctFullListProc: TOraStoredProc
+    StoredProcName = 'PK_NASEL_SWEETY.GET_PRE_NOTICES_LIST'
+    Session = EsaleSession
+    SQL.Strings = (
+      'begin'
+      '  PK_NASEL_SWEETY.GET_PRE_NOTICES_LIST(:P_ACCT_OTDELEN, :RC);'
+      'end;')
+    Left = 352
+    Top = 64
+    ParamData = <
+      item
+        DataType = ftFixedChar
+        Name = 'P_ACCT_OTDELEN'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftCursor
+        Name = 'RC'
+        ParamType = ptOutput
+        Value = 'Object'
+      end>
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_PRE_NOTICES_LIST'
+    object getAcctFullListProcROWNUM: TFloatField
+      FieldName = 'ROWNUM'
+    end
+    object getAcctFullListProcCHECK_DATA: TFloatField
+      FieldName = 'CHECK_DATA'
+    end
+    object getAcctFullListProcACCT_ID: TStringField
+      FieldName = 'ACCT_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object getAcctFullListProcFIO: TStringField
+      FieldName = 'FIO'
+      Size = 254
+    end
+    object getAcctFullListProcCITY: TStringField
+      FieldName = 'CITY'
+      Size = 60
+    end
+    object getAcctFullListProcADDRESS: TStringField
+      FieldName = 'ADDRESS'
+      Size = 315
+    end
+    object getAcctFullListProcPREM_TYPE_DESCR: TStringField
+      FieldName = 'PREM_TYPE_DESCR'
+      Size = 60
+    end
+    object getAcctFullListProcSALDO_UCH: TFloatField
+      FieldName = 'SALDO_UCH'
+    end
+    object getAcctFullListProcSALDO_M3: TFloatField
+      FieldName = 'SALDO_M3'
+    end
+    object getAcctFullListProcCC_DTTM: TDateTimeField
+      FieldName = 'CC_DTTM'
+    end
+    object getAcctFullListProcFA_ID: TStringField
+      FieldName = 'FA_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object getAcctFullListProcFA_PACK_ID: TStringField
+      FieldName = 'FA_PACK_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object getAcctFullListProcCRE_DTTM: TDateTimeField
+      FieldName = 'CRE_DTTM'
+    end
+    object getAcctFullListProcACCT_OTDELEN: TStringField
+      FieldName = 'ACCT_OTDELEN'
+      FixedChar = True
+      Size = 7
+    end
+    object getAcctFullListProcSERVICE_ORG: TStringField
+      FieldName = 'SERVICE_ORG'
+      Size = 50
+    end
+    object getAcctFullListProcOP_AREA_DESCR: TStringField
+      FieldName = 'OP_AREA_DESCR'
+      Size = 60
+    end
+    object getAcctFullListProcMR_RTE_CD: TStringField
+      FieldName = 'MR_RTE_CD'
+      FixedChar = True
+      Size = 8
     end
   end
 end

@@ -14,14 +14,22 @@ __fastcall TEditCcForm::TEditCcForm(TComponent* Owner)
     : TForm(Owner)
 {
 }
-//---------------------------------------------------------------------------
+/**/
 void __fastcall TEditCcForm::Button3Click(TObject *Sender)
 {
     try
     {
+        /**/
+        TDateTime ccDttm;
+        TCcStatusFlg::Type ccStatusFlg;
+        TCcTypeCd::Type ccTypeCd;
+        String callerValue;
+        String descrValue;
+
         //String curCcId = MainDataModule->getFaPackQuery->FieldByName("cc_id")->AsString;
         String curFaId = _ds->FieldByName("fa_id")->AsString;
         String curAcctId = _ds->FieldByName("acct_id")->AsString;
+
         ccDttm = CcDttmDateTimePicker->Date;
         ccStatusFlg = (int)CcStatusFlgComboBox->KeyValue;    // V_INT // OleAuto.h
         ccTypeCd = (int)CcTypeCdComboBox->KeyValue;
@@ -64,8 +72,6 @@ void __fastcall TEditCcForm::Button3Click(TObject *Sender)
         ShowMessage(e.Message);
     }
 
-    SaveDefaultValues();
-
 //    _modified = true;
 }
 
@@ -74,19 +80,24 @@ void __fastcall TEditCcForm::SaveDefaultValues()
 {
     if (LockCcDttmButton->Down)
     {
-        ccDttmDefaultValue = ccDttm;
+        ccDttmDefaultValue = CcDttmDateTimePicker->Date;
     }
     if (LockCcTypeCdButton->Down)
     {
-        ccTypeCdDefaultValue = ccTypeCd;
+        ccTypeCdDefaultValue = (int)CcTypeCdComboBox->KeyValue;
     }
     if (LockCcStatusFlgButton->Down)
     {
-        ccStatusFlgDefaultValue = ccStatusFlg;
+        ccStatusFlgDefaultValue = (int)CcStatusFlgComboBox->KeyValue;
     }
     if (LockDescrButton->Down)
     {
-        descrDefaultValue = descrValue;
+        descrDefaultValue = DescrEdit->Text;
+    }
+
+    if (LockCallerButton->Down)
+    {
+        callerDefaultValue = CallerEdit->Text;
     }
 
     //callerDefaultValue;
@@ -103,7 +114,7 @@ void __fastcall TEditCcForm::RestoreDefaultValues()
     }
 
     //
-    if ( LockCcDttmButton->Down )
+    if ( LockCcDttmButton->Down /* && ccDttmDefaultValue */ )
     {
             CcDttmDateTimePicker->Date = ccDttmDefaultValue;
     }
@@ -122,7 +133,7 @@ void __fastcall TEditCcForm::RestoreDefaultValues()
 
     if ( LockCcTypeCdButton->Down )
     {
-        CcTypeCdComboBox->KeyValue = ccTypeCd;
+        CcTypeCdComboBox->KeyValue = ccTypeCdDefaultValue;
     }
     else
     {
@@ -186,16 +197,16 @@ void __fastcall TEditCcForm::RestoreDefaultValues()
     }
 }
 
+/*
+*/
 void __fastcall TEditCcForm::ResetDefaultValues()
 {
 }
 
-/**/
+/* Главная интерфейсная функция для отображения этого окна
+*/
 bool TEditCcForm::Execute(TDataSet* ds)
 {
-    //ccDttmDefaultValue = Now();
-    //CcDttmDateTimePicker = Now();
-
     _ds = ds;
     RestoreDefaultValues();
     if (ds->RecordCount == 0)
@@ -206,11 +217,6 @@ bool TEditCcForm::Execute(TDataSet* ds)
     AcctIdLabel->Caption = ds->FieldByName("acct_id")->Value;
     FioLabel->Caption = ds->FieldByName("fio")->Value;
     DeleteCcButton->Enabled = !_ds->FieldByName("cc_id")->IsNull;
-
-    /*if (MainDataModule->getFaPackFilter->DataSet == ds)
-    {
-        ShowMessage("Eq");
-    }  */
 
     switch (ShowModal())
     {
@@ -227,10 +233,11 @@ bool TEditCcForm::Execute(TDataSet* ds)
     }
 }
 
-//---------------------------------------------------------------------------
-
+/*
+*/
 void __fastcall TEditCcForm::FormCreate(TObject *Sender)
 {
+    // Размещение изображений на кнопках
     FormSpecialModule->ButtonImageList->GetBitmap(0, LockCcDttmButton->Glyph);
     FormSpecialModule->ButtonImageList->GetBitmap(0, LockCcTypeCdButton->Glyph);
     FormSpecialModule->ButtonImageList->GetBitmap(0, LockCcStatusFlgButton->Glyph);
@@ -238,16 +245,16 @@ void __fastcall TEditCcForm::FormCreate(TObject *Sender)
     FormSpecialModule->ButtonImageList->GetBitmap(0, LockDescrButton->Glyph);
 
 }
-//---------------------------------------------------------------------------
 
+/*
+*/
 void __fastcall TEditCcForm::CloseWindowActionExecute(TObject *Sender)
 {
     ModalResult = mrCancel;
-  
 }
-//---------------------------------------------------------------------------
 
-
+/* Реакция на кнопку "Удалить" контакт
+*/
 void __fastcall TEditCcForm::DeleteCcButtonClick(TObject *Sender)
 {
     if ( !_ds->FieldByName("cc_id")->IsNull &&
@@ -257,13 +264,20 @@ void __fastcall TEditCcForm::DeleteCcButtonClick(TObject *Sender)
         try
         {
             MainDataModule->deleteCc(_ds, _ds->FieldByName("cc_id")->Value);
+            ShowMessage("Контакт удален!");
+            //ModalResult = mrOk;
         }
         catch(Exception &e)
         {
             ShowMessage(e.Message);
         }
-        ModalResult = mrOk;
     }
 }
-//---------------------------------------------------------------------------
+/* Закрытие формы
+*/
+void __fastcall TEditCcForm::FormClose(TObject *Sender,
+      TCloseAction &Action)
+{
+    SaveDefaultValues();
+}
 

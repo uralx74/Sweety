@@ -46,11 +46,11 @@ __published:	// IDE-managed Components
     TDBLookupComboBox *CcTypeCdComboBox;
     TDBLookupComboBox *CcStatusFlgComboBox;
     TButton *DeleteCcButton;
-    TDBLookupComboBox *DBLookupComboBox1;
     void __fastcall Button3Click(TObject *Sender);
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall CloseWindowActionExecute(TObject *Sender);
     void __fastcall DeleteCcButtonClick(TObject *Sender);
+    void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 private:	// User declarations
     bool _canceled;
     //bool _modified;
@@ -60,20 +60,12 @@ private:	// User declarations
     void __fastcall SaveDefaultValues();
     void __fastcall RestoreDefaultValues();
     void __fastcall ResetDefaultValues();
+
     TCcTypeCd::Type ccTypeCdDefaultValue;
     TCcStatusFlg::Type ccStatusFlgDefaultValue;
     TDateTime ccDttmDefaultValue;
     String callerDefaultValue;
     String descrDefaultValue;
-
-
-    /**/
-    TDateTime ccDttm;
-    TCcStatusFlg::Type ccStatusFlg;
-    TCcTypeCd::Type ccTypeCd;
-    String callerValue;
-    String descrValue;
-
 
 public:		// User declarations
     __fastcall TEditCcForm(TComponent* Owner);

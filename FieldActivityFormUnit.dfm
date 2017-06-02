@@ -1,6 +1,6 @@
 object FieldActivityForm: TFieldActivityForm
-  Left = 415
-  Top = 141
+  Left = 201
+  Top = 126
   Width = 1418
   Height = 884
   Caption = #1044#1086#1083#1078#1085#1080#1082#1080#1060
@@ -68,14 +68,14 @@ object FieldActivityForm: TFieldActivityForm
         Top = 0
         Width = 1107
         Height = 806
-        ActivePage = PackManualTabSheet
+        ActivePage = FullListTabSheet
         Align = alClient
         OwnerDraw = True
         ParentShowHint = False
         ShowHint = True
         Style = tsFlatButtons
         TabHeight = 25
-        TabIndex = 2
+        TabIndex = 10
         TabOrder = 0
         OnDrawTab = PackPageControlDrawTab
         object MainTabSheet: TTabSheet
@@ -1308,6 +1308,7 @@ object FieldActivityForm: TFieldActivityForm
             Width = 1099
             Height = 771
             Align = alClient
+            DataSource = MainDataModule.getAcctFullListDataSource
             ReadOnly = True
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
@@ -1544,7 +1545,7 @@ object FieldActivityForm: TFieldActivityForm
           Anchors = [akLeft, akTop, akRight]
           DropDownRows = 11
           KeyField = 'ACCT_OTDELEN'
-          ListField = 'ACCT_OTDELEN; OTDELEN_DESCR'
+          ListField = 'ACCT_OTDELEN; DESCR'
           ListFieldIndex = 1
           ListSource = MainDataModule.getOtdelenListDataSource
           ParentColor = True

@@ -299,7 +299,7 @@ object SelectFaPackForm: TSelectFaPackForm
       DataField = 'ACCT_OTDELEN'
       DropDownRows = 11
       KeyField = 'ACCT_OTDELEN'
-      ListField = 'OTDELEN_DESCR'
+      ListField = 'DESCR'
       ListSource = MainDataModule.getOtdelenListDataSource
       ParentColor = True
       TabOrder = 0
