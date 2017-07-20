@@ -14,6 +14,7 @@ USEFORM("DocumentDataModuleUnit.cpp", DocumentDataModule); /* TDataModule: File 
 USEFORM("..\util\FormLogin\formlogin.cpp", LoginForm);
 USEFORM("WaitFormUnit.cpp", WaitForm);
 USEFORM("SelectAcctOtdelenFormUnit.cpp", SelectAcctOtdelenForm);
+USEFORM("EditSaEndDtFormUnit.cpp", EditSaEndDtForm);
 
 //---------------------------------------------------------------------------
 /*
@@ -48,6 +49,7 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         Application->CreateForm(__classid(TSelectAcctOtdelenForm), &SelectAcctOtdelenForm);
         Application->CreateForm(__classid(TEditCcForm), &EditCcForm);
         Application->CreateForm(__classid(TMainForm), &MainForm);
+        Application->CreateForm(__classid(TEditSaEndDtForm), &EditSaEndDtForm);
         Application->Run();
     }
     catch (Exception &exception)

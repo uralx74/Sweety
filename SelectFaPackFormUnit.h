@@ -31,7 +31,7 @@ __published:	// IDE-managed Components
     TGroupBox *GroupBox1;
     TLabel *Label13;
     TButton *Button3;
-    TComboBox *FaPackTypeDescrFilterComboBox;
+    TComboBox *FaPackTypeCdFilterComboBox;
     TLabel *Label1;
     TGroupBox *GroupBox2;
     TLabel *Label4;
@@ -67,6 +67,7 @@ public:
 private:
     TMode _mode;
     String _faPackId;
+    TFaPackTypeCd _fpTypeCd;
     TDataSetFilter* _currentFilter; // Текущий фильтр
     void __fastcall FindPackList();     // Функция для поиска реестров
     void __fastcall ResetFindFilter();
@@ -78,6 +79,7 @@ public:
     bool __fastcall execute(String acctOtdelen, int mode/*String faPackTypeCd*/);
     FaPack getFaPack();
     String __fastcall getFaPackId();
+    TFaPackTypeCd __fastcall getFaPackTypeCd();
 
 };
 //---------------------------------------------------------------------------

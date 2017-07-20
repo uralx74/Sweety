@@ -10,7 +10,7 @@
       DocumentDataModuleUnit.obj ..\util\DocumentWriter.obj 
       ..\util\MSWordWorks.obj ..\util\MSExcelWorks.obj ..\util\JsonObject.obj 
       ..\util\FormLogin\formlogin.obj WaitFormUnit.obj ThreadDataSet.obj 
-      ..\util\TTrayIcon.obj SelectAcctOtdelenFormUnit.obj"/>
+      ..\util\TTrayIcon.obj SelectAcctOtdelenFormUnit.obj EditSaEndDtFormUnit.obj"/>
     <RESFILES value="Sweety.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -19,7 +19,7 @@
       MainDataModuleUnit.dfm GridFrameUnit.dfm SelectFaPackFormUnit.dfm 
       EditCcFormUnit.dfm FormSpecialModuleUnit.dfm DocumentDataModuleUnit.dfm 
       ..\util\FormLogin\formlogin.dfm WaitFormUnit.dfm 
-      SelectAcctOtdelenFormUnit.dfm"/>
+      SelectAcctOtdelenFormUnit.dfm EditSaEndDtFormUnit.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="vclx.lib dsnap.lib dacvcl60.lib odacvcl60.lib dac60.lib AltCtrl.lib 
       adortl.lib bdertl.lib vcldb.lib dbrtl.lib vcl.lib rtl.lib"/>
@@ -87,6 +87,7 @@
       <FILE FILENAME="..\util\TTrayIcon.cpp" FORMNAME="" UNITNAME="TTrayIcon" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="SelectAcctOtdelenFormUnit.cpp" FORMNAME="SelectAcctOtdelenForm" UNITNAME="SelectAcctOtdelenFormUnit" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\util\appver.h" FORMNAME="" UNITNAME="appver.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="EditSaEndDtFormUnit.cpp" FORMNAME="EditSaEndDtForm" UNITNAME="EditSaEndDtFormUnit" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
@@ -98,7 +99,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=0
 Release=0
-Build=43
+Build=45
 Debug=0
 PreRelease=0
 Special=0
@@ -110,7 +111,7 @@ CodePage=1251
 [Version Info Keys]
 CompanyName=Central Departament
 FileDescription=
-FileVersion=1.0.0.43
+FileVersion=1.0.0.45
 InternalName=Sweety
 LegalCopyright=
 LegalTrademarks=

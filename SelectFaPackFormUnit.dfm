@@ -182,14 +182,24 @@ object SelectFaPackForm: TSelectFaPackForm
       TabOrder = 0
       OnClick = Button3Click
     end
-    object FaPackTypeDescrFilterComboBox: TComboBox
+    object FaPackTypeCdFilterComboBox: TComboBox
       Left = 104
       Top = 48
       Width = 153
       Height = 21
+      Style = csDropDownList
       ItemHeight = 13
+      ItemIndex = 0
       TabOrder = 1
-      OnChange = FilterComboBoxTextChange
+      Text = #1042#1089#1077
+      OnChange = FilterComboBoxIndexChange
+      Items.Strings = (
+        #1042#1089#1077
+        #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103' '#1082#1086#1085#1090#1088#1086#1083#1077#1088#1091
+        #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103' '#1087#1086' '#1087#1086#1095#1090#1077
+        #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
+        #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1090#1084#1077#1085#1091
+        #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1074#1086#1079#1086#1073#1085#1086#1074#1083#1077#1085#1080#1077)
     end
     object FaPackIdFilterEdit: TEdit
       Left = 104
@@ -206,7 +216,9 @@ object SelectFaPackForm: TSelectFaPackForm
       Height = 21
       Style = csDropDownList
       ItemHeight = 13
+      ItemIndex = 0
       TabOrder = 3
+      Text = #1042#1089#1077
       OnChange = FilterComboBoxIndexChange
       Items.Strings = (
         #1042#1089#1077

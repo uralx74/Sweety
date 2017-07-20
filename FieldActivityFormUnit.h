@@ -36,6 +36,7 @@
 #include <set>
 #include <algorithm>
 #include "WaitFormUnit.h"
+#include "EditSaEndDtFormUnit.h"
 #include "appver.h"
 
 enum PackMode {
@@ -56,25 +57,26 @@ typedef enum  {
     MODE_STOP
 } TMode;
 
-typedef enum   {
+typedef enum {
     SHEET_TYPE_UNDEFINED = 0,
     SHEET_TYPE_MAIN_NOTICES,        // Главная вкладка (в наст. время она общая на все режимы)
 
-    SHEET_TYPE_FULL_LIST,           // general
-    SHEET_TYPE_DEBTORS,             // general
-    SHEET_TYPE_NOTICES_PACK,        //PACK_MANUAL,
-    SHEET_TYPE_APPROVE,
+    SHEET_TYPE_FULL_LIST,           // Полный список абонентов
+    SHEET_TYPE_PRE_NOTICES_LIST,    // Предварительный список на уведомление
+    SHEET_TYPE_PRE_POST_LIST,       // Предварительный список уведомлений на почту
+    SHEET_TYPE_FP_NOTICES_CONTENT,  // Содержимое реестра уведомлений
+    SHEET_TYPE_APPROVE_LIST,        // Список на утверждение
 
-    SHEET_TYPE_POST_LIST,
-    //SHEET_TYPE_POST_PACK,
+    SHEET_TYPE_PRE_STOP_LIST,       // Предварительный список на остановку
 
-    SHEET_TYPE_STOP,
-    SHEET_TYPE_PACK_STOP_LIST,  // Список реестров на отключение
-    SHEET_TYPE_STOP_PACK,
-    SHEET_TYPE_CANCEL_STOP_LIST,
-    SHEET_TYPE_RECONNECT_LIST
-    //SHEET_TYPE_RELOAD
-    //PACK_APPROVE_LIST
+    SHEET_TYPE_FP_STOP_LIST,        // Список реестров на отключение
+    SHEET_TYPE_FP_CANCEL_LIST,      // Список реестров на отмену остановки
+    SHEET_TYPE_FP_RECONNECT_LIST,   // Список реестров на возобновление
+
+    SHEET_TYPE_FP_STOP_CONTENT,     // Содержимое реестра на остановку
+    SHEET_TYPE_FP_CANCEL_CONTENT,   // Содержимое реестра на отмену остановки
+    SHEET_TYPE_FP_RECONNECT_CONTENT // Содержимое реестна на возобновление
+
 } TSheetType;
 
 
@@ -480,7 +482,7 @@ __published:	// IDE-managed Components
     TTabSheet *PackStopListTabSheet;
     TDBGridAlt *PackStopListGrid;
     TTabSheet *PackStopTabSheet;
-    TDBGridAlt *StopPackGrid;
+    TDBGridAlt *FpStopContentGrid;
     TTabSheet *FaCancelStopListTabSheet;
     TDBGridAlt *CancelStopListGrid;
     TTabSheet *PackReconnectTabSheet;
@@ -512,7 +514,7 @@ __published:	// IDE-managed Components
     TLabel *CheckedFilteredCountLabel;
     TSplitter *Splitter1;
     TDBGridAlt *PostListGrid;
-    TButton *Button6;
+    TButton *TestButton1;
     TDBLookupComboBox *DBLookupComboBox1;
     TLabel *Label8;
     TLabel *Label9;
@@ -531,6 +533,13 @@ __published:	// IDE-managed Components
     TDBGridAlt *ReconnectListGrid;
     TAction *printReconnectAction;
     TMenuItem *N18;
+    TAction *createFpCancelStopAction;
+    TMenuItem *N19;
+    TAction *editSaEndDtAction;
+    TTabSheet *FpCancelContentTabSheet;
+    TTabSheet *FpReconnectContentTabSheet;
+    TDBGridAlt *FpCancelContentGrid;
+    TDBGridAlt *FpReconnectContentGrid;
     void __fastcall FormShow(TObject *Sender);
     void __fastcall FilterComboBoxTextChange(TObject *Sender);
     void __fastcall ParamPackIdEditClick(TObject *Sender);
@@ -591,12 +600,17 @@ __published:	// IDE-managed Components
     void __fastcall printCancelStopActionExecute(
           TObject *Sender);
     void __fastcall OnChangeCheck(TObject *Sender);
-    void __fastcall Button6Click(TObject *Sender);
+    void __fastcall TestButton1Click(TObject *Sender);
     void __fastcall setFaPackCancelStopStatusCompleteActionExecute(
           TObject *Sender);
     void __fastcall ReconnectTabSheetShow(TObject *Sender);
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall printReconnectActionExecute(TObject *Sender);
+    void __fastcall createFpCancelStopActionExecute(TObject *Sender);
+    void __fastcall FpStopContentGridCellClick(TColumn *Column);
+    void __fastcall editSaEndDtActionExecute(TObject *Sender);
+    void __fastcall FpCancelContentTabSheetShow(TObject *Sender);
+    void __fastcall FpReconnectContentTabSheetShow(TObject *Sender);
 private:	// User declarations
     //void __fastcall TFieldActivityForm::selectMode(int mode);
     void __fastcall OnQueryAfterExecute(TObject *Sender);
@@ -615,7 +629,9 @@ private:	// User declarations
     void __fastcall showPreDebtorList();
     void __fastcall showPrePostList();
     void __fastcall showFaPackNotices(const Variant faPackId);
-    void __fastcall showFaPackStop(const Variant faPackId);
+    void __fastcall showFpStopContent(const Variant faPackId);
+    void __fastcall showFpCancelContent(const String& faPackId);
+    void __fastcall showFpReconnectContent(const String& faPackId);
     void __fastcall showStopList();
     void __fastcall showApprovalList();
 

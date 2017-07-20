@@ -48,7 +48,7 @@ public:		// User declarations
     void __fastcall getDocumentFaNoticesList(TDataSetFilter *mergeFields);
     bool __fastcall getDocumentFaNotices(TDataSetFilter* otdelenData, TDataSetFilter* faPackData, TDataSetFilter* faData);
     bool __fastcall getDocumentFaNoticesListForPostOffice(TDataSetFilter* otdelenDsF, TDataSetFilter* recDsF, TDataSetFilter* tableDsF);
-    bool __fastcall getDocumentStopRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc);
+    bool __fastcall getDocumentStopRequest(TDataSetFilter* otdelenData, TDataSetFilter* fpListData, TOraStoredProc* fpContentProc);
     bool __fastcall getDocumentCancelStopRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc);
     bool __fastcall getDocumentReconnectRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc);
 

@@ -1,8 +1,8 @@
 object FieldActivityForm: TFieldActivityForm
-  Left = 201
-  Top = 126
-  Width = 1418
-  Height = 884
+  Left = 192
+  Top = 295
+  Width = 1692
+  Height = 1015
   Caption = #1044#1086#1083#1078#1085#1080#1082#1080#1060
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
@@ -16,15 +16,15 @@ object FieldActivityForm: TFieldActivityForm
   OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
-    1402
-    846)
+    1676
+    977)
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 289
     Top = 0
     Width = 6
-    Height = 846
+    Height = 977
     Cursor = crHSplit
     Beveled = True
     Color = clBtnFace
@@ -32,7 +32,7 @@ object FieldActivityForm: TFieldActivityForm
   end
   object GroupBox3: TGroupBox
     Left = 8
-    Top = 747
+    Top = 878
     Width = 273
     Height = 201
     Anchors = [akLeft, akBottom]
@@ -50,32 +50,32 @@ object FieldActivityForm: TFieldActivityForm
   object MainPanel: TPanel
     Left = 295
     Top = 0
-    Width = 1107
-    Height = 846
+    Width = 1381
+    Height = 977
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     object Panel1: TPanel
       Left = 0
       Top = 40
-      Width = 1107
-      Height = 806
+      Width = 1381
+      Height = 937
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
       object PackPageControl: TPageControl
         Left = 0
         Top = 0
-        Width = 1107
-        Height = 806
-        ActivePage = FullListTabSheet
+        Width = 1381
+        Height = 937
+        ActivePage = FpReconnectContentTabSheet
         Align = alClient
         OwnerDraw = True
         ParentShowHint = False
         ShowHint = True
         Style = tsFlatButtons
         TabHeight = 25
-        TabIndex = 10
+        TabIndex = 12
         TabOrder = 0
         OnDrawTab = PackPageControlDrawTab
         object MainTabSheet: TTabSheet
@@ -89,24 +89,24 @@ object FieldActivityForm: TFieldActivityForm
           ParentFont = False
           OnShow = MainTabSheetShow
           DesignSize = (
-            1099
-            771)
+            1373
+            902)
           object GroupBox2: TGroupBox
             Left = 0
             Top = 7
-            Width = 1097
-            Height = 762
+            Width = 1371
+            Height = 893
             Anchors = [akLeft, akTop, akRight, akBottom]
             Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072
             Color = clBtnFace
             ParentColor = False
             TabOrder = 0
             DesignSize = (
-              1097
-              762)
+              1371
+              893)
             object Label8: TLabel
               Left = 24
-              Top = 608
+              Top = 739
               Width = 146
               Height = 13
               Anchors = [akLeft, akBottom]
@@ -114,7 +114,7 @@ object FieldActivityForm: TFieldActivityForm
             end
             object Label9: TLabel
               Left = 24
-              Top = 640
+              Top = 771
               Width = 193
               Height = 13
               Anchors = [akLeft, akBottom]
@@ -122,7 +122,7 @@ object FieldActivityForm: TFieldActivityForm
             end
             object Memo1: TMemo
               Left = 16
-              Top = 680
+              Top = 811
               Width = 281
               Height = 73
               Anchors = [akLeft, akBottom]
@@ -140,20 +140,19 @@ object FieldActivityForm: TFieldActivityForm
               ReadOnly = True
               TabOrder = 0
             end
-            object Button6: TButton
+            object TestButton1: TButton
               Left = 22
-              Top = 567
+              Top = 698
               Width = 75
               Height = 25
               Anchors = [akLeft, akBottom]
               Caption = 'TestButton'
               TabOrder = 1
-              Visible = False
-              OnClick = Button6Click
+              OnClick = TestButton1Click
             end
             object DBLookupComboBox1: TDBLookupComboBox
               Left = 232
-              Top = 600
+              Top = 731
               Width = 166
               Height = 21
               Anchors = [akLeft, akBottom]
@@ -167,7 +166,7 @@ object FieldActivityForm: TFieldActivityForm
             end
             object DBLookupComboBox2: TDBLookupComboBox
               Left = 232
-              Top = 632
+              Top = 763
               Width = 166
               Height = 21
               Anchors = [akLeft, akBottom]
@@ -182,8 +181,8 @@ object FieldActivityForm: TFieldActivityForm
             object RichEdit1: TRichEdit
               Left = 16
               Top = 32
-              Width = 1057
-              Height = 505
+              Width = 1331
+              Height = 636
               Anchors = [akLeft, akTop, akRight, akBottom]
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
@@ -206,8 +205,8 @@ object FieldActivityForm: TFieldActivityForm
           object DBGridAltGeneral: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 1099
-            Height = 771
+            Width = 1373
+            Height = 902
             Align = alClient
             DataSource = MainDataModule.getPreDebtorListDataSource
             ReadOnly = True
@@ -353,10 +352,10 @@ object FieldActivityForm: TFieldActivityForm
           object DBGridAltManual: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 1099
-            Height = 771
+            Width = 1373
+            Height = 902
             Align = alClient
-            DataSource = MainDataModule.getFaPackDataSource
+            DataSource = MainDataModule.getFpNoticesContentDataSource
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
             TitleFont.Color = clWindowText
@@ -497,8 +496,8 @@ object FieldActivityForm: TFieldActivityForm
           object ApproveListGrid: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 1099
-            Height = 771
+            Width = 1373
+            Height = 902
             Align = alClient
             DataSource = MainDataModule.getApprovalListDataSource
             TabOrder = 0
@@ -597,589 +596,15 @@ object FieldActivityForm: TFieldActivityForm
               end>
           end
         end
-        object StopListTabSheet: TTabSheet
-          Caption = #1057#1087#1080#1089#1086#1082' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
-          ImageIndex = 2
-          OnShow = StopListTabSheetShow
-          object StopListGrid: TDBGridAlt
-            Left = 0
-            Top = 0
-            Width = 1099
-            Height = 771
-            Align = alClient
-            DataSource = MainDataModule.getStopListDataSource
-            ReadOnly = True
-            TabOrder = 0
-            TitleFont.Charset = DEFAULT_CHARSET
-            TitleFont.Color = clWindowText
-            TitleFont.Height = -11
-            TitleFont.Name = 'MS Sans Serif'
-            TitleFont.Style = []
-            DefaultSortFieldName = 'ROWNUM'
-            CheckDataFieldName = 'CHECK_DATA'
-            OddRowColor = 16448250
-            EvenRowColor = clWhite
-            SortColumnColor = 13824255
-            ColumnAutosize = False
-            CheckedFont.Charset = DEFAULT_CHARSET
-            CheckedFont.Color = clRed
-            CheckedFont.Height = -11
-            CheckedFont.Name = 'MS Sans Serif'
-            CheckedFont.Style = []
-            EditableFont.Charset = DEFAULT_CHARSET
-            EditableFont.Color = clBlack
-            EditableFont.Height = -11
-            EditableFont.Name = 'MS Sans Serif'
-            EditableFont.Style = []
-            OnChangeCheck = OnChangeCheck
-            Columns = <
-              item
-                Expanded = False
-                FieldName = 'CHECK_DATA'
-                Visible = False
-              end
-              item
-                Expanded = False
-                FieldName = 'ROWNUM'
-                Title.Caption = 'N'
-                Width = 50
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'GRP_DATA'
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ACCT_ID'
-                Title.Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
-                Width = 80
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'FA_PACK_ID'
-                Title.Caption = #1056#1077#1077#1089#1090#1088
-                Width = 80
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'FA_PACK_TYPE_DESCR'
-                Title.Caption = #1058#1080#1087' '#1088#1077#1077#1089#1090#1088#1072
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'CC_DTTM'
-                Title.Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1072#1082#1090#1072
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'APPROVAL_DTTM'
-                Title.Caption = #1044#1072#1090#1072' '#1091#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'SPR_DESCR'
-                Title.Caption = #1054#1073#1089#1083#1091#1078#1080#1074#1072#1102#1097#1072#1103' '#1086#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103
-                Width = 300
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'FIO'
-                Title.Caption = #1060#1048#1054
-                Width = 160
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'CITY'
-                Title.Caption = #1053#1072#1089'. '#1087#1091#1085#1082#1090
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ADDRESS'
-                Title.Caption = #1040#1076#1088#1077#1089
-                Width = 200
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'SALDO_UCH'
-                Title.Caption = #1057#1072#1083#1100#1076#1086
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'PREM_TYPE_DESCR'
-                Title.Caption = #1058#1080#1087' '#1054#1054
-                Width = 100
-                Visible = True
-              end>
-          end
-        end
-        object PackStopListTabSheet: TTabSheet
-          Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
-          ImageIndex = 8
-          OnShow = PackStopListTabSheetShow
-          object PackStopListGrid: TDBGridAlt
-            Left = 0
-            Top = 0
-            Width = 1099
-            Height = 771
-            Align = alClient
-            DataSource = MainDataModule.getPackListStopDataSource
-            TabOrder = 0
-            TitleFont.Charset = DEFAULT_CHARSET
-            TitleFont.Color = clWindowText
-            TitleFont.Height = -11
-            TitleFont.Name = 'MS Sans Serif'
-            TitleFont.Style = []
-            DefaultSortFieldName = 'ROWNUM'
-            CheckDataFieldName = 'CHECK_DATA'
-            OddRowColor = 16448250
-            EvenRowColor = clWhite
-            SortColumnColor = 13824255
-            ColumnAutosize = False
-            CheckedFont.Charset = DEFAULT_CHARSET
-            CheckedFont.Color = clRed
-            CheckedFont.Height = -11
-            CheckedFont.Name = 'MS Sans Serif'
-            CheckedFont.Style = []
-            EditableFont.Charset = DEFAULT_CHARSET
-            EditableFont.Color = clBlack
-            EditableFont.Height = -11
-            EditableFont.Name = 'MS Sans Serif'
-            EditableFont.Style = []
-            OnChangeCheck = OnChangeCheck
-            Columns = <
-              item
-                Expanded = False
-                FieldName = 'ROWNUM'
-                Title.Caption = 'N'
-                Width = 40
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'CHECK_DATA'
-                Visible = False
-              end
-              item
-                Expanded = False
-                FieldName = 'FA_PACK_ID'
-                Title.Caption = #1056#1077#1077#1089#1090#1088
-                Width = 90
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'CRE_DTTM'
-                Title.Caption = #1044#1072#1090#1072' '#1088#1077#1077#1089#1090#1088#1072
-                Width = 120
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'FA_CNT'
-                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1072#1073#1086#1085#1077#1085#1090#1086#1074
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ST_P_DT'
-                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1082#1083'.'
-                Width = 90
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'FA_PACK_STATUS_DESCR'
-                Title.Caption = #1057#1090#1072#1090#1091#1089' '#1088#1077#1077#1089#1090#1088#1072
-                Width = 90
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'RECIPIENT_SPR_DESCR'
-                Title.Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
-                Width = 120
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'OWNER'
-                Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
-                Visible = True
-              end>
-          end
-        end
-        object PackStopTabSheet: TTabSheet
-          Tag = 1
-          Caption = #1057#1087#1080#1089#1086#1082' '#1072#1073#1086#1085#1077#1085#1090#1086#1074' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
-          ImageIndex = 4
-          OnShow = PackStopTabSheetShow
-          object StopPackGrid: TDBGridAlt
-            Left = 0
-            Top = 0
-            Width = 1099
-            Height = 771
-            Align = alClient
-            DataSource = MainDataModule.getFaPackStopDataSource
-            TabOrder = 0
-            TitleFont.Charset = DEFAULT_CHARSET
-            TitleFont.Color = clWindowText
-            TitleFont.Height = -11
-            TitleFont.Name = 'MS Sans Serif'
-            TitleFont.Style = []
-            DefaultSortFieldName = 'ROWNUM'
-            CheckDataFieldName = 'CHECK_DATA'
-            OddRowColor = 16448250
-            EvenRowColor = clWhite
-            SortColumnColor = 13824255
-            ColumnAutosize = False
-            CheckedFont.Charset = DEFAULT_CHARSET
-            CheckedFont.Color = clRed
-            CheckedFont.Height = -11
-            CheckedFont.Name = 'MS Sans Serif'
-            CheckedFont.Style = []
-            EditableFont.Charset = DEFAULT_CHARSET
-            EditableFont.Color = clBlack
-            EditableFont.Height = -11
-            EditableFont.Name = 'MS Sans Serif'
-            EditableFont.Style = []
-            OnChangeCheck = OnChangeCheck
-            Columns = <
-              item
-                Expanded = False
-                FieldName = 'ROWNUM'
-                Visible = False
-              end
-              item
-                Expanded = False
-                FieldName = 'CHECK_DATA'
-                ReadOnly = True
-                Visible = False
-              end
-              item
-                Expanded = False
-                FieldName = 'FA_ID'
-                ReadOnly = True
-                Title.Caption = 'ID '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-                Width = 90
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'NOTICE_FA_ID'
-                Title.Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
-                Width = 90
-                Visible = True
-              end
-              item
-                ButtonStyle = cbsEllipsis
-                Expanded = False
-                FieldName = 'CC_DTTM'
-                Title.Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1072#1082#1090#1072
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ST_P_DT'
-                Title.Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085'. '#1086#1075#1088'.'
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'SA_END_DT'
-                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1082#1083'. '#1056#1044#1054
-                Width = 64
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ACCT_ID'
-                ReadOnly = True
-                Title.Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
-                Width = 90
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'SALDO_UCH'
-                ReadOnly = True
-                Title.Caption = #1057#1072#1083#1100#1076#1086
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'END_REG_READING1'
-                ReadOnly = True
-                Title.Caption = #1055#1086#1082#1072#1079#1072#1085#1080#1103' '#1076#1077#1085#1100
-                Width = 64
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'END_REG_READING2'
-                ReadOnly = True
-                Title.Caption = #1055#1086#1082#1072#1079#1072#1085#1080#1103' '#1085#1086#1095#1100
-                Width = 64
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'PREM_TYPE_DESCR'
-                Title.Caption = #1058#1080#1087' '#1054#1054
-                Width = 120
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'CITY'
-                ReadOnly = True
-                Title.Caption = #1043#1086#1088#1086#1076
-                Width = 120
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ADDRESS'
-                ReadOnly = True
-                Title.Caption = #1059#1083#1080#1094#1072', '#1076#1086#1084', '#1082#1074#1072#1088#1090#1080#1088#1072', '#1082#1086#1088#1087#1091#1089
-                Width = 200
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'FIO'
-                ReadOnly = True
-                Title.Caption = #1060#1048#1054
-                Width = 200
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'OP_AREA_DESCR'
-                Title.Caption = #1050#1086#1085#1090#1088#1086#1083#1077#1088
-                Width = 64
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'SPR_DESCR'
-                Title.Caption = #1054#1073#1089#1083#1091#1078#1080#1074#1072#1102#1097#1072#1103' '#1086#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103
-                Width = 64
-                Visible = True
-              end>
-          end
-        end
-        object FaCancelStopListTabSheet: TTabSheet
-          Tag = 1
-          Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1090#1084#1077#1085#1091' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1103
-          ImageIndex = 5
-          OnShow = FaCancelStopListTabSheetShow
-          object CancelStopListGrid: TDBGridAlt
-            Left = 0
-            Top = 0
-            Width = 1099
-            Height = 771
-            Align = alClient
-            DataSource = MainDataModule.getCancelStopListDataSource
-            TabOrder = 0
-            TitleFont.Charset = DEFAULT_CHARSET
-            TitleFont.Color = clWindowText
-            TitleFont.Height = -11
-            TitleFont.Name = 'MS Sans Serif'
-            TitleFont.Style = []
-            DefaultSortFieldName = 'ROWNUM'
-            CheckDataFieldName = 'CHECK_DATA'
-            OddRowColor = 16448250
-            EvenRowColor = clWhite
-            SortColumnColor = 13824255
-            ColumnAutosize = False
-            CheckedFont.Charset = DEFAULT_CHARSET
-            CheckedFont.Color = clRed
-            CheckedFont.Height = -11
-            CheckedFont.Name = 'MS Sans Serif'
-            CheckedFont.Style = []
-            EditableFont.Charset = DEFAULT_CHARSET
-            EditableFont.Color = clBlack
-            EditableFont.Height = -11
-            EditableFont.Name = 'MS Sans Serif'
-            EditableFont.Style = []
-            OnChangeCheck = OnChangeCheck
-            Columns = <
-              item
-                Expanded = False
-                FieldName = 'ROWNUM'
-                ReadOnly = True
-                Title.Caption = 'N'
-                Width = 40
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'CHECK_DATA'
-                ReadOnly = True
-                Visible = False
-              end
-              item
-                Expanded = False
-                FieldName = 'FA_PACK_ID'
-                Title.Caption = #1056#1077#1077#1089#1090#1088
-                Width = 80
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'CRE_DTTM'
-                Title.Caption = #1044#1072#1090#1072' '#1088#1077#1077#1089#1090#1088#1072
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'FA_PACK_STATUS_DESCR'
-                Title.Caption = #1057#1090#1072#1090#1091#1089
-                Width = 140
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'RT_SPR'
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ACCT_ID_CNT'
-                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1072#1073#1086#1085#1077#1085#1090#1086#1074
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'OWNER'
-                Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
-                Width = 100
-                Visible = True
-              end>
-          end
-        end
-        object PackReconnectTabSheet: TTabSheet
-          Tag = 1
-          Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1074#1086#1079#1086#1073#1085#1086#1074#1083#1077#1085#1080#1077
-          ImageIndex = 7
-          OnShow = ReconnectTabSheetShow
-          object ReconnectListGrid: TDBGridAlt
-            Left = 0
-            Top = 0
-            Width = 1099
-            Height = 771
-            Align = alClient
-            DataSource = MainDataModule.getReconnectListDataSource
-            TabOrder = 0
-            TitleFont.Charset = DEFAULT_CHARSET
-            TitleFont.Color = clWindowText
-            TitleFont.Height = -11
-            TitleFont.Name = 'MS Sans Serif'
-            TitleFont.Style = []
-            DefaultSortFieldName = 'ROWNUM'
-            CheckDataFieldName = 'CHECK_DATA'
-            OddRowColor = 16448250
-            EvenRowColor = clWhite
-            SortColumnColor = 13824255
-            ColumnAutosize = False
-            CheckedFont.Charset = DEFAULT_CHARSET
-            CheckedFont.Color = clRed
-            CheckedFont.Height = -11
-            CheckedFont.Name = 'MS Sans Serif'
-            CheckedFont.Style = []
-            EditableFont.Charset = DEFAULT_CHARSET
-            EditableFont.Color = clBlack
-            EditableFont.Height = -11
-            EditableFont.Name = 'MS Sans Serif'
-            EditableFont.Style = []
-            OnChangeCheck = OnChangeCheck
-            Columns = <
-              item
-                Expanded = False
-                FieldName = 'ROWNUM'
-                ReadOnly = True
-                Title.Caption = 'N'
-                Width = 40
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'CHECK_DATA'
-                ReadOnly = True
-                Visible = False
-              end
-              item
-                Expanded = False
-                FieldName = 'FA_PACK_ID'
-                Title.Caption = #1056#1077#1077#1089#1090#1088
-                Width = 80
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'CRE_DTTM'
-                Title.Caption = #1044#1072#1090#1072' '#1088#1077#1077#1089#1090#1088#1072
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'FA_PACK_STATUS_DESCR'
-                Title.Caption = #1057#1090#1072#1090#1091#1089
-                Width = 140
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'RT_SPR'
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ACCT_ID_CNT'
-                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1072#1073#1086#1085#1077#1085#1090#1086#1074
-                Width = 100
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'OWNER'
-                Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
-                Width = 100
-                Visible = True
-              end>
-          end
-        end
         object PostListTabSheet: TTabSheet
           Caption = #1057#1087#1080#1089#1086#1082' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081' '#1085#1072' '#1087#1086#1095#1090#1091
-          ImageIndex = 9
+          ImageIndex = 4
           OnShow = PostListTabSheetShow
           object PostListGrid: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 1099
-            Height = 771
+            Width = 1373
+            Height = 902
             Align = alClient
             DataSource = MainDataModule.getPrePostListDataSource
             ReadOnly = True
@@ -1305,8 +730,8 @@ object FieldActivityForm: TFieldActivityForm
           object FullListGrid: TDBGridAlt
             Left = 0
             Top = 0
-            Width = 1099
-            Height = 771
+            Width = 1373
+            Height = 902
             Align = alClient
             DataSource = MainDataModule.getAcctFullListDataSource
             ReadOnly = True
@@ -1440,12 +865,950 @@ object FieldActivityForm: TFieldActivityForm
               end>
           end
         end
+        object StopListTabSheet: TTabSheet
+          Caption = #1057#1087#1080#1089#1086#1082' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
+          ImageIndex = 2
+          OnShow = StopListTabSheetShow
+          object StopListGrid: TDBGridAlt
+            Left = 0
+            Top = 0
+            Width = 1373
+            Height = 902
+            Align = alClient
+            DataSource = MainDataModule.getPreStopListDataSource
+            ReadOnly = True
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'MS Sans Serif'
+            TitleFont.Style = []
+            DefaultSortFieldName = 'ROWNUM'
+            CheckDataFieldName = 'CHECK_DATA'
+            OddRowColor = 16448250
+            EvenRowColor = clWhite
+            SortColumnColor = 13824255
+            ColumnAutosize = False
+            CheckedFont.Charset = DEFAULT_CHARSET
+            CheckedFont.Color = clRed
+            CheckedFont.Height = -11
+            CheckedFont.Name = 'MS Sans Serif'
+            CheckedFont.Style = []
+            EditableFont.Charset = DEFAULT_CHARSET
+            EditableFont.Color = clBlack
+            EditableFont.Height = -11
+            EditableFont.Name = 'MS Sans Serif'
+            EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'CHECK_DATA'
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'ROWNUM'
+                Title.Caption = 'N'
+                Width = 50
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ACCT_ID'
+                Title.Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
+                Width = 80
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_ID'
+                Title.Caption = #1056#1077#1077#1089#1090#1088
+                Width = 80
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_TYPE_DESCR'
+                Title.Caption = #1058#1080#1087' '#1088#1077#1077#1089#1090#1088#1072
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CC_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1072#1082#1090#1072
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'APPROVAL_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1091#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CTR_DESCR'
+                Title.Caption = #1048#1089#1087#1086#1083#1085#1080#1090#1077#1083#1100
+                Width = 300
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FIO'
+                Title.Caption = #1060#1048#1054
+                Width = 160
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CITY'
+                Title.Caption = #1053#1072#1089'. '#1087#1091#1085#1082#1090
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ADDRESS'
+                Title.Caption = #1040#1076#1088#1077#1089
+                Width = 200
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'SALDO_UCH'
+                Title.Caption = #1057#1072#1083#1100#1076#1086
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'PREM_TYPE_DESCR'
+                Title.Caption = #1058#1080#1087' '#1054#1054
+                Width = 100
+                Visible = True
+              end>
+          end
+        end
+        object PackStopListTabSheet: TTabSheet
+          Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
+          ImageIndex = 8
+          OnShow = PackStopListTabSheetShow
+          object PackStopListGrid: TDBGridAlt
+            Left = 0
+            Top = 0
+            Width = 1373
+            Height = 902
+            Align = alClient
+            DataSource = MainDataModule.getFpStopListDataSource
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'MS Sans Serif'
+            TitleFont.Style = []
+            DefaultSortFieldName = 'ROWNUM'
+            CheckDataFieldName = 'CHECK_DATA'
+            OddRowColor = 16448250
+            EvenRowColor = clWhite
+            SortColumnColor = 13824255
+            ColumnAutosize = False
+            CheckedFont.Charset = DEFAULT_CHARSET
+            CheckedFont.Color = clRed
+            CheckedFont.Height = -11
+            CheckedFont.Name = 'MS Sans Serif'
+            CheckedFont.Style = []
+            EditableFont.Charset = DEFAULT_CHARSET
+            EditableFont.Color = clBlack
+            EditableFont.Height = -11
+            EditableFont.Name = 'MS Sans Serif'
+            EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ROWNUM'
+                Title.Caption = 'N'
+                Width = 40
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CHECK_DATA'
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_ID'
+                Title.Caption = #1056#1077#1077#1089#1090#1088
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CRE_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1088#1077#1077#1089#1090#1088#1072
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_CNT'
+                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1072#1073#1086#1085#1077#1085#1090#1086#1074
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ST_P_DT'
+                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1082#1083'.'
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_STATUS_DESCR'
+                Title.Caption = #1057#1090#1072#1090#1091#1089' '#1088#1077#1077#1089#1090#1088#1072
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'RECIPIENT_SPR_DESCR'
+                Title.Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'OWNER'
+                Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
+                Visible = True
+              end>
+          end
+        end
+        object FaCancelStopListTabSheet: TTabSheet
+          Tag = 1
+          Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1090#1084#1077#1085#1091' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1103
+          ImageIndex = 5
+          OnShow = FaCancelStopListTabSheetShow
+          object CancelStopListGrid: TDBGridAlt
+            Left = 0
+            Top = 0
+            Width = 1373
+            Height = 902
+            Align = alClient
+            DataSource = MainDataModule.getFpCancelListDataSource
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'MS Sans Serif'
+            TitleFont.Style = []
+            DefaultSortFieldName = 'ROWNUM'
+            CheckDataFieldName = 'CHECK_DATA'
+            OddRowColor = 16448250
+            EvenRowColor = clWhite
+            SortColumnColor = 13824255
+            ColumnAutosize = False
+            CheckedFont.Charset = DEFAULT_CHARSET
+            CheckedFont.Color = clRed
+            CheckedFont.Height = -11
+            CheckedFont.Name = 'MS Sans Serif'
+            CheckedFont.Style = []
+            EditableFont.Charset = DEFAULT_CHARSET
+            EditableFont.Color = clBlack
+            EditableFont.Height = -11
+            EditableFont.Name = 'MS Sans Serif'
+            EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ROWNUM'
+                ReadOnly = True
+                Title.Caption = 'N'
+                Width = 40
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CHECK_DATA'
+                ReadOnly = True
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_ID'
+                Title.Caption = #1056#1077#1077#1089#1090#1088
+                Width = 80
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CRE_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1088#1077#1077#1089#1090#1088#1072
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_STATUS_DESCR'
+                Title.Caption = #1057#1090#1072#1090#1091#1089
+                Width = 140
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'RT_SPR'
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ACCT_ID_CNT'
+                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1072#1073#1086#1085#1077#1085#1090#1086#1074
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'OWNER'
+                Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
+                Width = 100
+                Visible = True
+              end>
+          end
+        end
+        object PackReconnectTabSheet: TTabSheet
+          Tag = 1
+          Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1074#1086#1079#1086#1073#1085#1086#1074#1083#1077#1085#1080#1077
+          ImageIndex = 7
+          OnShow = ReconnectTabSheetShow
+          object ReconnectListGrid: TDBGridAlt
+            Left = 0
+            Top = 0
+            Width = 1373
+            Height = 902
+            Align = alClient
+            DataSource = MainDataModule.getReconnectListDataSource
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'MS Sans Serif'
+            TitleFont.Style = []
+            DefaultSortFieldName = 'ROWNUM'
+            CheckDataFieldName = 'CHECK_DATA'
+            OddRowColor = 16448250
+            EvenRowColor = clWhite
+            SortColumnColor = 13824255
+            ColumnAutosize = False
+            CheckedFont.Charset = DEFAULT_CHARSET
+            CheckedFont.Color = clRed
+            CheckedFont.Height = -11
+            CheckedFont.Name = 'MS Sans Serif'
+            CheckedFont.Style = []
+            EditableFont.Charset = DEFAULT_CHARSET
+            EditableFont.Color = clBlack
+            EditableFont.Height = -11
+            EditableFont.Name = 'MS Sans Serif'
+            EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ROWNUM'
+                ReadOnly = True
+                Title.Caption = 'N'
+                Width = 40
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CHECK_DATA'
+                ReadOnly = True
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_ID'
+                Title.Caption = #1056#1077#1077#1089#1090#1088
+                Width = 80
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CRE_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1088#1077#1077#1089#1090#1088#1072
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_STATUS_DESCR'
+                Title.Caption = #1057#1090#1072#1090#1091#1089
+                Width = 140
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'RT_SPR'
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ACCT_ID_CNT'
+                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1072#1073#1086#1085#1077#1085#1090#1086#1074
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'OWNER'
+                Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
+                Width = 100
+                Visible = True
+              end>
+          end
+        end
+        object PackStopTabSheet: TTabSheet
+          Tag = 1
+          Caption = #1057#1087#1080#1089#1086#1082' '#1072#1073#1086#1085#1077#1085#1090#1086#1074' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
+          ImageIndex = 4
+          OnShow = PackStopTabSheetShow
+          object FpStopContentGrid: TDBGridAlt
+            Left = 0
+            Top = 0
+            Width = 1373
+            Height = 902
+            Align = alClient
+            DataSource = MainDataModule.getFpStopContentDataSource
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'MS Sans Serif'
+            TitleFont.Style = []
+            OnCellClick = FpStopContentGridCellClick
+            DefaultSortFieldName = 'ROWNUM'
+            CheckDataFieldName = 'CHECK_DATA'
+            OddRowColor = 16448250
+            EvenRowColor = clWhite
+            SortColumnColor = 13824255
+            ColumnAutosize = False
+            CheckedFont.Charset = DEFAULT_CHARSET
+            CheckedFont.Color = clRed
+            CheckedFont.Height = -11
+            CheckedFont.Name = 'MS Sans Serif'
+            CheckedFont.Style = []
+            EditableFont.Charset = DEFAULT_CHARSET
+            EditableFont.Color = clBlack
+            EditableFont.Height = -11
+            EditableFont.Name = 'MS Sans Serif'
+            EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ROWNUM'
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'CHECK_DATA'
+                ReadOnly = True
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_ID'
+                ReadOnly = True
+                Title.Caption = 'ID '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'NOTICE_FA_ID'
+                PopupMenu = ActionsPopupMenu
+                Title.Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CANCEL_FA_PACK_ID'
+                Title.Caption = #1054#1090#1084#1077#1085#1072
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CANCEL_FA_PACK_CRE_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1084#1077#1085#1099
+                Width = 100
+                Visible = True
+              end
+              item
+                ButtonStyle = cbsEllipsis
+                Expanded = False
+                FieldName = 'CC_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1072#1082#1090#1072
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ST_P_DT'
+                Title.Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085'. '#1086#1075#1088'.'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'SA_E_DT'
+                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1082#1083'. '#1056#1044#1054
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ACCT_ID'
+                ReadOnly = True
+                Title.Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'SALDO_UCH'
+                ReadOnly = True
+                Title.Caption = #1057#1072#1083#1100#1076#1086
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'END_REG_READING1'
+                ReadOnly = True
+                Title.Caption = #1055#1086#1082#1072#1079#1072#1085#1080#1103' '#1076#1077#1085#1100
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'END_REG_READING2'
+                ReadOnly = True
+                Title.Caption = #1055#1086#1082#1072#1079#1072#1085#1080#1103' '#1085#1086#1095#1100
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'PREM_TYPE_DESCR'
+                Title.Caption = #1058#1080#1087' '#1054#1054
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CITY'
+                ReadOnly = True
+                Title.Caption = #1043#1086#1088#1086#1076
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ADDRESS'
+                ReadOnly = True
+                Title.Caption = #1059#1083#1080#1094#1072', '#1076#1086#1084', '#1082#1074#1072#1088#1090#1080#1088#1072', '#1082#1086#1088#1087#1091#1089
+                Width = 200
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FIO'
+                ReadOnly = True
+                Title.Caption = #1060#1048#1054
+                Width = 200
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'OP_AREA_DESCR'
+                Title.Caption = #1050#1086#1085#1090#1088#1086#1083#1077#1088
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'SPR_DESCR'
+                Title.Caption = #1054#1073#1089#1083#1091#1078#1080#1074#1072#1102#1097#1072#1103' '#1086#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103
+                Width = 64
+                Visible = True
+              end>
+          end
+        end
+        object FpCancelContentTabSheet: TTabSheet
+          Caption = #1057#1087#1080#1089#1086#1082' '#1072#1073#1086#1085#1077#1085#1090#1086#1074' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1086#1090#1084#1077#1085#1091
+          ImageIndex = 11
+          OnShow = FpCancelContentTabSheetShow
+          object FpCancelContentGrid: TDBGridAlt
+            Left = 0
+            Top = 0
+            Width = 1373
+            Height = 902
+            Align = alClient
+            DataSource = MainDataModule.getFpCancelContentDataSource
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'MS Sans Serif'
+            TitleFont.Style = []
+            DefaultSortFieldName = 'ROWNUM'
+            CheckDataFieldName = 'CHECK_DATA'
+            OddRowColor = 16448250
+            EvenRowColor = clWhite
+            SortColumnColor = 13824255
+            ColumnAutosize = False
+            CheckedFont.Charset = DEFAULT_CHARSET
+            CheckedFont.Color = clRed
+            CheckedFont.Height = -11
+            CheckedFont.Name = 'MS Sans Serif'
+            CheckedFont.Style = []
+            EditableFont.Charset = DEFAULT_CHARSET
+            EditableFont.Color = clBlack
+            EditableFont.Height = -11
+            EditableFont.Name = 'MS Sans Serif'
+            EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ROWNUM'
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'CHECK_DATA'
+                ReadOnly = True
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_ID'
+                ReadOnly = True
+                Title.Caption = 'ID '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'NOTICE_FA_ID'
+                PopupMenu = ActionsPopupMenu
+                Title.Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CANCEL_FA_PACK_ID'
+                Title.Caption = #1054#1090#1084#1077#1085#1072
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CANCEL_FA_PACK_CRE_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1084#1077#1085#1099
+                Width = 100
+                Visible = True
+              end
+              item
+                ButtonStyle = cbsEllipsis
+                Expanded = False
+                FieldName = 'CC_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1072#1082#1090#1072
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ST_P_DT'
+                Title.Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085'. '#1086#1075#1088'.'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'SA_E_DT'
+                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1082#1083'. '#1056#1044#1054
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ACCT_ID'
+                ReadOnly = True
+                Title.Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'SALDO_UCH'
+                ReadOnly = True
+                Title.Caption = #1057#1072#1083#1100#1076#1086
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'END_REG_READING1'
+                ReadOnly = True
+                Title.Caption = #1055#1086#1082#1072#1079#1072#1085#1080#1103' '#1076#1077#1085#1100
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'END_REG_READING2'
+                ReadOnly = True
+                Title.Caption = #1055#1086#1082#1072#1079#1072#1085#1080#1103' '#1085#1086#1095#1100
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'PREM_TYPE_DESCR'
+                Title.Caption = #1058#1080#1087' '#1054#1054
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CITY'
+                ReadOnly = True
+                Title.Caption = #1043#1086#1088#1086#1076
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ADDRESS'
+                ReadOnly = True
+                Title.Caption = #1059#1083#1080#1094#1072', '#1076#1086#1084', '#1082#1074#1072#1088#1090#1080#1088#1072', '#1082#1086#1088#1087#1091#1089
+                Width = 200
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FIO'
+                ReadOnly = True
+                Title.Caption = #1060#1048#1054
+                Width = 200
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'OP_AREA_DESCR'
+                Title.Caption = #1050#1086#1085#1090#1088#1086#1083#1077#1088
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'SPR_DESCR'
+                Title.Caption = #1054#1073#1089#1083#1091#1078#1080#1074#1072#1102#1097#1072#1103' '#1086#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103
+                Width = 64
+                Visible = True
+              end>
+          end
+        end
+        object FpReconnectContentTabSheet: TTabSheet
+          Caption = #1057#1087#1080#1089#1086#1082' '#1072#1073#1086#1085#1077#1085#1090#1086#1074' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1074#1086#1079#1086#1073#1085#1086#1074#1083#1077#1085#1080#1077
+          ImageIndex = 12
+          OnShow = FpReconnectContentTabSheetShow
+          object FpReconnectContentGrid: TDBGridAlt
+            Left = 0
+            Top = 0
+            Width = 1373
+            Height = 902
+            Align = alClient
+            DataSource = MainDataModule.getFpReconnectContentDataSource
+            DefaultDrawing = False
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'MS Sans Serif'
+            TitleFont.Style = []
+            DefaultSortFieldName = 'ROWNUM'
+            CheckDataFieldName = 'CHECK_DATA'
+            OddRowColor = 16448250
+            EvenRowColor = clWhite
+            SortColumnColor = 13824255
+            ColumnAutosize = False
+            CheckedFont.Charset = DEFAULT_CHARSET
+            CheckedFont.Color = clRed
+            CheckedFont.Height = -11
+            CheckedFont.Name = 'MS Sans Serif'
+            CheckedFont.Style = []
+            EditableFont.Charset = DEFAULT_CHARSET
+            EditableFont.Color = clBlack
+            EditableFont.Height = -11
+            EditableFont.Name = 'MS Sans Serif'
+            EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ROWNUM'
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'CHECK_DATA'
+                ReadOnly = True
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_ID'
+                ReadOnly = True
+                Title.Caption = 'ID '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'NOTICE_FA_ID'
+                PopupMenu = ActionsPopupMenu
+                Title.Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CANCEL_FA_PACK_ID'
+                Title.Caption = #1054#1090#1084#1077#1085#1072
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CANCEL_FA_PACK_CRE_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1084#1077#1085#1099
+                Width = 100
+                Visible = True
+              end
+              item
+                ButtonStyle = cbsEllipsis
+                Expanded = False
+                FieldName = 'CC_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1072#1082#1090#1072
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ST_P_DT'
+                Title.Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085'. '#1086#1075#1088'.'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'SA_E_DT'
+                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1082#1083'. '#1056#1044#1054
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ACCT_ID'
+                ReadOnly = True
+                Title.Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'SALDO_UCH'
+                ReadOnly = True
+                Title.Caption = #1057#1072#1083#1100#1076#1086
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'END_REG_READING1'
+                ReadOnly = True
+                Title.Caption = #1055#1086#1082#1072#1079#1072#1085#1080#1103' '#1076#1077#1085#1100
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'END_REG_READING2'
+                ReadOnly = True
+                Title.Caption = #1055#1086#1082#1072#1079#1072#1085#1080#1103' '#1085#1086#1095#1100
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'PREM_TYPE_DESCR'
+                Title.Caption = #1058#1080#1087' '#1054#1054
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CITY'
+                ReadOnly = True
+                Title.Caption = #1043#1086#1088#1086#1076
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ADDRESS'
+                ReadOnly = True
+                Title.Caption = #1059#1083#1080#1094#1072', '#1076#1086#1084', '#1082#1074#1072#1088#1090#1080#1088#1072', '#1082#1086#1088#1087#1091#1089
+                Width = 200
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FIO'
+                ReadOnly = True
+                Title.Caption = #1060#1048#1054
+                Width = 200
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'OP_AREA_DESCR'
+                Title.Caption = #1050#1086#1085#1090#1088#1086#1083#1077#1088
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'SPR_DESCR'
+                Title.Caption = #1054#1073#1089#1083#1091#1078#1080#1074#1072#1102#1097#1072#1103' '#1086#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103
+                Width = 64
+                Visible = True
+              end>
+          end
+        end
       end
     end
     object Panel2: TPanel
       Left = 0
       Top = 0
-      Width = 1107
+      Width = 1381
       Height = 40
       Align = alTop
       BevelOuter = bvNone
@@ -1504,14 +1867,14 @@ object FieldActivityForm: TFieldActivityForm
     Left = 0
     Top = 0
     Width = 289
-    Height = 846
+    Height = 977
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 2
     DesignSize = (
       289
-      846)
+      977)
     object GroupBox7: TGroupBox
       Left = 5
       Top = 40
@@ -2121,7 +2484,7 @@ object FieldActivityForm: TFieldActivityForm
     end
     object Panel3: TPanel
       Left = 2
-      Top = 735
+      Top = 866
       Width = 285
       Height = 109
       Align = alBottom
@@ -2255,6 +2618,11 @@ object FieldActivityForm: TFieldActivityForm
       OnExecute = printDocumentFaNoticesListActionExecute
       OnUpdate = createFaPackNoticeActionUpdate
     end
+    object editSaEndDtAction: TAction
+      Category = 'Actions_notice'
+      Caption = #1042#1074#1077#1089#1090#1080' '#1076#1072#1090#1091' '#1082#1086#1085#1090#1072#1082#1090#1072' '#1089' '#1072#1073#1086#1085#1077#1085#1090#1086#1084
+      OnExecute = editSaEndDtActionExecute
+    end
     object createFaPackPostAction: TAction
       Category = 'Actions_notice'
       Caption = #1057#1086#1079#1076#1072#1090#1100' '#1088#1077#1077#1089#1090#1088' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081' '#1087#1086' '#1087#1086#1095#1090#1077
@@ -2374,6 +2742,12 @@ object FieldActivityForm: TFieldActivityForm
       OnExecute = setFaPackCancelStopStatusCompleteActionExecute
       OnUpdate = createFaPackNoticeActionUpdate
     end
+    object createFpCancelStopAction: TAction
+      Category = 'Actions_stop'
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1079#1072#1103#1074#1082#1091
+      OnExecute = createFpCancelStopActionExecute
+      OnUpdate = createFaPackNoticeActionUpdate
+    end
   end
   object ActionsPopupMenu: TPopupMenu
     Left = 368
@@ -2404,6 +2778,9 @@ object FieldActivityForm: TFieldActivityForm
     end
     object N12: TMenuItem
       Action = setFaPackCancelStopStatusCompleteAction
+    end
+    object N19: TMenuItem
+      Action = createFpCancelStopAction
     end
   end
   object ActionList2: TActionList

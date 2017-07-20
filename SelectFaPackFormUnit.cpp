@@ -31,6 +31,7 @@ void __fastcall TSelectFaPackForm::faListGridChangeCheck(TObject *Sender)
     if (!_currentFilter->DataSet->FieldByName("fa_pack_id")->IsNull)
     {
         _faPackId = _currentFilter->DataSet->FieldByName("fa_pack_id")->AsString;
+        _fpTypeCd = _currentFilter->DataSet->FieldByName("fa_pack_type_cd")->AsInteger;
         ////_faPack.setFaPackId(MainDataModule->selectFaPackQuery->FieldByName("fa_pack_id")->AsString);
         ////_faPack.setFaPackType(MainDataModule->selectFaPackQuery->FieldByName("fa_pack_type_cd")->AsInteger);
     }
@@ -44,11 +45,12 @@ bool __fastcall TSelectFaPackForm::execute(String acctOtdelen, int mode)
     OtdelenComboBox->KeyValue = acctOtdelen;
     _mode = mode;
 
-    ResetFilter();
-    ResetFindFilter();
 
     FindPackList(); // Поиск
 
+    ResetFilter();
+    ResetFindFilter();
+    
     return this->ShowModal() == mrOk;
 }
 
@@ -59,7 +61,6 @@ void __fastcall TSelectFaPackForm::FindPackList()
     {
     case 0:
     {
-
         MainDataModule->findFaPackListNotices(OtdelenComboBox->KeyValue, FaIdFindEdit->Text, AcctIdFindEdit->Text);
         faListGrid->DataSource = MainDataModule->findFaPackListNoticesDS;
         _currentFilter = MainDataModule->findFaPackListNoticesFilter;
@@ -69,7 +70,7 @@ void __fastcall TSelectFaPackForm::FindPackList()
     {
         MainDataModule->findFaPackListStop(OtdelenComboBox->KeyValue, FaIdFindEdit->Text, AcctIdFindEdit->Text);
         faListGrid->DataSource = MainDataModule->findFaPackListStopDS;
-        _currentFilter = MainDataModule->findFaPackListStopFilter;
+        _currentFilter = MainDataModule->findFpStopListFilter;
         break;
     }
     }
@@ -81,6 +82,13 @@ String __fastcall TSelectFaPackForm::getFaPackId()
 {
     return _faPackId;
 }
+
+/* Возвращает pack_id выбранного реестра */
+TFaPackTypeCd __fastcall TSelectFaPackForm::getFaPackTypeCd()
+{
+    return _fpTypeCd;
+}
+
 
 
 /* Изменение значения поля фильтра */
@@ -178,12 +186,17 @@ void __fastcall TSelectFaPackForm::Button3Click(TObject *Sender)
 /* Очистка фильтров */
 void __fastcall TSelectFaPackForm::ResetFilter()
 {
-    // В дальнейшем при необходимости организовать через currentFilter
-    
-    FaPackIdFilterEdit->Text = "";
-    FaPackTypeDescrFilterComboBox->Text = "";
-    FaPackStatusFlgFilterComboBox->Text = "";
-    OwnerFilterEdit->Text = "";
+    _currentFilter->clearAllValues();
+    FaPackIdFilterEdit->Text = _currentFilter->getValue(FaPackIdFilterEdit->Name, "param");
+    OwnerFilterEdit->Text = _currentFilter->getValue(OwnerFilterEdit->Name, "param");
+    FaPackStatusFlgFilterComboBox->ItemIndex = StrToInt( _currentFilter->getValue(FaPackStatusFlgFilterComboBox->Name, "param") );
+    FaPackTypeCdFilterComboBox->ItemIndex = StrToInt( _currentFilter->getValue(FaPackTypeCdFilterComboBox->Name, "param") );
+
+
+    //FaPackIdFilterEdit->Text = "";
+    //FaPackTypeCdFilterComboBox->ItemIndex = 0;
+    //FaPackStatusFlgFilterComboBox->ItemIndex = 0;
+    //OwnerFilterEdit->Text = "";
 }
 //---------------------------------------------------------------------------
 
