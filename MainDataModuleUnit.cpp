@@ -312,12 +312,21 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
     // По версии программы
     // или по другим причинам
     // В будущем предусмотреть сообщение из БД
+
+
     if (!getConfigProc->FieldByName("stop_allert")->IsNull)
     {
+        #ifndef _DEBUG
+        //Form1->Caption = Form1->Caption + " (Debuging...)";
         Application->Terminate();
         Application->ProcessMessages();
+        #endif
+
         MessageBoxStop(getConfigProc->FieldByName("stop_allert")->AsString);
+
+        #ifndef _DEBUG
         return;
+        #endif
     }
 
     // Время запуска программы
@@ -484,7 +493,7 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
     //getApprovalListFilter->add("cc_dttm", "(:param)");
     //getApprovalListFilter->add("ccDttmIsApprovedCheckBox", "approval_dttm is not null :param");
     //getApprovalListFilter->add("ApprovedStatusComboBox", "approval_dttm is :param null"); // is [not] null
-    getApprovalListFilter->add("ApprovedStatusComboBox", "(:param = 0 or (:param=1 and approval_dttm is not null) or (:param=2 and approval_dttm is null) )"); // is [not] null
+    getApprovalListFilter->add("ApprovedStatusComboBox", "(:param = 0 or (:param=1 and cc_status_flg = '20') or (:param=2 and cc_status_flg='10') or (:param=3 and cc_status_flg = '50') )"); // is [not] null
     //getApprovalListFilter->setValue("ApprovedStatusComboBox", "param", "2");
     getApprovalListFilter->setDefaultValue("ApprovedStatusComboBox", "param", "2");
 
@@ -511,9 +520,9 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
     getPreStopListFilter->add("PremTypeComboBox", "prem_type_descr like '%:param%'");
     getPreStopListFilter->add("FaPackTypeFilterComboBox", "fa_pack_type_descr like '%:param%'");
     getPreStopListFilter->add("CcDttmStatusComboBox", "(:param = 0 or (:param=1 and cc_dttm is not null) or (:param=2 and cc_dttm is null) or (:param=3 and cc_dttm >= ':begin_dt' and cc_dttm < ':end_dt') )");
-    getPreStopListFilter->setDefaultValue("CcDttmStatusComboBox", "param", "0");
-    getPreStopListFilter->setDefaultValue("CcDttmStatusComboBox", "begin_dt", beginDt);
-    getPreStopListFilter->setDefaultValue("CcDttmStatusComboBox", "end_dt", endDt);
+    getPreStopListFilter->setDefaultValue("CcDttmStatusComboBox", "param", "3");
+    getPreStopListFilter->setDefaultValue("CcDttmStatusComboBox", "begin_dt", "01.01.1900");
+    getPreStopListFilter->setDefaultValue("CcDttmStatusComboBox", "end_dt", IncDay(dt, -17));
     getPreStopListFilter->EnableControls();
 
     /* Фильтр для списка реестров на ограничение */
@@ -554,6 +563,7 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
     /* Фильтр для реестра на ограничение */
     getFpStopContentFilter->DisableControls();
     getFpStopContentFilter->add("AcctIdComboBox", "acct_id like '%:param%'");
+    getFpStopContentFilter->add("FaIdFilterEdit", "fa_id like '%:param%'");
     getFpStopContentFilter->add("AddressComboBox", "address like '%:param%'");
     getFpStopContentFilter->add("CityComboBox", "city like '%:param%'");
     getFpStopContentFilter->add("FioComboBox", "fio like '%:param%'");
@@ -562,14 +572,16 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
     /* Фильтр для реестра на ограничение */
     getFpCancelContentFilter->DisableControls();
     getFpCancelContentFilter->add("AcctIdComboBox", "acct_id like '%:param%'");
+    getFpCancelContentFilter->add("FaIdFilterEdit", "fa_id like '%:param%'");
     getFpCancelContentFilter->add("AddressComboBox", "address like '%:param%'");
     getFpCancelContentFilter->add("CityComboBox", "city like '%:param%'");
     getFpCancelContentFilter->add("FioComboBox", "fio like '%:param%'");
     getFpCancelContentFilter->EnableControls();
 
-    /* Фильтр для реестра на ограничение */
+    /* Фильтр для реестра на возобновление */
     getFpReconnectContentFilter->DisableControls();
     getFpReconnectContentFilter->add("AcctIdComboBox", "acct_id like '%:param%'");
+    getFpReconnectContentFilter->add("FaIdFilterEdit", "fa_id like '%:param%'");
     getFpReconnectContentFilter->add("AddressComboBox", "address like '%:param%'");
     getFpReconnectContentFilter->add("CityComboBox", "city like '%:param%'");
     getFpReconnectContentFilter->add("FioComboBox", "fio like '%:param%'");
@@ -592,7 +604,7 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
     findFaPackListNoticesFilter->DisableControls();
     findFaPackListNoticesFilter->add("FaPackIdFilterEdit", "fa_pack_id like '%:param%'");
     //findFaPackListNoticesFilter->add("FaPackTypeDescrFilterComboBox", "fa_pack_type_descr like '%:param%'");
-    findFaPackListNoticesFilter->add("FaPackTypeCdFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_type_cd = '10') or (:param=2 and fa_pack_type_cd = '20') or (:param=3 and fa_pack_type_cd = '40') or (:param=3 and fa_pack_type_cd = '45') or (:param=3 and fa_pack_type_cd = '50'))");
+    findFaPackListNoticesFilter->add("FaPackTypeCdFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_type_cd = '10') or (:param=2 and fa_pack_type_cd = '20') or (:param=3 and fa_pack_type_cd = '40') or (:param=4 and fa_pack_type_cd = '45') or (:param=5 and fa_pack_type_cd = '50'))");
     findFaPackListNoticesFilter->add("FaPackStatusFlgFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_status_flg = '50') or (:param=2 and fa_pack_status_flg = '20') or (:param=3 and fa_pack_status_flg = '60'))");
     findFaPackListNoticesFilter->add("OwnerFilterEdit", "owner like '%:param%'");
     findFaPackListNoticesFilter->setDefaultValue("FaPackTypeCdFilterComboBox", "param", "0");
@@ -603,7 +615,7 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
     findFpStopListFilter->DisableControls();
     findFpStopListFilter->add("FaPackIdFilterEdit", "fa_pack_id like '%:param%'");
     //findFpStopListFilter->add("FaPackTypeDescrFilterComboBox", "fa_pack_type_descr like '%:param%'");
-    findFpStopListFilter->add("FaPackTypeCdFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_type_cd = '10') or (:param=2 and fa_pack_type_cd = '20') or (:param=3 and fa_pack_type_cd = '40') or (:param=3 and fa_pack_type_cd = '45') or (:param=3 and fa_pack_type_cd = '50'))");
+    findFpStopListFilter->add("FaPackTypeCdFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_type_cd = '10') or (:param=2 and fa_pack_type_cd = '20') or (:param=3 and fa_pack_type_cd = '40') or (:param=4 and fa_pack_type_cd = '45') or (:param=5 and fa_pack_type_cd = '50'))");
     findFpStopListFilter->add("FaPackStatusFlgFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_status_flg = '50') or (:param=2 and fa_pack_status_flg = '20') or (:param=3 and fa_pack_status_flg = '60'))");
     findFpStopListFilter->setDefaultValue("FaPackTypeCdFilterComboBox", "param", "0");
     findFpStopListFilter->setDefaultValue("FaPackStatusFlgFilterComboBox", "param", "0");    findFpStopListFilter->add("OwnerFilterEdit", "owner like '%:param%'");
@@ -743,8 +755,8 @@ void TMainDataModule::updateCc(
     TDateTime ccDttm,
     const String& descr,
     const String& caller,
-    TCcTypeCd::Type ccTypeCd,
-    TCcStatusFlg::Type ccStatusFlg
+    TCcTypeCd::Type ccTypeCd/*
+    TCcStatusFlg::Type ccStatusFlg */
 )
 {
     try
@@ -752,7 +764,7 @@ void TMainDataModule::updateCc(
         updateCcProc->ParamByName("p_cc_id")->Value = ccId;
         updateCcProc->ParamByName("p_cc_dttm")->Value = ccDttm;
         updateCcProc->ParamByName("p_cc_type_cd")->Value = FormatFloat("00", ccTypeCd);//IntToStr(statusFlg);
-        updateCcProc->ParamByName("p_cc_status_flg")->Value = FormatFloat("00", ccStatusFlg);//IntToStr(statusFlg);
+        //updateCcProc->ParamByName("p_cc_status_flg")->Value = FormatFloat("00", ccStatusFlg);//IntToStr(statusFlg);
         updateCcProc->ParamByName("p_descr")->Value = descr;
         updateCcProc->ParamByName("p_caller")->Value = caller;
 
@@ -818,7 +830,7 @@ String TMainDataModule::addCc(
     const String& srcId,
     const String& caller,
     TCcTypeCd::Type ccTypeCd,
-    TCcStatusFlg::Type ccStatusFlg,
+    //TCcStatusFlg::Type ccStatusFlg,
     TCcSourceTypeCd::Type ccSourceTypeCd
 )
 {
@@ -826,7 +838,7 @@ String TMainDataModule::addCc(
 
         addCcProc->ParamByName("p_cc_dttm")->Value = ccDttm;
         addCcProc->ParamByName("p_cc_type_cd")->Value = FormatFloat("00", ccTypeCd);//IntToStr(statusFlg);
-        addCcProc->ParamByName("p_cc_status_flg")->Value = FormatFloat("00", ccStatusFlg);//IntToStr(statusFlg);
+        //addCcProc->ParamByName("p_cc_status_flg")->Value = FormatFloat("00", ccStatusFlg);//IntToStr(statusFlg);
         addCcProc->ParamByName("p_src_type_cd")->Value = FormatFloat("00", ccSourceTypeCd);//IntToStr(statusFlg);
         addCcProc->ParamByName("p_acct_id")->Value = acct_id;
         addCcProc->ParamByName("p_descr")->Value = descr;
@@ -843,7 +855,7 @@ String TMainDataModule::addCc(
             ds->FieldByName("cc_id")->Value = addCcProc->ParamByName("result")->Value;
             ds->FieldByName("cc_dttm")->Value = addCcProc->ParamByName("p_cc_dttm")->Value;
             ds->FieldByName("cc_type_cd")->Value = addCcProc->ParamByName("p_cc_type_cd")->Value;
-            ds->FieldByName("cc_status_flg")->Value = addCcProc->ParamByName("p_cc_status_flg")->Value;
+            //ds->FieldByName("cc_status_flg")->Value = addCcProc->ParamByName("p_cc_status_flg")->Value;
             //ds->FieldByName("cc_dttm")->RefreshLookupList();
             //ds->FieldByName("cc_dttm")->Value = ccDttm;
             ds->Post();
@@ -887,7 +899,7 @@ TFields* TMainDataModule::getCcInfo(const String& ccId)
 
 /* Утверждает контакт
 */
-void TMainDataModule::setCcApproval()
+void __fastcall TMainDataModule::setCcStatusApproval()
 {
     TDataSetFilter* approvalList = getApprovalListFilter;
 
@@ -936,24 +948,43 @@ void TMainDataModule::setCcApproval()
     //getApprovalListQuery->EnableControls();
 }
 
-
-/* Создает несколько реестров
-   используя группировку
-   Используется, например, для создания заявок на ограничение в разные сетевые компании
-*/
-String __fastcall TMainDataModule::createPackMulti(TDataSetFilter* filter, TFaPackTypeCd faPackTypeCd, const String& acctOtdelen)
+/* Отклонить контакты */
+bool __fastcall TMainDataModule::setCcStatusRefuse()
 {
-    int grp = 1;
-    getCheckedFilter->clearAllValues();
-    getCheckedFilter->setValue("checked", "param", "1");
-    getCheckedFilter->setValue("group", "param", IntToStr(grp++)); //
-    while ( !getFpStopContentFilter->DataSet->Eof )
+    FillProcListParameter(getApprovalListFilter, "cc_id", setCcStatusRefuseProc, "p_cc_id_list");
+
+    try
     {
-        createFpNotice(faPackTypeCd);
-        //setPackCharDttm("ST-P-DT", getConfigQuery->FieldByName("sysdate")->Value)
-        getCheckedFilter->setValue("group", "param", IntToStr(grp++)); //
+        setCcStatusRefuseProc->Execute();
+        return true;
+    }
+    catch(Exception& e)
+    {
+        MessageBoxStop(e.Message);
+        return false;
     }
 }
+
+
+/* Заполняет параметр процедуры, являющийся списком, используя заданное поле dataset */
+void __fastcall TMainDataModule::FillProcListParameter(TDataSetFilter* dsFilter, const String& filterParamName, TOraStoredProc* procedure, const String& procParamName)
+{
+    BeginProcessing(dsFilter);
+
+    // Очищаем значения параметров
+    procedure->ParamByName(procParamName)->Length = 0;
+
+    // Заполняем параметр - список абонентов
+    int i = 0;
+    while ( !dsFilter->DataSet->Eof )
+    {
+        procedure->ParamByName(procParamName)->ItemAsString[++i] = dsFilter->DataSet->FieldByName(filterParamName)->AsString;
+        dsFilter->DataSet->Next();
+    }
+
+    EndProcessing(dsFilter);
+}
+
 
 
 
@@ -963,14 +994,14 @@ String __fastcall TMainDataModule::createPackMulti(TDataSetFilter* filter, TFaPa
 bool __fastcall TMainDataModule::createPackStop(bool forceSelf)
 {
     TDataSetFilter* filter = getPreStopListFilter;
-    BeginProcessing(filter);
+
+    FillProcListParameter(getPreStopListFilter, "acct_id", createFpStopProc, "p_acct_id_list");    // 2017-08-09
+    createFpStopProc->ParamByName("p_force_self")->AsString = forceSelf? 'Y': 'N';
+
+    /*BeginProcessing(filter);    2017-08-09
 
     // Очищаем значения параметров
     createFpStopProc->ParamByName("p_acct_id_list")->Length = 0;
-
-    //createFpStopProc->ParamByName("p_acct_id_list")->ItemAsString[1] = "2267484132";
-    //createFpStopProc->ParamByName("p_acct_id_list")->ItemAsString[2] = "1081960000";
-
     createFpStopProc->ParamByName("p_force_self")->AsString = forceSelf? 'Y': 'N';
 
     // Заполняем параметр - список абонентов
@@ -979,11 +1010,11 @@ bool __fastcall TMainDataModule::createPackStop(bool forceSelf)
     {
         createFpStopProc->ParamByName("p_acct_id_list")->ItemAsString[++i] = filter->DataSet->FieldByName("acct_id")->AsString;
         filter->DataSet->Next();
-    } 
+    }
 
-    EndProcessing(filter);
+    EndProcessing(filter);   */
 
-    if (i == 0)
+    if (createFpStopProc->ParamByName("p_acct_id_list")->Length == 0)
     {
         return false;
     }
@@ -1648,8 +1679,8 @@ bool __fastcall TMainDataModule::setFaPackStatusIncomplete()
     {
         try
         {
-            setFaPackStatusFlgCancelProc->ParamByName("p_fa_pack_id")->Value =  filter->DataSet->FieldByName("fa_pack_id")->AsString;
-            setFaPackStatusFlgCancelProc->ExecProc();
+            setFpStatusFlgCancelProc->ParamByName("p_fa_pack_id")->Value =  filter->DataSet->FieldByName("fa_pack_id")->AsString;
+            setFpStatusFlgCancelProc->ExecProc();
         }
         catch(Exception& e)
         {
@@ -1719,7 +1750,7 @@ void __fastcall TMainDataModule::OnFilterChange(
 }
 
 /**/
-bool __fastcall TMainDataModule::setFaPackCancelStopStatusComplete()
+/*bool __fastcall TMainDataModule::setFaPackCancelStopStatusComplete()
 {
     TDataSetFilter* filter = getFpCancelListFilter;
     BeginProcessing(filter);
@@ -1742,7 +1773,7 @@ bool __fastcall TMainDataModule::setFaPackCancelStopStatusComplete()
     EndProcessing(filter);
 
     return true;
-}
+} */
 
 
 void __fastcall TMainDataModule::EsaleSessionAfterDisconnect(
@@ -1869,7 +1900,7 @@ String __fastcall TMainDataModule::getFaPackStats()
 }
 
 /* Отмена заявки на остановку */
-bool __fastcall TMainDataModule::createFpCancelStopForce()
+bool __fastcall TMainDataModule::createFpCancelForce()
 {
     TDataSetFilter* filter = getFpStopContentFilter;
     BeginProcessing(filter);
@@ -1877,7 +1908,7 @@ bool __fastcall TMainDataModule::createFpCancelStopForce()
     int i = 1;
     while ( !filter->DataSet->Eof )
     {
-        createFpCancelStopForceProc->ParamByName("p_fa_id_list")->ItemAsString[i++] = filter->DataSet->FieldByName("fa_id")->AsString;
+        createFpCancelForceProc->ParamByName("p_fa_id_list")->ItemAsString[i++] = filter->DataSet->FieldByName("fa_id")->AsString;
         filter->DataSet->Next();
     }
 
@@ -1885,19 +1916,20 @@ bool __fastcall TMainDataModule::createFpCancelStopForce()
 
     try
     {
-        createFpCancelStopForceProc->Execute();
+        createFpCancelForceProc->Execute();
+        return true;
     }
     catch(Exception& e)
     {
         MessageBoxStop(e.Message);
-        //return false;
+        return false;
     }
 
 
-    if (i > 1)
+    /*if (i > 1)
     {
         return true;
-    }
+    }    */
 
     /*createFpCancelStopForceProc->ParamByName("p_fa_id_list")->ItemAsString[1] = "0000035604";
     createFpCancelStopForceProc->ParamByName("p_fa_id_list")->ItemAsString[2] = "0000035610";

@@ -21,7 +21,7 @@ void __fastcall TEditCcForm::Button3Click(TObject *Sender)
     {
         /**/
         TDateTime ccDttm;
-        TCcStatusFlg::Type ccStatusFlg;
+        //TCcStatusFlg::Type ccStatusFlg;
         TCcTypeCd::Type ccTypeCd;
         String callerValue;
         String descrValue;
@@ -31,7 +31,7 @@ void __fastcall TEditCcForm::Button3Click(TObject *Sender)
         String curAcctId = _ds->FieldByName("acct_id")->AsString;
 
         ccDttm = CcDttmDateTimePicker->Date;
-        ccStatusFlg = (int)CcStatusFlgComboBox->KeyValue;    // V_INT // OleAuto.h
+        //ccStatusFlg = (int)CcStatusFlgComboBox->KeyValue;    // V_INT // OleAuto.h
         ccTypeCd = (int)CcTypeCdComboBox->KeyValue;
         descrValue = DescrEdit->Text;
         callerValue = CallerEdit->Text;
@@ -50,7 +50,7 @@ void __fastcall TEditCcForm::Button3Click(TObject *Sender)
                 curFaId,                 //
                 callerValue,      // вызывающий
                 ccTypeCd,          // тип контакта
-                ccStatusFlg,    // статус
+                //ccStatusFlg,    // статус
                 TCcSourceTypeCd::FA // тип источника
             );
         }
@@ -62,8 +62,8 @@ void __fastcall TEditCcForm::Button3Click(TObject *Sender)
                 ccDttm,      // дата контакта
                 descrValue,          // описание
                 callerValue,      // вызывающий
-            ccTypeCd,          // тип контакта
-                ccStatusFlg    // статус
+                ccTypeCd/*,          // тип контакта
+                ccStatusFlg    // статус  */
             );
         }
     }
@@ -265,7 +265,7 @@ void __fastcall TEditCcForm::DeleteCcButtonClick(TObject *Sender)
         {
             MainDataModule->deleteCc(_ds, _ds->FieldByName("cc_id")->Value);
             ShowMessage("Контакт удален!");
-            //ModalResult = mrOk;
+            ModalResult = mrOk;
         }
         catch(Exception &e)
         {

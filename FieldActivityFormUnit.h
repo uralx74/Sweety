@@ -395,7 +395,7 @@ __published:	// IDE-managed Components
     TAction *printCancelStopAction;
     TAction *printDocumentStopListAction;
     TAction *createFaPackAction;
-    TAction *approveFaPackCcDttmAction;
+    TAction *setCcStatusApproveAction;
     TPopupMenu *ActionsPopupMenu;
     TMenuItem *MenuItem1;
     TMenuItem *MenuItem2;
@@ -456,7 +456,7 @@ __published:	// IDE-managed Components
     TComboBox *PremTypeComboBox;
     TAction *deleteFaPackAction;
     TMenuItem *N13;
-    TAction *setFaPackStatusIncompleteAction;
+    TAction *setFaPackStatusCancelAction;
     TMenuItem *N14;
     TAction *setFaPackStatusFrozenAction;
     TMenuItem *N15;
@@ -520,7 +520,7 @@ __published:	// IDE-managed Components
     TLabel *Label9;
     TDBLookupComboBox *DBLookupComboBox2;
     TComboBox *MrRteCdFilterComboBox;
-    TAction *setFaPackCancelStopStatusCompleteAction;
+    TAction *setCcStatusRefuseAction;
     TPanel *FaPackStatusFilterPanel;
     TComboBox *FaPackStatusFilterComboBox;
     TMenuItem *N12;
@@ -533,13 +533,15 @@ __published:	// IDE-managed Components
     TDBGridAlt *ReconnectListGrid;
     TAction *printReconnectAction;
     TMenuItem *N18;
-    TAction *createFpCancelStopAction;
+    TAction *createFpCancelAction;
     TMenuItem *N19;
     TAction *editSaEndDtAction;
     TTabSheet *FpCancelContentTabSheet;
     TTabSheet *FpReconnectContentTabSheet;
     TDBGridAlt *FpCancelContentGrid;
     TDBGridAlt *FpReconnectContentGrid;
+    TPanel *FaIdFilterPanel;
+    TEditAlt *FaIdFilterEdit;
     void __fastcall FormShow(TObject *Sender);
     void __fastcall FilterComboBoxTextChange(TObject *Sender);
     void __fastcall ParamPackIdEditClick(TObject *Sender);
@@ -564,7 +566,7 @@ __published:	// IDE-managed Components
     void __fastcall printDocumentFaNoticesActionExecute(TObject *Sender);
     void __fastcall printDocumentFaNoticesListActionExecute(TObject *Sender);
     void __fastcall createFaPackActionExecute(TObject *Sender);
-    void __fastcall approveFaPackCcDttmActionExecute(TObject *Sender);
+    void __fastcall setCcStatusApproveActionExecute(TObject *Sender);
     void __fastcall ShowActionsMenuButtonMouseDown(TObject *Sender, TMouseButton Button,
           TShiftState Shift, int X, int Y);
     void __fastcall checkWithCcLess3MonthActionExecute(TObject *Sender);
@@ -589,7 +591,7 @@ __published:	// IDE-managed Components
     void __fastcall FullListTabSheetShow(TObject *Sender);
     void __fastcall updateCcActionExecute(TObject *Sender);
     void __fastcall deleteFaPackActionExecute(TObject *Sender);
-    void __fastcall setFaPackStatusIncompleteActionExecute(
+    void __fastcall setFaPackStatusCancelActionExecute(
           TObject *Sender);
     void __fastcall setFaPackStatusFrozenActionExecute(TObject *Sender);
     void __fastcall MainTabSheetShow(TObject *Sender);
@@ -601,12 +603,12 @@ __published:	// IDE-managed Components
           TObject *Sender);
     void __fastcall OnChangeCheck(TObject *Sender);
     void __fastcall TestButton1Click(TObject *Sender);
-    void __fastcall setFaPackCancelStopStatusCompleteActionExecute(
+    void __fastcall setCcStatusRefuseActionExecute(
           TObject *Sender);
     void __fastcall ReconnectTabSheetShow(TObject *Sender);
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall printReconnectActionExecute(TObject *Sender);
-    void __fastcall createFpCancelStopActionExecute(TObject *Sender);
+    void __fastcall createFpCancelActionExecute(TObject *Sender);
     void __fastcall FpStopContentGridCellClick(TColumn *Column);
     void __fastcall editSaEndDtActionExecute(TObject *Sender);
     void __fastcall FpCancelContentTabSheetShow(TObject *Sender);

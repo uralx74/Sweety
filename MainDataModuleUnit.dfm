@@ -1,8 +1,8 @@
 object MainDataModule: TMainDataModule
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Left = 219
-  Top = 106
+  Left = 210
+  Top = 144
   Height = 873
   Width = 1777
   object EsaleSession: TOraSession
@@ -106,8 +106,7 @@ object MainDataModule: TMainDataModule
       'begin'
       
         '  :RESULT := PK_NASEL_SWEETY.ADD_FA_CC(:P_CC_DTTM, :P_CC_TYPE_CD' +
-        ', :P_CC_STATUS_FLG, :P_ACCT_ID, :P_DESCR, :P_SRC_ID, :P_SRC_TYPE' +
-        '_CD, :P_CALLER);'
+        ', :P_ACCT_ID, :P_DESCR, :P_SRC_ID, :P_SRC_TYPE_CD, :P_CALLER);'
       'end;')
     Left = 840
     Top = 600
@@ -115,7 +114,6 @@ object MainDataModule: TMainDataModule
       item
         DataType = ftFixedChar
         Name = 'RESULT'
-        ParamType = ptResult
         Size = 10
         IsResult = True
       end
@@ -127,11 +125,6 @@ object MainDataModule: TMainDataModule
       item
         DataType = ftFixedChar
         Name = 'P_CC_TYPE_CD'
-        ParamType = ptInput
-      end
-      item
-        DataType = ftFixedChar
-        Name = 'P_CC_STATUS_FLG'
         ParamType = ptInput
       end
       item
@@ -476,7 +469,7 @@ object MainDataModule: TMainDataModule
       'begin'
       
         '  PK_NASEL_SWEETY.UPDATE_CC(:P_CC_ID, :P_CC_DTTM, :P_CC_TYPE_CD,' +
-        ' :P_CC_STATUS_FLG, :P_DESCR, :P_CALLER);'
+        ' :P_DESCR, :P_CALLER);'
       'end;')
     Left = 952
     Top = 656
@@ -494,11 +487,6 @@ object MainDataModule: TMainDataModule
       item
         DataType = ftFixedChar
         Name = 'P_CC_TYPE_CD'
-        ParamType = ptInput
-      end
-      item
-        DataType = ftFixedChar
-        Name = 'P_CC_STATUS_FLG'
         ParamType = ptInput
       end
       item
@@ -520,7 +508,7 @@ object MainDataModule: TMainDataModule
       'begin'
       '  PK_NASEL_SWEETY.DELETE_CC(:P_CC_ID);'
       'end;')
-    Left = 1032
+    Left = 1056
     Top = 656
     ParamData = <
       item
@@ -622,8 +610,8 @@ object MainDataModule: TMainDataModule
       'begin'
       '  PK_NASEL_SWEETY.DELETE_FP(:P_FA_PACK_ID);'
       'end;')
-    Left = 1080
-    Top = 600
+    Left = 1168
+    Top = 592
     ParamData = <
       item
         DataType = ftFixedChar
@@ -632,7 +620,7 @@ object MainDataModule: TMainDataModule
       end>
     CommandStoredProcName = 'PK_NASEL_SWEETY.DELETE_FP'
   end
-  object setFaPackStatusFlgCancelProc: TOraStoredProc
+  object setFpStatusFlgCancelProc: TOraStoredProc
     StoredProcName = 'PK_NASEL_SWEETY.SET_FP_STATUS_FLG_CANCEL'
     Session = EsaleSession
     SQL.Strings = (
@@ -1007,6 +995,28 @@ object MainDataModule: TMainDataModule
     object getApprovalListProcN: TFloatField
       FieldName = 'N'
     end
+    object getApprovalListProcCC_STATUS_FLG: TStringField
+      FieldName = 'CC_STATUS_FLG'
+      FixedChar = True
+      Size = 2
+    end
+    object getApprovalListProcCC_STATUS_DESCR: TStringField
+      FieldName = 'CC_STATUS_DESCR'
+      Size = 60
+    end
+    object getApprovalListProcAPPROVAL_USER: TStringField
+      FieldName = 'APPROVAL_USER'
+      Size = 22
+    end
+    object getApprovalListProcCC_TYPE_CD: TStringField
+      FieldName = 'CC_TYPE_CD'
+      FixedChar = True
+      Size = 10
+    end
+    object getApprovalListProcCC_TYPE_DESCR: TStringField
+      FieldName = 'CC_TYPE_DESCR'
+      Size = 60
+    end
   end
   object getPreStopListProc: TOraStoredProc
     StoredProcName = 'PK_NASEL_SWEETY.GET_PRE_STOP_LIST'
@@ -1232,6 +1242,15 @@ object MainDataModule: TMainDataModule
     object getFpStopContentProcSA_E_DT: TDateTimeField
       FieldName = 'SA_E_DT'
     end
+    object getFpStopContentProcNOTICE_SALDO_UCH: TFloatField
+      FieldName = 'NOTICE_SALDO_UCH'
+    end
+    object getFpStopContentProcNOTICE_END_REG_READING1: TFloatField
+      FieldName = 'NOTICE_END_REG_READING1'
+    end
+    object getFpStopContentProcNOTICE_END_REG_READING2: TFloatField
+      FieldName = 'NOTICE_END_REG_READING2'
+    end
   end
   object getFpStopListProc: TOraStoredProc
     StoredProcName = 'PK_NASEL_SWEETY.GET_FP_STOP_LIST'
@@ -1328,6 +1347,14 @@ object MainDataModule: TMainDataModule
       FieldName = 'RT_TYPE'
       Size = 255
     end
+    object getFpStopListProcSIGNER_NAME: TStringField
+      FieldName = 'SIGNER_NAME'
+      Size = 25
+    end
+    object getFpStopListProcSIGNER_POST: TStringField
+      FieldName = 'SIGNER_POST'
+      Size = 100
+    end
   end
   object getFpCancelListProc: TOraStoredProc
     StoredProcName = 'PK_NASEL_SWEETY.GET_FP_CANCEL_LIST'
@@ -1405,6 +1432,14 @@ object MainDataModule: TMainDataModule
     object getFpCancelListProcOWNER: TStringField
       FieldName = 'OWNER'
       Size = 22
+    end
+    object getFpCancelListProcSIGNER_NAME: TStringField
+      FieldName = 'SIGNER_NAME'
+      Size = 25
+    end
+    object getFpCancelListProcSIGNER_POST: TStringField
+      FieldName = 'SIGNER_POST'
+      Size = 100
     end
   end
   object getAcctFullListDataSource: TOraDataSource
@@ -1642,13 +1677,11 @@ object MainDataModule: TMainDataModule
     Data = {03000000000000000000}
   end
   object getFpCancelContentTmpProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_CANCEL_STOP_CONTENT'
+    StoredProcName = 'PK_NASEL_SWEETY.GET_FP_CANCEL_CONTENT'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      
-        '  PK_NASEL_SWEETY.GET_FP_CANCEL_STOP_CONTENT(:P_FA_PACK_ID, :RC)' +
-        ';'
+      '  PK_NASEL_SWEETY.GET_FP_CANCEL_CONTENT(:P_FA_PACK_ID, :RC);'
       'end;')
     Left = 936
     Top = 344
@@ -1664,7 +1697,7 @@ object MainDataModule: TMainDataModule
         ParamType = ptOutput
         Value = 'Object'
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_CANCEL_STOP_CONTENT'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_CANCEL_CONTENT'
     object getFpCancelContentTmpProcACCT_ID: TStringField
       FieldName = 'ACCT_ID'
       FixedChar = True
@@ -1718,8 +1751,14 @@ object MainDataModule: TMainDataModule
     object getFpCancelContentTmpProcSTOP_SALDO_UCH: TFloatField
       FieldName = 'STOP_SALDO_UCH'
     end
-    object getFpCancelContentTmpProcST_P_DT_END: TDateTimeField
-      FieldName = 'ST_P_DT_END'
+    object getFpCancelContentTmpProcROWNUM: TFloatField
+      FieldName = 'ROWNUM'
+    end
+    object getFpCancelContentTmpProcCHECK_DATA: TFloatField
+      FieldName = 'CHECK_DATA'
+    end
+    object getFpCancelContentTmpProcCC_DTTM: TDateTimeField
+      FieldName = 'CC_DTTM'
     end
   end
   object getOtdelenListProc: TOraStoredProc
@@ -1875,6 +1914,30 @@ object MainDataModule: TMainDataModule
       FieldName = 'STOP_ALLERT'
       FixedChar = True
       Size = 34
+    end
+    object getConfigProcAPP_VER: TStringField
+      FieldName = 'APP_VER'
+      Size = 32
+    end
+    object getConfigProcSERVICE_STOP_ALLERT: TStringField
+      FieldName = 'SERVICE_STOP_ALLERT'
+      FixedChar = True
+      Size = 1
+    end
+    object getConfigProcNEEDS_APP_UPDATE: TStringField
+      FieldName = 'NEEDS_APP_UPDATE'
+      FixedChar = True
+      Size = 2
+    end
+    object getConfigProcUPDATE_FAILURE: TStringField
+      FieldName = 'UPDATE_FAILURE'
+      FixedChar = True
+      Size = 2
+    end
+    object getConfigProcOTHER_STOP_REASON: TStringField
+      FieldName = 'OTHER_STOP_REASON'
+      FixedChar = True
+      Size = 2
     end
   end
   object getFaPackTypeListProc: TOraStoredProc
@@ -2132,6 +2195,14 @@ object MainDataModule: TMainDataModule
       FieldName = 'OWNER'
       Size = 22
     end
+    object getReconnectListProcSGNR_NAME: TStringField
+      FieldName = 'SGNR_NAME'
+      Size = 25
+    end
+    object getReconnectListProcSGNR_POST: TStringField
+      FieldName = 'SGNR_POST'
+      Size = 100
+    end
   end
   object getFpReconnectContentTmpProc: TOraStoredProc
     StoredProcName = 'PK_NASEL_SWEETY.GET_FP_RECONNECT_CONTENT'
@@ -2300,12 +2371,12 @@ object MainDataModule: TMainDataModule
       Size = 8
     end
   end
-  object createFpCancelStopForceProc: TOraStoredProc
-    StoredProcName = 'PK_NASEL_SWEETY.CREATE_FP_CANCEL_STOP_FORCE'
+  object createFpCancelForceProc: TOraStoredProc
+    StoredProcName = 'PK_NASEL_SWEETY.CREATE_FP_CANCEL_FORCE'
     Session = EsaleSession
     SQL.Strings = (
       'begin'
-      '  PK_NASEL_SWEETY.CREATE_FP_CANCEL_STOP_FORCE(:P_FA_ID_LIST);'
+      '  PK_NASEL_SWEETY.CREATE_FP_CANCEL_FORCE(:P_FA_ID_LIST);'
       'end;')
     Left = 640
     Top = 760
@@ -2317,7 +2388,7 @@ object MainDataModule: TMainDataModule
         Size = 10
         Table = True
       end>
-    CommandStoredProcName = 'PK_NASEL_SWEETY.CREATE_FP_CANCEL_STOP_FORCE'
+    CommandStoredProcName = 'PK_NASEL_SWEETY.CREATE_FP_CANCEL_FORCE'
   end
   object createFpStopProc: TOraStoredProc
     StoredProcName = 'PK_NASEL_SWEETY.CREATE_FP_STOP'
@@ -2559,6 +2630,27 @@ object MainDataModule: TMainDataModule
     object DateTimeField11: TDateTimeField
       FieldName = 'SA_E_DT'
     end
+    object getFpCancelContentProcSTOP_FA_ID: TStringField
+      FieldName = 'STOP_FA_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object getFpCancelContentProcSTOP_FA_PACK_ID: TStringField
+      FieldName = 'STOP_FA_PACK_ID'
+      FixedChar = True
+      Size = 10
+    end
+    object getFpCancelContentProcSTOP_SALDO_UCH: TFloatField
+      FieldName = 'STOP_SALDO_UCH'
+    end
+    object getFpCancelContentProcSTOP_CRE_DTTM: TDateTimeField
+      FieldName = 'STOP_CRE_DTTM'
+    end
+    object getFpCancelContentProcNOTICE_FA_PACK_ID: TStringField
+      FieldName = 'NOTICE_FA_PACK_ID'
+      FixedChar = True
+      Size = 10
+    end
   end
   object getFpCancelContentDataSource: TOraDataSource
     DataSet = getFpCancelContentProc
@@ -2601,132 +2693,94 @@ object MainDataModule: TMainDataModule
         Value = 'Object'
       end>
     CommandStoredProcName = 'PK_NASEL_SWEETY.GET_FP_RECONNECT_CONTENT'
-    object FloatField7: TFloatField
+    object getFpReconnectContentProcROWNUM: TFloatField
       FieldName = 'ROWNUM'
     end
-    object FloatField8: TFloatField
+    object getFpReconnectContentProcCHECK_DATA: TFloatField
       FieldName = 'CHECK_DATA'
     end
-    object StringField28: TStringField
+    object getFpReconnectContentProcFA_ID: TStringField
       FieldName = 'FA_ID'
       FixedChar = True
       Size = 10
     end
-    object StringField29: TStringField
+    object getFpReconnectContentProcACCT_ID: TStringField
       FieldName = 'ACCT_ID'
       FixedChar = True
       Size = 10
     end
-    object StringField30: TStringField
-      FieldName = 'ADDRESS'
-      Size = 315
-    end
-    object StringField31: TStringField
-      FieldName = 'CITY'
-      Size = 60
-    end
-    object StringField32: TStringField
+    object getFpReconnectContentProcFIO: TStringField
       FieldName = 'FIO'
       Size = 254
     end
-    object StringField33: TStringField
-      FieldName = 'POSTAL'
-      Size = 10
-    end
-    object DateTimeField12: TDateTimeField
-      FieldName = 'CC_DTTM'
-    end
-    object StringField34: TStringField
-      FieldName = 'SRC_TYPE_CD'
+    object getFpReconnectContentProcSTOP_FA_ID: TStringField
+      FieldName = 'STOP_FA_ID'
       FixedChar = True
       Size = 10
     end
-    object StringField35: TStringField
-      FieldName = 'SPR_DESCR'
-      Size = 50
-    end
-    object StringField36: TStringField
-      FieldName = 'PHONES'
-      Size = 254
-    end
-    object StringField37: TStringField
-      FieldName = 'PHONE'
-      Size = 254
-    end
-    object FloatField9: TFloatField
-      FieldName = 'END_REG_READING1'
-    end
-    object FloatField10: TFloatField
-      FieldName = 'END_REG_READING2'
-    end
-    object FloatField11: TFloatField
-      FieldName = 'SALDO_UCH'
-    end
-    object StringField38: TStringField
-      FieldName = 'MTR_SERIAL_NBR'
-      Size = 16
-    end
-    object StringField39: TStringField
-      FieldName = 'FA_PACK_ID'
+    object getFpReconnectContentProcSTOP_FA_PACK_ID: TStringField
+      FieldName = 'STOP_FA_PACK_ID'
       FixedChar = True
       Size = 10
     end
-    object StringField40: TStringField
-      FieldName = 'ACCT_OTDELEN'
-      FixedChar = True
-      Size = 7
+    object getFpReconnectContentProcSTOP_CRE_DTTM: TDateTimeField
+      FieldName = 'STOP_CRE_DTTM'
     end
-    object DateTimeField13: TDateTimeField
-      FieldName = 'CRE_DTTM'
-    end
-    object StringField41: TStringField
-      FieldName = 'OP_AREA_DESCR'
-      Size = 60
-    end
-    object StringField42: TStringField
-      FieldName = 'FA_PACK_TYPE_CD'
-      FixedChar = True
-      Size = 8
-    end
-    object FloatField12: TFloatField
-      FieldName = 'GRP'
-    end
-    object StringField43: TStringField
-      FieldName = 'PREM_TYPE_DESCR'
-      Size = 60
-    end
-    object DateTimeField14: TDateTimeField
-      FieldName = 'ST_P_DT'
-    end
-    object DateTimeField15: TDateTimeField
-      FieldName = 'SA_END_DT'
-    end
-    object StringField44: TStringField
+    object getFpReconnectContentProcNOTICE_FA_ID: TStringField
       FieldName = 'NOTICE_FA_ID'
       FixedChar = True
       Size = 10
     end
-    object DateTimeField16: TDateTimeField
-      FieldName = 'NOTICE_CRE_DTTM'
-    end
-    object DateTimeField17: TDateTimeField
-      FieldName = 'ST_P_DT_END'
-    end
-    object DateTimeField18: TDateTimeField
-      FieldName = 'CANCEL_FA_PACK_CRE_DTTM'
-    end
-    object StringField45: TStringField
-      FieldName = 'CANCEL_FA_PACK_ID'
+    object getFpReconnectContentProcNOTICE_FA_PACK_ID: TStringField
+      FieldName = 'NOTICE_FA_PACK_ID'
       FixedChar = True
       Size = 10
     end
-    object DateTimeField19: TDateTimeField
-      FieldName = 'SA_E_DT'
+    object getFpReconnectContentProcNOTICE_CRE_DTTM: TDateTimeField
+      FieldName = 'NOTICE_CRE_DTTM'
+    end
+    object getFpReconnectContentProcST_P_DT: TDateTimeField
+      FieldName = 'ST_P_DT'
+    end
+    object getFpReconnectContentProcPHONES: TStringField
+      FieldName = 'PHONES'
+      Size = 254
+    end
+    object getFpReconnectContentProcCITY: TStringField
+      FieldName = 'CITY'
+      Size = 60
+    end
+    object getFpReconnectContentProcADDRESS: TStringField
+      FieldName = 'ADDRESS'
+      Size = 315
+    end
+    object getFpReconnectContentProcPREM_TYPE_DESCR: TStringField
+      FieldName = 'PREM_TYPE_DESCR'
+      Size = 60
     end
   end
   object getFpReconnectContentDataSource: TOraDataSource
     DataSet = getFpReconnectContentProc
     Left = 1576
     Top = 320
+  end
+  object setCcStatusRefuseProc: TOraStoredProc
+    StoredProcName = 'PK_NASEL_SWEETY.SET_CC_STATUS_REFUSE'
+    Session = EsaleSession
+    SQL.Strings = (
+      'begin'
+      '  PK_NASEL_SWEETY.SET_CC_STATUS_REFUSE(:P_CC_ID_LIST);'
+      'end;')
+    Left = 1056
+    Top = 592
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'P_CC_ID_LIST'
+        ParamType = ptInput
+        Size = 10
+        Table = True
+      end>
+    CommandStoredProcName = 'PK_NASEL_SWEETY.SET_CC_STATUS_REFUSE'
   end
 end

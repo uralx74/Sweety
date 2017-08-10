@@ -36,7 +36,7 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     : TForm(Owner)/*,
     _curPackMode(PACK_MODE_UNDEFINED)  */
 {
-    Caption = "ДолжникиФ (" + AppVer::FullVersion + "a) - " + MainDataModule->getConfigProc->FieldByName("username")->AsString;
+    Caption = "ARES (" + AppVer::FullVersion + "a) - " + MainDataModule->getConfigProc->FieldByName("username")->AsString;
     //MainDataModule->otdelenList.assignTo(OtdelenComboBox);
 
     // Задаем функции для связи модуля данных с графическим интерфейсом
@@ -205,13 +205,14 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     createFaPackPostAction->Enabled  = bRoleAdministrator || bRoleOperator;
     createFaPackStopAction->Enabled = bRoleAdministrator || bRoleOperator;
     createFaPackStopToControlAction->Enabled = bRoleAdministrator || bRoleOperator;
-    createFpCancelStopAction->Enabled = bRoleAdministrator || bRoleOperator;    // Отмена заявки на ост. (вручную)
-    approveFaPackCcDttmAction->Enabled = bRoleAdministrator || bRoleApprover;
+    createFpCancelAction->Enabled = bRoleAdministrator || bRoleOperator;    // Отмена заявки на ост. (вручную)
+    setCcStatusApproveAction->Enabled = bRoleAdministrator || bRoleApprover;
+    setCcStatusRefuseAction->Enabled = bRoleAdministrator || bRoleApprover;
     updateCcAction->Enabled = bRoleAdministrator || bRoleOperator;
-    deleteFaPackAction->Enabled = bRoleAdministrator || bRoleTester;  // временное значение
-    setFaPackStatusIncompleteAction->Enabled = bRoleAdministrator || bRoleTester;  // временное значение
+    deleteFaPackAction->Enabled = bRoleTester;  // временное значение
+    setFaPackStatusCancelAction->Enabled = bRoleAdministrator || bRoleTester;  // временное значение
     setFaPackStatusFrozenAction->Enabled = bRoleAdministrator || bRoleTester;
-    setFaPackCancelStopStatusCompleteAction->Enabled = bRoleAdministrator || bRoleTester;
+    //setFaPackCancelStatusCompleteAction->Enabled = bRoleAdministrator || bRoleTester;
 
 
     // Главная вкладка в разделе Уведомления
@@ -253,7 +254,8 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp->addAction(checkNoneAction);
     sheetTemp->addAction(checkWithoutCcAction);
     sheetTemp->addAction(checkWithCcLess3MonthAction);
-    sheetTemp->addAction(approveFaPackCcDttmAction);
+    sheetTemp->addAction(setCcStatusApproveAction);
+    sheetTemp->addAction(setCcStatusRefuseAction);
 
     // Вкладка списка уведомлений на почту
     sheetTemp = item->addSheet(PostListTabSheet);
@@ -312,7 +314,7 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp->addAction(printDocumentStopAction);
     sheetTemp->addAction(printDocumentStopListAction);
     sheetTemp->addAction(deleteFaPackAction);
-    sheetTemp->addAction(setFaPackStatusIncompleteAction);
+    sheetTemp->addAction(setFaPackStatusCancelAction);
     sheetTemp->addAction(setFaPackStatusFrozenAction);
 
 
@@ -324,7 +326,7 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp->addAction(checkNoneAction);
     sheetTemp->addAction(checkWithoutCcAction);
     sheetTemp->addAction(checkWithCcLess3MonthAction);
-    sheetTemp->addAction(createFpCancelStopAction);
+    sheetTemp->addAction(createFpCancelAction);
 
     // Содержимое реестра на отмену
     sheetTemp = item->addSheet(FpCancelContentTabSheet);
@@ -381,7 +383,7 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp->addAction(checkAllAction);
     sheetTemp->addAction(checkNoneAction);
     sheetTemp->addAction(printCancelStopAction);
-    sheetTemp->addAction(setFaPackCancelStopStatusCompleteAction); // Установить статус Отправлен исполнителю
+    //sheetTemp->addAction(setFaPackCancelStatusCompleteAction); // Установить статус Отправлен исполнителю
 
     // Список на возобновление
     sheetTemp = item->addSheet(PackReconnectTabSheet);
@@ -443,7 +445,7 @@ void __fastcall TFieldActivityForm::PackPageControlDrawTab(
 
     int pageIndex = HackCtrl::PageIndexFromTabIndex(((TPageControl*)Control), TabIndex);
 
-    AnsiString tabCaption = ((TPageControl*)Control)->Pages[pageIndex]->Caption;
+    String tabCaption = ((TPageControl*)Control)->Pages[pageIndex]->Caption;
 
     // РИСОВАНИЕ
     canvas->Lock();    // Блокирум канвас перед рисованием
@@ -929,6 +931,7 @@ void __fastcall TFieldActivityForm::refreshFilterControls()
             ccDttmIsApprovedFilterPanel->Visible = _currentFilter->isFilterExists(ApprovedStatusComboBox->Name);
             CcDttmExistsFilterPanel->Visible = _currentFilter->isFilterExists(CcDttmStatusComboBox->Name);
             FaPackIdFilterPanel->Visible = _currentFilter->isFilterExists(FaPackIdFilterEdit->Name);
+            FaIdFilterPanel->Visible = _currentFilter->isFilterExists(FaIdFilterEdit->Name);
             OpAreaDescrFilterPanel->Visible = _currentFilter->isFilterExists(OpAreaDescrFilterComboBox->Name);
             SaldoFilterPanel->Visible = _currentFilter->isFilterExists(SaldoFilterEdit->Name);
             ServiceCompanyFilterPanel->Visible = _currentFilter->isFilterExists(ServiceCompanyFilterComboBox->Name);
@@ -946,6 +949,7 @@ void __fastcall TFieldActivityForm::refreshFilterControls()
             ccDttmIsApprovedFilterPanel->Visible = false;
             CcDttmExistsFilterPanel->Visible = false;
             FaPackIdFilterPanel->Visible = false;
+            FaIdFilterPanel->Visible = false;
             OpAreaDescrFilterPanel->Visible = false;
             SaldoFilterPanel->Visible = false;
             ServiceCompanyFilterPanel->Visible = false;
@@ -985,6 +989,7 @@ void __fastcall TFieldActivityForm::refreshFilterControls()
             AddressComboBox->Text = _currentFilter->getValue(AddressComboBox->Name, "param");
             FioComboBox->Text = _currentFilter->getValue(FioComboBox->Name, "param");
             FaPackIdFilterEdit->Text = _currentFilter->getValue(FaPackIdFilterEdit->Name, "param");
+            FaIdFilterEdit->Text = _currentFilter->getValue(FaIdFilterEdit->Name, "param");
             ServiceCompanyFilterComboBox->Text = _currentFilter->getValue(ServiceCompanyFilterComboBox->Name, "param");
             SaldoFilterEdit->Text = _currentFilter->getValue(SaldoFilterEdit->Name, "param");
             OpAreaDescrFilterComboBox->Text = _currentFilter->getValue(OpAreaDescrFilterComboBox->Name, "param");
@@ -1435,13 +1440,13 @@ void __fastcall TFieldActivityForm::createFaPackPostActionExecute(
 }
 
 /* Действие утвердить контакты */
-void __fastcall TFieldActivityForm::approveFaPackCcDttmActionExecute(TObject *Sender)
+void __fastcall TFieldActivityForm::setCcStatusApproveActionExecute(TObject *Sender)
 {
     if (MessageBoxQuestion("Отмечено " + IntToStr(ApproveListGrid->recordCountChecked) + " записей."
         "\nУже утвержденные контакты будут пропущены."
         "\nПродолжить?") != IDNO )
     {
-        MainDataModule->setCcApproval();
+        MainDataModule->setCcStatusApproval();
         MainDataModule->closeCcApprovalList();
         MainDataModule->closeFaPackNoticesList();
         showApprovalList();
@@ -1530,26 +1535,27 @@ void __fastcall TFieldActivityForm::updateCcActionExecute(TObject *Sender)
 /* Удалить отмеченные реестры */
 void __fastcall TFieldActivityForm::deleteFaPackActionExecute(TObject *Sender)
 {
-    MainDataModule->deleteFaPack();
+    if (MainDataModule->deleteFaPack())
+    {
+        MessageBoxInf("Выполнено.");
 
-    MessageBoxInf("Выполнено.");
-
-    MainDataModule->closeStopList();
-    MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
-    MainDataModule->getFaPackStopList();
+        MainDataModule->closeStopList();
+        MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
+        MainDataModule->getFaPackStopList();
+    }
 }
 
 /* Перевести реестр в статус Не завершен */
-void __fastcall TFieldActivityForm::setFaPackStatusIncompleteActionExecute(
+void __fastcall TFieldActivityForm::setFaPackStatusCancelActionExecute(
       TObject *Sender)
 {
     if ( MainDataModule->setFaPackStatusIncomplete() )
     {
         MessageBoxInf("Выполнено.");
+        MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
+        MainDataModule->getFaPackStopList();
     }
 
-    MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
-    MainDataModule->getFaPackStopList();
 }
 
 /* Перевести реестр в статус Утвержден */
@@ -1624,12 +1630,23 @@ void __fastcall TFieldActivityForm::TestButton1Click(TObject *Sender)
     //MainDataModule->createFpCancelStopForce();
 }
 
-/* Задает статус для реестра на отмену ограничения [Отправлен исполнителю]*/
-void __fastcall TFieldActivityForm::setFaPackCancelStopStatusCompleteActionExecute(
+/* Задает статус для реестра на отмену ограничения [Отправлен исполнителю] УДАЛИТЬ ТАК КАК Н Е  ИСПОЛЬЗУЕТСЯ*/
+void __fastcall TFieldActivityForm::setCcStatusRefuseActionExecute(
       TObject *Sender)
 {
+
+    if (MessageBoxQuestion("Отмечено " + IntToStr(ApproveListGrid->recordCountChecked) + " записей."
+        "\nРанее утвержденные контакт изменены не будут."
+        "\nВы действительно хотите отклонить контакты?") != IDNO )
+    {
+        MainDataModule->setCcStatusRefuse();
+        MainDataModule->closeCcApprovalList();
+        MainDataModule->closeFaPackNoticesList();
+        showApprovalList();
+    }
+
     //
-    if ( MainDataModule->setFaPackCancelStopStatusComplete() )
+    /*if ( MainDataModule->setFaPackCancelStopStatusComplete() )
     {
         MessageBoxInf("Выполнено.");
     }
@@ -1637,7 +1654,7 @@ void __fastcall TFieldActivityForm::setFaPackCancelStopStatusCompleteActionExecu
     //MainDataModule->getPackStopList();
     //MainDataModule->getFaCancelStopList();
     MainDataModule->closeFpCancelStopList();
-    showCancelList();
+    showCancelList();*/
 
 }
 //---------------------------------------------------------------------------
@@ -1679,7 +1696,7 @@ void __fastcall TFieldActivityForm::printReconnectActionExecute(
 //---------------------------------------------------------------------------
 
 
-void __fastcall TFieldActivityForm::createFpCancelStopActionExecute(
+void __fastcall TFieldActivityForm::createFpCancelActionExecute(
       TObject *Sender)
 {
     if (MessageBoxQuestion("Будут созданы заявки на отмену заявок на отключение. Продолжить?") != IDYES)
@@ -1688,7 +1705,7 @@ void __fastcall TFieldActivityForm::createFpCancelStopActionExecute(
     }
 
     //
-    if (MainDataModule->createFpCancelStopForce())
+    if (MainDataModule->createFpCancelForce())
     {
         MessageBoxInf("Заявки на отмену заявки созданы.");
 
@@ -1744,4 +1761,6 @@ void __fastcall TFieldActivityForm::FpReconnectContentTabSheetShow(
 
 }
 //---------------------------------------------------------------------------
+
+
 

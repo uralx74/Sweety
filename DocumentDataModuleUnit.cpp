@@ -353,6 +353,7 @@ bool __fastcall TDocumentDataModule::getDocumentStopRequest(TDataSetFilter* otde
     wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");     // Общая информация по участку
     wordExportParams.addSingleTextDataSet(fpListData->DataSet, "rec_");  // Информация по реестру
     wordExportParams.addTableDataSet(fpContentProc, 3, "table_");                  // Информация для таблицы
+    wordExportParams.addSingleTextDataSet(MainDataModule->getConfigProc, "sysrec_");  // Служебная информация
 
     //wordExportParams.addSingleTextDataSet(MainDataModule->getOtdelenListQuery, "otdelen_");     // Общая информация по участку
     //wordExportParams.addSingleTextDataSet(MainDataModule->getPackListStopFilter->DataSet, "rec_");  // Информация по реестру
@@ -418,6 +419,9 @@ bool __fastcall TDocumentDataModule::getDocumentCancelStopRequest(TDataSetFilter
     wordExportParams.addSingleTextDataSet(faPackListData->DataSet, "rec_");  // Информация по реестру
     wordExportParams.addTableDataSet(faDataProc, 3, "table_");                  // Информация для таблицы
 
+
+    wordExportParams.addSingleTextDataSet(MainDataModule->getConfigProc, "sysrec_");  // Служебная информация
+
     // Далее фильтруем выделенные и формируем документы
     BeginPrint(faPackListData);
 
@@ -459,8 +463,8 @@ bool __fastcall TDocumentDataModule::getDocumentReconnectRequest(TDataSetFilter*
     wordExportParams.pagePerDocument = 500;
 
     /* Присоединяем источники данных */
-    wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");     // Общая информация по участку
-    wordExportParams.addSingleTextDataSet(faPackListData->DataSet, "rec_");  // Информация по реестру
+    wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");    // Общая информация по участку
+    wordExportParams.addSingleTextDataSet(faPackListData->DataSet, "rec_");     // Информация по реестру
     wordExportParams.addTableDataSet(faDataProc, 3, "table_");                  // Информация для таблицы
 
     // Далее фильтруем выделенные и формируем документы

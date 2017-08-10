@@ -35,13 +35,13 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     try
     {
         Application->Initialize();
-        Application->Title = "Sweety";
+        Application->Title = "ARES";
         Application->CreateForm(__classid(TMainDataModule), &MainDataModule);
         if (Application->Terminated)
         {
             Application->Run();
             return 0;
-        }
+        } 
         Application->CreateForm(__classid(TFormSpecialModule), &FormSpecialModule);
         Application->CreateForm(__classid(TDocumentDataModule), &DocumentDataModule);
         Application->CreateForm(__classid(TFieldActivityForm), &FieldActivityForm);
