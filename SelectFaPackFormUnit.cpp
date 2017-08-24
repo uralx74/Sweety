@@ -42,8 +42,13 @@ void __fastcall TSelectFaPackForm::faListGridChangeCheck(TObject *Sender)
 /* Главная вызываемая функция */
 bool __fastcall TSelectFaPackForm::execute(String acctOtdelen, int mode)
 {
-    OtdelenComboBox->KeyValue = acctOtdelen;
+    if (mode == TM_UNDEFINED)
+    {
+        this->ModalResult = mrCancel;
+        return false;
+    }
     _mode = mode;
+    OtdelenComboBox->KeyValue = acctOtdelen;
 
 
     FindPackList(); // Поиск
@@ -59,18 +64,25 @@ void __fastcall TSelectFaPackForm::FindPackList()
 {
     switch (_mode)
     {
-    case 0:
+    case TM_NOTICES:
     {
         MainDataModule->findFaPackListNotices(OtdelenComboBox->KeyValue, FaIdFindEdit->Text, AcctIdFindEdit->Text);
         faListGrid->DataSource = MainDataModule->findFaPackListNoticesDS;
         _currentFilter = MainDataModule->findFaPackListNoticesFilter;
         break;
     }
-    case 1:
+    case TM_STOP:
     {
         MainDataModule->findFaPackListStop(OtdelenComboBox->KeyValue, FaIdFindEdit->Text, AcctIdFindEdit->Text);
         faListGrid->DataSource = MainDataModule->findFaPackListStopDS;
         _currentFilter = MainDataModule->findFpStopListFilter;
+        break;
+    }
+    case TM_OVERDUE:
+    {
+        MainDataModule->findFpOverdueList(OtdelenComboBox->KeyValue, FaIdFindEdit->Text, AcctIdFindEdit->Text);
+        faListGrid->DataSource = MainDataModule->findFpOverdueListDataSource;
+        _currentFilter = MainDataModule->findFpOverdueListFilter;
         break;
     }
     }
@@ -117,14 +129,19 @@ void __fastcall TSelectFaPackForm::OtdelenComboBoxClick(TObject *Sender)
 {
     switch (_mode)
     {
-    case 0:
+    case TM_NOTICES:
     {
         MainDataModule->findFaPackListNotices(OtdelenComboBox->KeyValue/*, _mode*/);
         break;
     }
-    case 1:
+    case TM_STOP:
     {
         MainDataModule->findFaPackListStop(OtdelenComboBox->KeyValue/*, _mode*/);
+        break;
+    }
+    case TM_OVERDUE:
+    {
+        MainDataModule->findFpOverdueList(OtdelenComboBox->KeyValue/*, _mode*/);
         break;
     }
     }

@@ -22,6 +22,8 @@
 #include <Provider.hpp>
 #include <Dialogs.hpp>
 
+
+
 //---------------------------------------------------------------------------
 class TDocumentDataModule : public TDataModule
 {
@@ -33,6 +35,15 @@ __published:	// IDE-managed Components
     TOpenDialog *OpenDialog1;
     TDataSetFilter *getCheckedFilter;
 private:	// User declarations
+    typedef enum {
+        DT_NOTICES_MANUAL,
+        DT_NOTICES_LIST_FOR_POSTOFFICE,
+        DT_STOP_REQUEST,
+        DT_CANCEL_REQUEST,
+        DT_RECONNECT_REQUEST,
+        DT_OVERDUE_REQUEST
+    } TDocTypeCd;
+
     TDocumentWriter* documentWriter;
     
     String __fastcall askExcelFileName();
@@ -41,6 +52,8 @@ private:	// User declarations
     void __fastcall BeginPrint(TDataSetFilter* dsFilter);
     void __fastcall EndPrint(TDataSetFilter* dsFilter);
 
+    bool __fastcall getDocument(TDataSetFilter* otdelenData, TDataSetFilter* fpListData, TDataSetFilter* faDataFilter, TDocTypeCd docTypeCd);
+    bool __fastcall getDocument(TDataSetFilter* otdelenData, TDataSetFilter* fpListData, TOraStoredProc* faDataProc, TDocTypeCd docTypeCd);
 
 public:		// User declarations
     __fastcall TDocumentDataModule(TComponent* Owner);
@@ -48,9 +61,10 @@ public:		// User declarations
     void __fastcall getDocumentFaNoticesList(TDataSetFilter *mergeFields);
     bool __fastcall getDocumentFaNotices(TDataSetFilter* otdelenData, TDataSetFilter* faPackData, TDataSetFilter* faData);
     bool __fastcall getDocumentFaNoticesListForPostOffice(TDataSetFilter* otdelenDsF, TDataSetFilter* recDsF, TDataSetFilter* tableDsF);
-    bool __fastcall getDocumentStopRequest(TDataSetFilter* otdelenData, TDataSetFilter* fpListData, TOraStoredProc* fpContentProc);
-    bool __fastcall getDocumentCancelStopRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc);
-    bool __fastcall getDocumentReconnectRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc);
+    bool __fastcall getDocumentStopRequest();
+    bool __fastcall getDocumentCancelRequest();
+    bool __fastcall getDocumentReconnectRequest();
+    bool __fastcall getDocumentOverdueRequest();
 
 };
 //---------------------------------------------------------------------------

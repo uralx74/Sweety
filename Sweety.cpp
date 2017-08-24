@@ -35,8 +35,8 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     try
     {
         Application->Initialize();
-        Application->Title = "ARES";
-        Application->CreateForm(__classid(TMainDataModule), &MainDataModule);
+        Application->Title = "ARRES";
+         Application->CreateForm(__classid(TMainDataModule), &MainDataModule);
         if (Application->Terminated)
         {
             Application->Run();

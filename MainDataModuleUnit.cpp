@@ -211,16 +211,21 @@ __fastcall TMainDataModule::TMainDataModule(TComponent* Owner)
     getPreStopListDataSource->DataSet = getPreStopListRam;         // Список на ограничение
     getFpStopListDataSource->DataSet = getFpStopListRam;  // Список реестров
     getFpCancelListDataSource->DataSet = getFpCancelStopRam;
-    getReconnectListDataSource->DataSet = getReconnectListRam;
+    getFpReconnectListDataSource->DataSet = getFpReconnectListRam;
     getFpStopContentDataSource->DataSet = getFpStopContentRam;    // Реестр
     getFpCancelContentDataSource->DataSet = getFpCancelContentRam;    // Реестр
     getFpReconnectContentDataSource->DataSet = getFpReconnectContentRam;    // Реестр
     //getFpReconnectDataSource
 
+    getPreOverdueListDataSource->DataSet = getPreOverdueListRam;        // Список просроченных заявок
+    getFpOverdueContentDataSource->DataSet = getFpOverdueContentRam;    // Список абонентов в реестре просроченных заявок
+    getFpOverdueListDataSource->DataSet = getFpOverdueListRam;          // Список реестров просроченных заявок
+
     //getFaPackListNoticesDataSource->DataSet = getFaPackListNoticesRam;
 
     findFaPackListNoticesDS->DataSet = findFaPackListNoticesRam;
     findFaPackListStopDS->DataSet = findFpStopListRam;
+    findFpOverdueListDataSource->DataSet = findFpOverdueListRam;
 
 }
 
@@ -516,7 +521,7 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
     getPreStopListFilter->add("CityComboBox", "city like '%:param%'");
     getPreStopListFilter->add("FioComboBox", "fio like '%:param%'");
     getPreStopListFilter->add("SaldoFilterEdit", "saldo_uch > :param");
-    getPreStopListFilter->add("ServiceCompanyFilterComboBox", "spr_descr like '%:param%'");
+    getPreStopListFilter->add("ServiceCompanyFilterComboBox", "rt_descr like '%:param%'");
     getPreStopListFilter->add("PremTypeComboBox", "prem_type_descr like '%:param%'");
     getPreStopListFilter->add("FaPackTypeFilterComboBox", "fa_pack_type_descr like '%:param%'");
     getPreStopListFilter->add("CcDttmStatusComboBox", "(:param = 0 or (:param=1 and cc_dttm is not null) or (:param=2 and cc_dttm is null) or (:param=3 and cc_dttm >= ':begin_dt' and cc_dttm < ':end_dt') )");
@@ -528,7 +533,7 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
     /* Фильтр для списка реестров на ограничение */
     getFpStopListFilter->DisableControls();
     getFpStopListFilter->add("FaPackIdFilterEdit", "fa_pack_id like '%:param%'");
-    getFpStopListFilter->add("ServiceCompanyFilterComboBox", "spr_descr like '%:param%'");
+    getFpStopListFilter->add("ServiceCompanyFilterComboBox", "rt_descr like '%:param%'");
     //getFpStopListFilter->add("AddressComboBox", "address like '%:param%'");
     //getFpStopListFilter->add("FioComboBox", "fio like '%:param%'");
     getFpStopListFilter->EnableControls();
@@ -536,28 +541,26 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
 
     /* Фильтр для списка реестров на отмену ограничения */
     getFpCancelListFilter->DisableControls();
-    getFpCancelListFilter->add("FaPackStatusFilterComboBox", "(:param = 0 or"
+    getFpCancelListFilter->add("FaPackIdFilterEdit", "fa_pack_id like '%:param%'");
+    getFpCancelListFilter->add("FaPackStatusFilterComboBox", "(:param = 0 or "
         "(:param=1 and fa_pack_status_flg = '20') "
         "or (:param=2 and fa_pack_status_flg = '50') "
-        "or (:param=3 and fa_pack_status_flg = '60') "
-        "or (:param=4 and fa_pack_status_flg = '71') "
-        "or (:param=5 and fa_pack_status_flg = '72'))"
+        "or (:param=3 and fa_pack_status_flg = '60'))"
         );
     getFpCancelListFilter->setDefaultValue("FaPackStatusFilterComboBox", "param", "2");
     getFpCancelListFilter->EnableControls();
 
 
     /* Фильтр для списка реестров на возобноление */
-    getReconnectListFilter->DisableControls();
-    getReconnectListFilter->add("FaPackStatusFilterComboBox", "(:param = 0 or"
+    getFpReconnectListFilter->DisableControls();
+    getFpReconnectListFilter->add("FaPackIdFilterEdit", "fa_pack_id like '%:param%'");
+    getFpReconnectListFilter->add("FaPackStatusFilterComboBox", "(:param = 0 or "
         "(:param=1 and fa_pack_status_flg = '20') "
         "or (:param=2 and fa_pack_status_flg = '50') "
-        "or (:param=3 and fa_pack_status_flg = '60') "
-        "or (:param=4 and fa_pack_status_flg = '71') "
-        "or (:param=5 and fa_pack_status_flg = '72'))"
+        "or (:param=3 and fa_pack_status_flg = '60')) "
         );
-    getReconnectListFilter->setDefaultValue("FaPackStatusFilterComboBox", "param", "2");
-    getReconnectListFilter->EnableControls();
+    getFpReconnectListFilter->setDefaultValue("FaPackStatusFilterComboBox", "param", "2");
+    getFpReconnectListFilter->EnableControls();
 
 
     /* Фильтр для реестра на ограничение */
@@ -592,6 +595,42 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
 
 
 
+    /* Фильтр для списка просроченных заявок */
+    getPreOverdueListFilter->DisableControls();
+    getPreOverdueListFilter->add("FaPackIdFilterEdit", "fa_pack_id like '%:param%'");
+    getPreOverdueListFilter->add("AcctIdComboBox", "acct_id like '%:param%'");
+    getPreOverdueListFilter->add("AddressComboBox", "address like '%:param%'");
+    getPreOverdueListFilter->add("CityComboBox", "city like '%:param%'");
+    getPreOverdueListFilter->add("FioComboBox", "fio like '%:param%'");
+    //getPreOverdueListFilter->add("SaldoFilterEdit", "saldo_uch > :param");
+    getPreOverdueListFilter->add("ServiceCompanyFilterComboBox", "rt_descr like '%:param%'");
+    getPreOverdueListFilter->add("PremTypeComboBox", "prem_type_descr like '%:param%'");
+    //getPreOverdueListFilter->add("FaPackTypeFilterComboBox", "fa_pack_type_descr like '%:param%'");
+    //getPreOverdueListFilter->add("CcDttmStatusComboBox", "(:param = 0 or (:param=1 and cc_dttm is not null) or (:param=2 and cc_dttm is null) or (:param=3 and cc_dttm >= ':begin_dt' and cc_dttm < ':end_dt') )");
+    //getPreOverdueListFilter->setDefaultValue("CcDttmStatusComboBox", "param", "3");
+    //getPreOverdueListFilter->setDefaultValue("CcDttmStatusComboBox", "begin_dt", "01.01.1900");
+    //getPreOverdueListFilter->setDefaultValue("CcDttmStatusComboBox", "end_dt", IncDay(dt, -17));
+    getPreOverdueListFilter->EnableControls();
+
+
+    /* Фильтр для списка реестров просроченных заявок */
+    getFpOverdueListFilter->DisableControls();
+    getFpOverdueListFilter->add("FaPackIdFilterEdit", "fa_pack_id like '%:param%'");
+    getFpOverdueListFilter->add("ServiceCompanyFilterComboBox", "rt_descr like '%:param%'");
+    getFpOverdueListFilter->EnableControls();
+
+    /* Фильтр для реестра просроченных заявок */
+    getFpOverdueContentFilter->DisableControls();
+    getFpOverdueContentFilter->add("AcctIdComboBox", "acct_id like '%:param%'");
+    //getFpOverdueContentFilter->add("FaIdFilterEdit", "fa_id like '%:param%'");
+    getFpOverdueContentFilter->add("AddressComboBox", "address like '%:param%'");
+    getFpOverdueContentFilter->add("CityComboBox", "city like '%:param%'");
+    getFpOverdueContentFilter->add("FioComboBox", "fio like '%:param%'");
+    getFpOverdueContentFilter->EnableControls();
+
+
+
+
    /* Все
 Отменен
 Утвержден
@@ -605,7 +644,7 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
     findFaPackListNoticesFilter->add("FaPackIdFilterEdit", "fa_pack_id like '%:param%'");
     //findFaPackListNoticesFilter->add("FaPackTypeDescrFilterComboBox", "fa_pack_type_descr like '%:param%'");
     findFaPackListNoticesFilter->add("FaPackTypeCdFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_type_cd = '10') or (:param=2 and fa_pack_type_cd = '20') or (:param=3 and fa_pack_type_cd = '40') or (:param=4 and fa_pack_type_cd = '45') or (:param=5 and fa_pack_type_cd = '50'))");
-    findFaPackListNoticesFilter->add("FaPackStatusFlgFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_status_flg = '50') or (:param=2 and fa_pack_status_flg = '20') or (:param=3 and fa_pack_status_flg = '60'))");
+    findFaPackListNoticesFilter->add("FaPackStatusFlgFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_status_flg = '50') or (:param=2 and fa_pack_status_flg = '20') )");
     findFaPackListNoticesFilter->add("OwnerFilterEdit", "owner like '%:param%'");
     findFaPackListNoticesFilter->setDefaultValue("FaPackTypeCdFilterComboBox", "param", "0");
     findFaPackListNoticesFilter->setDefaultValue("FaPackStatusFlgFilterComboBox", "param", "0");
@@ -616,12 +655,22 @@ void __fastcall TMainDataModule::DataModuleCreate(TObject *Sender)
     findFpStopListFilter->add("FaPackIdFilterEdit", "fa_pack_id like '%:param%'");
     //findFpStopListFilter->add("FaPackTypeDescrFilterComboBox", "fa_pack_type_descr like '%:param%'");
     findFpStopListFilter->add("FaPackTypeCdFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_type_cd = '10') or (:param=2 and fa_pack_type_cd = '20') or (:param=3 and fa_pack_type_cd = '40') or (:param=4 and fa_pack_type_cd = '45') or (:param=5 and fa_pack_type_cd = '50'))");
-    findFpStopListFilter->add("FaPackStatusFlgFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_status_flg = '50') or (:param=2 and fa_pack_status_flg = '20') or (:param=3 and fa_pack_status_flg = '60'))");
+    findFpStopListFilter->add("FaPackStatusFlgFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_status_flg = '50') or (:param=2 and fa_pack_status_flg = '20') )");
     findFpStopListFilter->setDefaultValue("FaPackTypeCdFilterComboBox", "param", "0");
-    findFpStopListFilter->setDefaultValue("FaPackStatusFlgFilterComboBox", "param", "0");    findFpStopListFilter->add("OwnerFilterEdit", "owner like '%:param%'");
+    findFpStopListFilter->setDefaultValue("FaPackStatusFlgFilterComboBox", "param", "0");
+    findFpStopListFilter->add("OwnerFilterEdit", "owner like '%:param%'");
     findFpStopListFilter->EnableControls();
 
 
+    /* Фильтры для выбора реестра заявок на отключение */
+    findFpOverdueListFilter->DisableControls();
+    findFpOverdueListFilter->add("FaPackIdFilterEdit", "fa_pack_id like '%:param%'");
+    findFpOverdueListFilter->add("FaPackTypeCdFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_type_cd = '10') or (:param=2 and fa_pack_type_cd = '20') or (:param=3 and fa_pack_type_cd = '40') or (:param=4 and fa_pack_type_cd = '45') or (:param=5 and fa_pack_type_cd = '50'))");
+    findFpOverdueListFilter->add("FaPackStatusFlgFilterComboBox", "(:param = 0 or (:param=1 and fa_pack_status_flg = '50') or (:param=2 and fa_pack_status_flg = '20') )");
+    findFpOverdueListFilter->setDefaultValue("FaPackTypeCdFilterComboBox", "param", "0");
+    findFpOverdueListFilter->setDefaultValue("FaPackStatusFlgFilterComboBox", "param", "0");
+    findFpOverdueListFilter->add("OwnerFilterEdit", "owner like '%:param%'");
+    findFpOverdueListFilter->EnableControls();
 
 
 
@@ -1033,7 +1082,7 @@ bool __fastcall TMainDataModule::createPackStop(bool forceSelf)
 
 /* Создать реестр уведомлений
 */
-String __fastcall TMainDataModule::createFaPackFree(TFaPackTypeCd faPackTypeCd)
+/*String __fastcall TMainDataModule::createFaPackFree(TFaPackTypeCd faPackTypeCd)
 {
     try
     {
@@ -1047,7 +1096,7 @@ String __fastcall TMainDataModule::createFaPackFree(TFaPackTypeCd faPackTypeCd)
     {
         ShowMessage(e.Message);
     }
-}
+}  */
 
 /* Создать реестр уведомлений
 */
@@ -1109,14 +1158,13 @@ void __fastcall TMainDataModule::closePreDebtorList()
 
 /* Закрывает DataSet
    используется, если необходимо обновить список реестров на ограничение
-   */
-void __fastcall TMainDataModule::closeFaPackStopList()
+*/
+void __fastcall TMainDataModule::closeFpStopList()
 {
-    //getFaPackStopFilter->DataSet->ParamByName("acct_otdelen")->Value = "";
     getFpStopListFilter->DataSet->Close();
 }
 
-void __fastcall TMainDataModule::closeStopList()
+void __fastcall TMainDataModule::closePreStopList()
 {
     getPreStopListFilter->DataSet->Close();
 }
@@ -1130,8 +1178,20 @@ void __fastcall TMainDataModule::closeFpCancelStopList()
 /* Закрывает список реестров заявок на возобновление подключения */
 void __fastcall TMainDataModule::closeFpReconnectList()
 {
-    getReconnectListFilter->DataSet->Close();
+    getFpReconnectListFilter->DataSet->Close();
 }
+
+void __fastcall TMainDataModule::closePreOverdueList()
+{
+    getPreOverdueListFilter->DataSet->Close();
+}
+
+
+void __fastcall TMainDataModule::closeFpOverdueList()
+{
+    getFpOverdueListFilter->DataSet->Close();
+}
+
 
 
 /* Закрывает содержание заявки на отключение*/
@@ -1263,9 +1323,11 @@ void __fastcall TMainDataModule::getStopList()
 
 /* Отображает список реестров на ограничение
    по выбранному участку */
-void __fastcall TMainDataModule::getFaPackStopList()
+void __fastcall TMainDataModule::getFpStopList()
 {
-    if (_threadDataSet != NULL)
+    getFpList(getFpStopListProc, getFpStopListFilter, getFpStopListRam, _acctOtdelen->AsString);
+
+    /*if (_threadDataSet != NULL)
     {   // Если поток уже запущен
         return;
     }
@@ -1275,8 +1337,27 @@ void __fastcall TMainDataModule::getFaPackStopList()
     {
         getFpStopListProc->ParamByName("p_acct_otdelen")->AsString = _acctOtdelen->AsString;
         _threadDataSet = new TThreadDataSet(false, getFpStopListProc, getFpStopListRam, &OnThreadEvent);
+    }*/
+}
+
+
+/* Отображает список просроченных заявок
+   по выбранному участку */
+void __fastcall TMainDataModule::getPreOverdueList()
+{
+    if (_threadDataSet != NULL)
+    {   // Если поток уже запущен
+        return;
+    }
+
+    if (!getPreOverdueListFilter->DataSet->Active || getPreOverdueListProc->ParamByName("p_acct_otdelen")->AsString != _acctOtdelen->AsString)
+    {
+        getPreOverdueListProc->ParamByName("p_acct_otdelen")->AsString = _acctOtdelen->AsString;
+        _threadDataSet = new TThreadDataSet(false, getPreOverdueListProc, getPreOverdueListRam, &OnThreadEvent);
     }
 }
+
+
 
 
 /* Отображает список реестров
@@ -1306,6 +1387,19 @@ void __fastcall TMainDataModule::findFaPackListStop(const String& acctOtdelen, c
     CopyDataSet(findFpStopListProc, findFpStopListFilter->DataSet);
     findFpStopListProc->Close();
 }
+
+/**/
+void __fastcall TMainDataModule::findFpOverdueList(const String& acctOtdelen, const String& faId, const String& acctId)
+{
+
+    findFpOverdueListProc->ParamByName("p_acct_otdelen")->AsString = acctOtdelen;
+    findFpOverdueListProc->ParamByName("p_fa_id")->AsString = faId;
+    findFpOverdueListProc->ParamByName("p_acct_id")->AsString = acctId;
+    findFpOverdueListProc->Open();
+    CopyDataSet(findFpOverdueListProc, findFpOverdueListFilter->DataSet);
+    findFpOverdueListProc->Close();
+}
+
 
 /* Отображает полный список абонентов
    по выбранному участку */
@@ -1370,7 +1464,7 @@ void __fastcall TMainDataModule::getPrePostList()
 }
 
 /* Отображает список на отмену ограничения */
-void __fastcall TMainDataModule::getCancelStopList()
+void __fastcall TMainDataModule::getFpCancelList()
 {
     if (_threadDataSet != NULL)
     {
@@ -1421,28 +1515,50 @@ void __fastcall TMainDataModule::setAcctOtdelen(const String& acctOtdelen, bool 
     }
 }
 
-void __fastcall TMainDataModule::setFaPack(const String& faPackId)
+void __fastcall TMainDataModule::setCurrentFp(const String& faPackId)
 {
-    /* Запрос для хранения текущей информации по пакету */
-    //static String oldFaPackId = "";
-
-    // Здесь возможно сделать проверку на наличие уже открытого запроса getFaPackInfo
-    //if (oldFaPackId )
-
     getFaPackInfProc->ParamByName("p_fa_pack_id")->AsString = faPackId;
     openOrRefresh(getFaPackInfProc);
 
     setAcctOtdelen(getFaPackInfProc->FieldByName("acct_otdelen")->AsString, true);
 }
 
+/* Задает текущий реестр */
+void __fastcall TMainDataModule::setCurrentFp(TOraStoredProc* proc, TDataSetFilter* filter, TVirtualTable* vtable, const String& faPackId)
+{
+    if (_threadDataSet != NULL)
+    {   
+        return;   // Если поток уже запущен
+    }
+
+    _currentFilter  = filter;
+
+    if (faPackId != "" && proc->ParamByName("p_fa_pack_id")->AsString != faPackId)
+    {
+        proc->ParamByName("p_fa_pack_id")->Value = faPackId;
+        filter->DataSet->Close();
+    }
+
+    if ( !filter->DataSet->Active && !proc->ParamByName("p_fa_pack_id")->IsNull)
+    {
+        _threadDataSet = new TThreadDataSet(false, proc, vtable, &OnThreadEvent);
+
+        // Запрос для хранения текущей информации по пакету
+        //setCurrentFp(proc->ParamByName("p_fa_pack_id")->AsString);  // проверить, нужно ли это  2017-08-21
+    }
+
+}
+
+
 /* Задает текущий реестр
 */
 void __fastcall TMainDataModule::setCurrentFpNoticesId(const String& faPackId)
 {
+    setCurrentFp(getFpNoticesContentProc, getFpNoticesContentFilter, getFpNoticesContentRam, faPackId);
 
     // здесь сделать или код открытия или использовать функцию
     //  getFaPack может быть переименовать в openFaPack.....
-    if (_threadDataSet != NULL)
+    /*if (_threadDataSet != NULL)
     {   // Если поток уже запущен
         return;
     }
@@ -1453,20 +1569,23 @@ void __fastcall TMainDataModule::setCurrentFpNoticesId(const String& faPackId)
         _currentFilter  = getFpNoticesContentFilter;
 
         /* Запрос для списка*/
-        getFpNoticesContentProc->ParamByName("p_fa_pack_id")->Value = faPackId;
+        /*getFpNoticesContentProc->ParamByName("p_fa_pack_id")->Value = faPackId;
 
         _threadDataSet = new TThreadDataSet(false, getFpNoticesContentProc, getFpNoticesContentRam, &OnThreadEvent);
 
         /* Запрос для хранения текущей информации по пакету */
-        setFaPack(faPackId);
-    }
+        /*setFaPack(faPackId);
+    }  */
 }
 
 /* Задает текущий пакет
 */
 void __fastcall TMainDataModule::setCurrentFpStopId(const String& faPackId)
 {
-    if (_threadDataSet != NULL)
+
+    setCurrentFp(getFpStopContentProc, getFpStopContentFilter, getFpStopContentRam, faPackId);
+
+    /*if (_threadDataSet != NULL)
     {   // Если поток уже запущен
         return;
     }
@@ -1487,7 +1606,7 @@ void __fastcall TMainDataModule::setCurrentFpStopId(const String& faPackId)
 
         // Запрос для хранения текущей информации по пакету
         setFaPack(getFpStopContentProc->ParamByName("p_fa_pack_id")->AsString);
-    }
+    } */
 
 
 
@@ -1510,7 +1629,9 @@ void __fastcall TMainDataModule::setCurrentFpStopId(const String& faPackId)
 */
 void __fastcall TMainDataModule::setCurrentFpCancel(const String& faPackId)
 {
-    if (_threadDataSet != NULL)
+    setCurrentFp(getFpCancelContentProc, getFpCancelContentFilter, getFpCancelContentRam, faPackId);
+
+    /*if (_threadDataSet != NULL)
     {   // Если поток уже запущен
         return;
     }
@@ -1529,7 +1650,7 @@ void __fastcall TMainDataModule::setCurrentFpCancel(const String& faPackId)
 
         // Запрос для хранения текущей информации по пакету
         setFaPack(getFpCancelContentProc->ParamByName("p_fa_pack_id")->AsString);
-    }
+    }   */
 
 
     /*if ( !getFpCancelContentFilter->DataSet->Active
@@ -1553,43 +1674,17 @@ void __fastcall TMainDataModule::setCurrentFpCancel(const String& faPackId)
 */
 void __fastcall TMainDataModule::setCurrentFpReconnect(const String& faPackId)
 {
-    if (_threadDataSet != NULL)
-    {   // Если поток уже запущен
-        return;
-    }
-
-    _currentFilter  = getFpReconnectContentFilter;
-
-    if (faPackId !="" && getFpReconnectContentProc->ParamByName("p_fa_pack_id")->AsString != faPackId)
-    {
-        getFpReconnectContentProc->ParamByName("p_fa_pack_id")->Value = faPackId;
-        getFpReconnectContentFilter->DataSet->Close();
-    }
-
-    if ( !getFpReconnectContentFilter->DataSet->Active && !getFpReconnectContentProc->ParamByName("p_fa_pack_id")->IsNull)
-    {
-        _threadDataSet = new TThreadDataSet(false, getFpReconnectContentProc, getFpReconnectContentRam, &OnThreadEvent);
-
-        // Запрос для хранения текущей информации по пакету
-        setFaPack(getFpReconnectContentProc->ParamByName("p_fa_pack_id")->AsString);
-    }
-
-
-    
-
-/*    if ( !getFpReconnectContentFilter->DataSet->Active
-        || getFpReconnectContentProc->ParamByName("p_fa_pack_id")->Value != faPackId)
-    {
-        _currentFilter  = getFpReconnectContentFilter;
-
-        /* Запрос для списка*/
-       /* getFpReconnectContentProc->ParamByName("p_fa_pack_id")->Value = faPackId;
-        _threadDataSet = new TThreadDataSet(false, getFpReconnectContentProc, getFpReconnectContentRam, &OnThreadEvent);
-                                                                              
-        /* Запрос для хранения текущей информации по пакету */
-        /*setFaPack(faPackId);
-    } */
+    setCurrentFp(getFpReconnectContentProc, getFpReconnectContentFilter, getFpReconnectContentRam, faPackId);
 }
+
+/* Задает текущий реестр просроченных заявок
+*/
+void __fastcall TMainDataModule::setCurrentFpOverdue(const String& faPackId)
+{
+    setCurrentFp(getFpOverdueContentProc, getFpOverdueContentFilter, getFpOverdueContentRam, faPackId);
+}
+
+
 
 /* Возвращает ID текущего участка
 */
@@ -1622,6 +1717,11 @@ String __fastcall TMainDataModule::getFpReconnectId() const
     return getFpReconnectContentProc->ParamByName("p_fa_pack_id")->AsString;
 }
 
+/* Возвращает ID текущего реестра просроченных заявок */
+String __fastcall TMainDataModule::getFpOverdueId() const
+{
+    return getFpOverdueContentProc->ParamByName("p_fa_pack_id")->AsString;
+}
 
 
 /* Функция для подготовки к обработке данных
@@ -1786,9 +1886,11 @@ void __fastcall TMainDataModule::EsaleSessionAfterDisconnect(
     }*/
 }
 /**/
-void __fastcall TMainDataModule::getReconnectList()
+void __fastcall TMainDataModule::getFpReconnectList()
 {
-    if (_threadDataSet != NULL)
+    getFpList(getFpReconnectListProc, getFpReconnectListFilter, getFpReconnectListRam, _acctOtdelen->AsString);
+
+    /*if (_threadDataSet != NULL)
     {
         return;
     }
@@ -1800,7 +1902,7 @@ void __fastcall TMainDataModule::getReconnectList()
     {
         getReconnectListProc->ParamByName("p_acct_otdelen")->AsString = _acctOtdelen->AsString;
         _threadDataSet = new TThreadDataSet(false, getReconnectListProc, getReconnectListRam, &OnThreadEvent);
-    }
+    }*/
 }
 
 String __fastcall TMainDataModule::getFaPackStats()
@@ -1937,4 +2039,72 @@ bool __fastcall TMainDataModule::createFpCancelForce()
     */
 
 }
+
+bool __fastcall TMainDataModule::createFpOverdue()
+{
+    TDataSetFilter* filter = getPreOverdueListFilter;
+
+    FillProcListParameter(getPreOverdueListFilter, "fa_id", createFpOverdueProc, "p_fa_id_list");    // Заполняем список
+
+    //createFpStopProc->ParamByName("p_force_self")->AsString = forceSelf? 'Y': 'N';
+
+    /*BeginProcessing(filter);    2017-08-09
+
+    // Очищаем значения параметров
+    createFpStopProc->ParamByName("p_acct_id_list")->Length = 0;
+    createFpStopProc->ParamByName("p_force_self")->AsString = forceSelf? 'Y': 'N';
+
+    // Заполняем параметр - список абонентов
+    int i = 0;
+    while ( !filter->DataSet->Eof )
+    {
+        createFpStopProc->ParamByName("p_acct_id_list")->ItemAsString[++i] = filter->DataSet->FieldByName("acct_id")->AsString;
+        filter->DataSet->Next();
+    }
+
+    EndProcessing(filter);   */
+
+    if (createFpOverdueProc->ParamByName("p_fa_id_list")->Length == 0)
+    {
+        return false;
+    }
+
+    try
+    {
+        createFpOverdueProc->Execute();
+        return true;
+    }
+    catch(Exception& e)
+    {
+        MessageBoxStop(e.Message);
+        return false;
+    }
+}
+
+
+
+//void __fastcall TMainDataModule::setCurrentFp(TOraStoredProc* proc, TDataSetFilter* filter, TVirtualTable* vtable, const String& faPackId)
+
+void __fastcall TMainDataModule::getFpList(TOraStoredProc* proc, TDataSetFilter* filter, TVirtualTable* vtable, const String& acctOtdelen)
+{
+    if (_threadDataSet != NULL)
+    {   // Если поток уже запущен
+        return;
+    }
+
+    //if (!getPackStopListQuery->Active || getPackStopListQuery->ParamByName("acct_otdelen")->Value != _acctOtdelen->Value)
+    if (!filter->DataSet->Active || proc->ParamByName("p_acct_otdelen")->AsString != acctOtdelen)
+    {
+        proc->ParamByName("p_acct_otdelen")->AsString = acctOtdelen;
+        _threadDataSet = new TThreadDataSet(false, proc, vtable, &OnThreadEvent);
+    }
+
+}
+
+void __fastcall TMainDataModule::getFpOverdueList()
+{
+    getFpList(getFpOverdueListProc, getFpOverdueListFilter, getFpOverdueListRam, _acctOtdelen->AsString);
+}
+
+
 

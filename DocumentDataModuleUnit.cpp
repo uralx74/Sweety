@@ -41,6 +41,7 @@ void __fastcall TDocumentDataModule::BeginPrint(TDataSetFilter* dsFilter)
     //MainDataModule->getCheckedFilter->setValue("group", "param", ""); //
     getCheckedFilter->setValue("checked", "param", "1"); //
     getCheckedFilter->DataSet = dsFilter->DataSet;   // Присоединяем фильтр к dataset
+    dsFilter->DataSet->First(); // На всякий случай 2017-08-24
 }
 
 /* Функция, вызываемая при завершении вывода данных */
@@ -92,96 +93,177 @@ String __fastcall TDocumentDataModule::askWordFileName(const String &defaultFile
 }
 
 
-/* Печать уведомлений */
-bool __fastcall TDocumentDataModule::getDocumentFaNotices(TDataSetFilter* otdelenData, TDataSetFilter* faPackData, TDataSetFilter* faData)
+/* Печать заявок. Универсальная функция.
+   При появлении нового типа шаблона, добавить сюда имя файла шаблона
+   Тип 1 - Выбрано содержимое, документ формируется с помощь слияния
+*/
+bool __fastcall TDocumentDataModule::getDocument(TDataSetFilter* otdelenData, TDataSetFilter* fpListData, TDataSetFilter* faDataFilter, TDocTypeCd docTypeCd)
 {
     bool result = false;
-    String resultFilename = askWordFileName(faPackData->DataSet->FieldByName("fa_pack_id")->AsString);
+    String resultFilename = askWordFileName();
     if (resultFilename == "")
     {
         return result;
     }
 
-    #define _DEBUG
-    TWordExportParams wordExportParams;
+    TWordExportParams wordExportParams;     // Параметры документа
     wordExportParams.pagePerDocument = 500;
-    wordExportParams.resultFilename = ExtractFilePath(resultFilename) + ExtractFileName(resultFilename) + "_[:counter].doc";
-    wordExportParams.templateFilename = MainDataModule->getConfigQuery->FieldByName("report_path")->AsString + "notice.dotx";
 
-    // Привязываем источники данных к полям
-    wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");     // Общая информация по участку
-    wordExportParams.addMergeDataSet(faData->DataSet);   // Информация по абонентам
-    //wordExportParams.addSingleTextDataSet(faPackData->DataSet, "rec_");   // Информация по реестру
-    //wordExportParams.addTableDataSet(faData->DataSet, 1, "table_");       // Информация для таблицы
+    String fileName = "";
+
+    // Переделать. Сделать таблицу в БД.
+    switch (docTypeCd)
+    {
+    case DT_NOTICES_MANUAL:
+    {
+        fileName = "notice_manual.dotx";
+        wordExportParams.addMergeDataSet(faDataFilter->DataSet);   // Информация по абонентам
+        break;
+    }
+    case DT_NOTICES_LIST_FOR_POSTOFFICE:
+    {
+        fileName = "notice_pack_post.dotx";
+        wordExportParams.addTableDataSet(faDataFilter->DataSet, 1, "table_");                  // Информация для таблицы
+        break;
+    }
+    };
+
+    wordExportParams.templateFilename = MainDataModule->getConfigQuery->FieldByName("report_path")->AsString + fileName;
+
+    /* Присоединяем источники данных */
+    wordExportParams.addSingleTextDataSet(MainDataModule->getConfigProc, "sysrec_");    // Служебная информация
+    wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");    // Общая информация по участку
+    wordExportParams.addSingleTextDataSet(fpListData->DataSet, "rec_");         // Информация по реестру
 
 
     // Далее фильтруем выделенные и формируем документы
-    BeginPrint(faData);
+    BeginPrint(faDataFilter);
 
-    faData->DataSet->First();
 
-    if ( faData->DataSet->RecordCount > 0)
+    if ( !faDataFilter->DataSet->Eof )
     {
-        // Получаем дополнительные данные для полей документа
-        //MainDataModule->getFaPackInfo->ParamByName("fa_pack_id")->Value = mergeFields->DataSet->FieldByName("fa_pack_id")->Value;
-        //MainDataModule->openOrRefresh(MainDataModule->getFaPackInfo);
+        wordExportParams.resultFilename = ExtractFilePath(resultFilename) + ExtractFileName(resultFilename) +
+            fpListData->DataSet->FieldByName("fa_pack_id")->AsString;
 
-        // Формируем документ
         documentWriter->ExportToWordTemplate(&wordExportParams);
-        
         result = true;
     }
 
-    EndPrint(faData);
+
+    EndPrint(faDataFilter);
 
     return result;
-
 }
 
-/*void __fastcall TDocumentDataModule::getDocumentFaNotices(TDataSetFilter* mergeFields)
+/* Печать заявок. Универсальная функция.
+   При появлении нового типа шаблона, добавить сюда имя файла шаблона
+   Тип 2 - Выбран список
+*/
+bool __fastcall TDocumentDataModule::getDocument(TDataSetFilter* otdelenData, TDataSetFilter* fpListData, TOraStoredProc* faDataProc, TDocTypeCd docTypeCd)
 {
+    bool result = false;
     String resultFilename = askWordFileName();
     if (resultFilename == "")
     {
-        return;
+        return result;
     }
 
-    #define _DEBUG
-    TWordExportParams wordExportParams;
-    wordExportParams.resultFilename = ExtractFilePath(resultFilename) + ExtractFileName(resultFilename) + "_[:counter].doc";
-
-
+    TWordExportParams wordExportParams;     // Параметры документа
     wordExportParams.pagePerDocument = 500;
-    // Присоединяем источники данных
-    wordExportParams.templateFilename = MainDataModule->getConfigQuery->FieldByName("report_path")->AsString + "notice.dotx";
-    //wordExportParams.addSingleImageDataSet(MainDataModule->getConfigProc, "image_");     // Общая информация по участку
-    wordExportParams.addSingleTextDataSet(MainDataModule->getOtdelenListQuery, "otdelen_");     // Общая информация по участку
-    //wordExportParams.addSingleTextDataSet(MainDataModule->getPackStopListFilter->DataSet, "rec_");  // Информация по реестру
-    //wordExportParams.addMergeDataSet(mergeFields->DataSet); // 2017-03-23 наглядней когда запрос указывается однозначно
-    wordExportParams.addMergeDataSet(MainDataModule->getFaPackNoticesFilter->DataSet);   // Информация по абонентам
 
-    //wordExportParams.addSingleDataSet(MainDataModule->getPackStopListFilter->DataSet, "rec_");  // Информация по реестру
-    //wordExportParams.addTableDataSet(MainDataModule->getFaPackStopQuery, 1, "table_");                  // Информация для таблицы
+    String fileName = "";
+    int mode = 0;
+
+    // Переделать. Сделать таблицу в БД.
+    switch (docTypeCd)
+    {
+    case DT_STOP_REQUEST:
+    {
+        // Задаем имя файла шаблона в зависимости от того, куда предназначена заявка
+        if ( fpListData->DataSet->FieldByName("rt_type")->AsString == "OTDELEN" ||
+            (fpListData->DataSet->FieldByName("rt_type")->IsNull && fpListData->DataSet->FieldByName("rt_cd")->IsNull) )
+        {
+            // Распоряжение участку
+            fileName = "stop_request_self.dotx";
+        }
+        else
+        {
+            // Заявка поставщику услуг
+            fileName = "stop_request.dotx";
+        }
+        wordExportParams.addTableDataSet(faDataProc, 3, "table_");                  // Информация для таблицы  // !!!!!!!!!!! Сделать универсальную функцию без указания индекса таблицы
+        break;
+    }
+    case DT_CANCEL_REQUEST:
+    {
+        fileName = "cancel_request.dotx";
+        wordExportParams.addTableDataSet(faDataProc, 3, "table_");                  // Информация для таблицы  // !!!!!!!!!!! Сделать универсальную функцию без указания индекса таблицы
+        break;
+    }
+    case DT_RECONNECT_REQUEST:
+    {
+        fileName = "reconnect_request.dotx";
+        wordExportParams.addTableDataSet(faDataProc, 3, "table_");                  // Информация для таблицы  // !!!!!!!!!!! Сделать универсальную функцию без указания индекса таблицы
+        break;
+    }
+    case DT_OVERDUE_REQUEST:
+    {
+        fileName = "overdue_request.dotx";
+        wordExportParams.addTableDataSet(faDataProc, 3, "table_");                  // Информация для таблицы  // !!!!!!!!!!! Сделать универсальную функцию без указания индекса таблицы
+        break;
+    }
+    };
+
+    wordExportParams.templateFilename = MainDataModule->getConfigQuery->FieldByName("report_path")->AsString + fileName;
+
+    /* Присоединяем источники данных */
+    wordExportParams.addSingleTextDataSet(MainDataModule->getConfigProc, "sysrec_");    // Служебная информация
+    wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");    // Общая информация по участку
+    wordExportParams.addSingleTextDataSet(fpListData->DataSet, "rec_");         // Информация по реестру
 
 
     // Далее фильтруем выделенные и формируем документы
-    BeginPrint(mergeFields);
+    BeginPrint(fpListData);
 
-    mergeFields->DataSet->First();
-
-    if ( mergeFields->DataSet->RecordCount > 0)
+    while( !fpListData->DataSet->Eof )
     {
-        // Получаем дополнительные данные для полей документа
-        //MainDataModule->getFaPackInfo->ParamByName("fa_pack_id")->Value = mergeFields->DataSet->FieldByName("fa_pack_id")->Value;
-        //MainDataModule->openOrRefresh(MainDataModule->getFaPackInfo);
 
-        // Формируем документ
-        documentWriter->ExportToWordTemplate(&wordExportParams);
+        faDataProc->Close();
+        faDataProc->ParamByName("p_fa_pack_id")->Value =  fpListData->DataSet->FieldByName("fa_pack_id")->Value;
+        faDataProc->Open();
+
+        if ( !faDataProc->Eof )
+        {
+            wordExportParams.resultFilename = ExtractFilePath(resultFilename) + ExtractFileName(resultFilename) +
+                fpListData->DataSet->FieldByName("fa_pack_id")->AsString;
+
+            documentWriter->ExportToWordTemplate(&wordExportParams);
+
+            result = true;
+        }
+
+        fpListData->DataSet->Next();
     }
 
-    EndPrint(mergeFields);
+    EndPrint(fpListData);
 
-} */
+
+    return result;
+}
+
+
+/* Печать уведомлений */
+bool __fastcall TDocumentDataModule::getDocumentFaNotices(TDataSetFilter* otdelenData, TDataSetFilter* faPackData, TDataSetFilter* faData)
+{
+    //String resultFilename = faPackData->DataSet->FieldByName("fa_pack_id")->AsString;
+
+    return getDocument(
+        MainDataModule->getOtdelenListFilter,
+        MainDataModule->getFaPackInfoFilter,
+        MainDataModule->getFpNoticesContentFilter,
+        DT_NOTICES_MANUAL);
+
+}
 
 /* Печать списка уведомлений */
 void __fastcall TDocumentDataModule::getDocumentFaNoticesList(TDataSetFilter *mergeFields)
@@ -223,7 +305,20 @@ void __fastcall TDocumentDataModule::getDocumentFaNoticesList(TDataSetFilter *me
 /* Печать списка уведомлений для почтового отделения */
 bool __fastcall TDocumentDataModule::getDocumentFaNoticesListForPostOffice(TDataSetFilter* otdelenData, TDataSetFilter* faPackData, TDataSetFilter* faData)
 {
-    if ( faData->DataSet->Eof )
+
+    //getDocumentFaNoticesListForPostOffice(MainDataModule->getOtdelenListFilter, MainDataModule->getFaPackInfoFilter, MainDataModule->getFpNoticesContentFilter
+
+
+    return getDocument(
+        MainDataModule->getOtdelenListFilter,
+        MainDataModule->getFaPackInfoFilter,
+        MainDataModule->getFpNoticesContentFilter,
+        DT_NOTICES_LIST_FOR_POSTOFFICE);
+
+
+
+
+    /*    if ( faData->DataSet->Eof )
     {
         return false;
     }
@@ -240,7 +335,7 @@ bool __fastcall TDocumentDataModule::getDocumentFaNoticesListForPostOffice(TData
     //wordExportParams.pagePerDocument = 500;   // Количество страниц на документ
 
     /* Присоединяем источники данных */
-    wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");     // Общая информация по участку
+ /*   wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");     // Общая информация по участку
     wordExportParams.addSingleTextDataSet(faPackData->DataSet, "rec_");  // Информация по реестру
     wordExportParams.addTableDataSet(faData->DataSet, 1, "table_");                  // Информация для таблицы
 
@@ -251,246 +346,48 @@ bool __fastcall TDocumentDataModule::getDocumentFaNoticesListForPostOffice(TData
 
     EndPrint(faData);       // Освобождаем набор данных
 
-    return true;
+    return true;  */
 }
 
-
-
-/* Печать списка заявок на ограничение - устаревшая */
-//void __fastcall TDocumentDataModule::getDocumentStopService(TDataSetFilter *mergeFields)
-//{
-/*    #ifdef NDEBUG
-    String resultFilename = askWordFileName();
-    if (resultFilename == "")
-    {
-        return;
-    }
-    #else
-    String resultFilename = "c:\\hello.doc";
-    #endif
-
-    TWordExportParams wordExportParams;
-    wordExportParams.templateFilename = "c:\\PROGRS\\current\\GroupDoc\\report\\template_document_stop.dotx";
-    wordExportParams.pagePerDocument = 500;
-
-    MainDataModule->getFaPackStopInfoQuery->Close();
-    MainDataModule->getFaPackStopInfoQuery->ParamByName("fa_pack_id")->Value = mergeFields->DataSet->FieldByName("fa_pack_id")->Value;
-    MainDataModule->getFaPackStopInfoQuery->Open();
-    //OpenOrRefresh(MainDataModule->getFaPackStopInfoQuery);
-
-    /* Присоединяем источники данных * /
-    wordExportParams.addSingleDataSet(MainDataModule->getOtdelenListQuery, "otdelen_");     // Общая информация по участку
-    wordExportParams.addSingleDataSet(MainDataModule->getFaPackStopInfoQuery, "rec_");  // Информация по реестру
-    wordExportParams.addTableDataSet(mergeFields->DataSet, 1, "table_");                  // Информация для таблицы
-
-    // Далее фильтруем выделенные и формируем документы
-    BeginPrint(mergeFields);
-    MainDataModule->getCheckedFilter->setValue("group", "param", "1"); //
-
-    if ( mergeFields->DataSet->RecordCount > 0)
-    {
-        // здесь дополнительный фильтр для формирования разных документов
-        // в разные сетевые организации
-        //
-
-        int grp = 1;
-        while ( true )
-        {
-            wordExportParams.resultFilename = ExtractFilePath(resultFilename) + ExtractFileName(resultFilename) + IntToStr(grp) + ".doc";
-            MainDataModule->getCheckedFilter->setValue("group", "param", IntToStr(grp++)); //
-
-            String ss = MainDataModule->getCheckedFilter->getFilterString();
-
-            if (!mergeFields->DataSet->Eof )
-            {
-                documentWriter->ExportToWordTemplate2(&wordExportParams);
-                //documentWriter->ExportToWordTemplate(&wordExportParams, mergeFields->DataSet);
-            }
-            else
-            {
-                break;
-            }
-        }
-
-
-
-        //MainDataModule->getFaPackInfo->ParamByName("fa_pack_id")->Value = mergeFields->DataSet->FieldByName("fa_pack_id")->Value;
-        //MainDataModule->openOrRefresh(MainDataModule->getFaPackInfo);
-
-
-    }
-
-    EndPrint(mergeFields);
-
-
-  /*  Variant tables = Document.OlePropertyGet("Tables");
-    Variant table = tables.OleFunction("Item", 1);
-
-    MainDataModule->Raion->Open();
-    msword.writeDataSetToTable(table, MainDataModule->Raion);  */
-//}
-
-
 /* Печать списка заявок на ограничение */
-bool __fastcall TDocumentDataModule::getDocumentStopRequest(TDataSetFilter* otdelenData, TDataSetFilter* fpListData, TOraStoredProc* fpContentProc)
+bool __fastcall TDocumentDataModule::getDocumentStopRequest()
 {
-    String resultFilename = askWordFileName();
-    if (resultFilename == "")
-    {
-        return false;
-    }
-
-    TWordExportParams wordExportParams;
-    //wordExportParams.templateFilename = MainDataModule->getConfigQuery->FieldByName("report_path")->AsString + "stop_request.dotx";
-    wordExportParams.pagePerDocument = 500;
-
-    //MainDataModule->getFaPackStopInfoQuery->Close();
-    //OpenOrRefresh(MainDataModule->getFaPackStopInfoQuery);
-    //MainDataModule->getFaPackStopInfoQuery->ParamByName("fa_pack_id")->Value = mergeFields->DataSet->FieldByName("fa_pack_id")->Value;
-    //MainDataModule->getFaPackStopInfoQuery->Open();
-
-    /* Присоединяем источники данных */
-    wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");     // Общая информация по участку
-    wordExportParams.addSingleTextDataSet(fpListData->DataSet, "rec_");  // Информация по реестру
-    wordExportParams.addTableDataSet(fpContentProc, 3, "table_");                  // Информация для таблицы
-    wordExportParams.addSingleTextDataSet(MainDataModule->getConfigProc, "sysrec_");  // Служебная информация
-
-    //wordExportParams.addSingleTextDataSet(MainDataModule->getOtdelenListQuery, "otdelen_");     // Общая информация по участку
-    //wordExportParams.addSingleTextDataSet(MainDataModule->getPackListStopFilter->DataSet, "rec_");  // Информация по реестру
-    //wordExportParams.addTableDataSet(MainDataModule->getFaPackStopProc, 3, "table_");                  // Информация для таблицы
-
-
-    // Далее фильтруем выделенные и формируем документы
-    BeginPrint(fpListData);
-    //BeginPrint(MainDataModule->getPackListStopFilter);
-
-    while( !fpListData->DataSet->Eof )
-    {
-        fpContentProc->Close();
-        fpContentProc->ParamByName("p_fa_pack_id")->AsString = fpListData->DataSet->FieldByName("fa_pack_id")->AsString;
-        fpContentProc->Open();
-
-
-        if ( !fpContentProc->Eof )
-        {
-            // Задаем имя файла шаблона в зависимости от того, куда предназначена заявка
-            if ( fpListData->DataSet->FieldByName("rt_type")->AsString == "OTDELEN" ||
-                (fpListData->DataSet->FieldByName("rt_type")->IsNull && fpListData->DataSet->FieldByName("rt_spr_cd")->IsNull) )
-            {
-                // Распоряжение участку
-                wordExportParams.templateFilename = MainDataModule->getConfigQuery->FieldByName("report_path")->AsString + "stop_request_self.dotx";
-            }
-            else
-            {
-                // Заявка поставщику услуг
-                wordExportParams.templateFilename = MainDataModule->getConfigQuery->FieldByName("report_path")->AsString + "stop_request.dotx";
-            }
-
-            wordExportParams.resultFilename = ExtractFilePath(resultFilename) + ExtractFileName(resultFilename) +
-                fpContentProc->ParamByName("p_fa_pack_id")->AsString;
-
-            documentWriter->ExportToWordTemplate(&wordExportParams);
-             //documentWriter->ExportToWordTemplate(&wordExportParams, mergeFields->DataSet);
-        }
-
-        fpListData->DataSet->Next();
-    }
-
-    EndPrint(fpListData);
-
-    return true;
+    return getDocument(
+        MainDataModule->getOtdelenListFilter,
+        MainDataModule->getFpStopListFilter,
+        MainDataModule->getFpStopContentProc,
+        DT_STOP_REQUEST
+    );
 }
 
 /* Печать списка заявок на отмену остановки */
-bool __fastcall TDocumentDataModule::getDocumentCancelStopRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc)
+bool __fastcall TDocumentDataModule::getDocumentCancelRequest()
 {
-    String resultFilename = askWordFileName();
-    if (resultFilename == "")
-    {
-        return false;
-    }
-
-    TWordExportParams wordExportParams;
-    wordExportParams.templateFilename = MainDataModule->getConfigQuery->FieldByName("report_path")->AsString + "\\cancel_stop_request.dotx";
-    wordExportParams.pagePerDocument = 500;
-
-    /* Присоединяем источники данных */
-    wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");     // Общая информация по участку
-    wordExportParams.addSingleTextDataSet(faPackListData->DataSet, "rec_");  // Информация по реестру
-    wordExportParams.addTableDataSet(faDataProc, 3, "table_");                  // Информация для таблицы
-
-
-    wordExportParams.addSingleTextDataSet(MainDataModule->getConfigProc, "sysrec_");  // Служебная информация
-
-    // Далее фильтруем выделенные и формируем документы
-    BeginPrint(faPackListData);
-
-    while( !faPackListData->DataSet->Eof )
-    {
-
-        faDataProc->Close();
-        faDataProc->ParamByName("p_fa_pack_id")->Value =  faPackListData->DataSet->FieldByName("fa_pack_id")->Value;
-        faDataProc->Open();
-
-        if ( !faDataProc->Eof )
-        {
-            wordExportParams.resultFilename = ExtractFilePath(resultFilename) + ExtractFileName(resultFilename) +
-                faPackListData->DataSet->FieldByName("fa_pack_id")->AsString;
-
-            documentWriter->ExportToWordTemplate(&wordExportParams);
-        }
-
-        faPackListData->DataSet->Next();
-    }
-
-    EndPrint(faPackListData);
-
-    return true;
+    return getDocument(
+        MainDataModule->getOtdelenListFilter,
+        MainDataModule->getFpCancelListFilter,
+        MainDataModule->getFpCancelContentTmpProc,
+        DT_CANCEL_REQUEST);
 }
 
-
 /* Печать списка заявок на ограничение */
-bool __fastcall TDocumentDataModule::getDocumentReconnectRequest(TDataSetFilter* otdelenData, TDataSetFilter* faPackListData, TOraStoredProc* faDataProc)
+bool __fastcall TDocumentDataModule::getDocumentReconnectRequest()
 {
-    String resultFilename = askWordFileName();
-    if (resultFilename == "")
-    {
-        return false;
-    }
+    return getDocument(
+        MainDataModule->getOtdelenListFilter,
+        MainDataModule->getFpReconnectListFilter,
+        MainDataModule->getFpReconnectContentTmpProc,
+        DT_RECONNECT_REQUEST);
+}
 
-    TWordExportParams wordExportParams;
-    wordExportParams.templateFilename = MainDataModule->getConfigQuery->FieldByName("report_path")->AsString + "\\reconnect_request.dotx";
-    wordExportParams.pagePerDocument = 500;
-
-    /* Присоединяем источники данных */
-    wordExportParams.addSingleTextDataSet(otdelenData->DataSet, "otdelen_");    // Общая информация по участку
-    wordExportParams.addSingleTextDataSet(faPackListData->DataSet, "rec_");     // Информация по реестру
-    wordExportParams.addTableDataSet(faDataProc, 3, "table_");                  // Информация для таблицы
-
-    // Далее фильтруем выделенные и формируем документы
-    BeginPrint(faPackListData);
-
-    while( !faPackListData->DataSet->Eof )
-    {
-
-        faDataProc->Close();
-        faDataProc->ParamByName("p_fa_pack_id")->Value =  faPackListData->DataSet->FieldByName("fa_pack_id")->Value;
-        faDataProc->Open();
-
-        if ( !faDataProc->Eof )
-        {
-            wordExportParams.resultFilename = ExtractFilePath(resultFilename) + ExtractFileName(resultFilename) +
-                faPackListData->DataSet->FieldByName("fa_pack_id")->AsString;
-
-            documentWriter->ExportToWordTemplate(&wordExportParams);
-        }
-
-        faPackListData->DataSet->Next();
-    }
-
-    EndPrint(faPackListData);
-
-    return true;
+/* Печать списка заявок на отмену остановки */
+bool __fastcall TDocumentDataModule::getDocumentOverdueRequest()
+{
+    return getDocument(
+        MainDataModule->getOtdelenListFilter,
+        MainDataModule->getFpOverdueListFilter,
+        MainDataModule->getFpOverdueContentProc,
+        DT_OVERDUE_REQUEST);
 }
 
 

@@ -36,7 +36,7 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     : TForm(Owner)/*,
     _curPackMode(PACK_MODE_UNDEFINED)  */
 {
-    Caption = "ARES (" + AppVer::FullVersion + "a) - " + MainDataModule->getConfigProc->FieldByName("username")->AsString;
+    Caption = "ARRES (" + AppVer::FullVersion + "a) - " + MainDataModule->getConfigProc->FieldByName("username")->AsString;
     //MainDataModule->otdelenList.assignTo(OtdelenComboBox);
 
     // Задаем функции для связи модуля данных с графическим интерфейсом
@@ -58,6 +58,9 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     //_colorList.addColor(static_cast<TColor>(RGB(180,255,20)));
     //_colorList.addColor(static_cast<TColor>(RGB(255,255,0)));
     //_colorList.addColor(static_cast<TColor>(RGB(255,255,255)));
+
+
+
 
     /* Формирование списков доступа к вкладкам */
     /* Раздел Уведомления*/
@@ -160,10 +163,24 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     AccessReconnectTabSheet.insert(TUserRole::VIEWER);
     AccessReconnectTabSheet.insert(TUserRole::TESTER);
 
-    //AccessPackReloadTabSheet<<TUserRole::APPROVER;
-    //TUserRole::TRoleTypes AccessPackRefuseStopTabSheet;
-    //AccessPackRefuseStopTabSheet<<TUserRole::OPERATOR;
-    //AccessPackRefuseStopTabSheet<<TUserRole::ADMINISTRATOR;
+    /* Раздел Просроченные заявки */
+    // Список просроченных заявок
+    TUserRole::TRoleTypes Access_PreOverdueListTabSheet;
+    Access_PreOverdueListTabSheet.insert(TUserRole::OPERATOR);
+    Access_PreOverdueListTabSheet.insert(TUserRole::ADMINISTRATOR);
+    Access_PreOverdueListTabSheet.insert(TUserRole::VIEWER);
+
+    // Список реестров просроченных заявок
+    TUserRole::TRoleTypes Access_FpOverdueListTabSheet;
+    Access_FpOverdueListTabSheet.insert(TUserRole::OPERATOR);
+    Access_FpOverdueListTabSheet.insert(TUserRole::ADMINISTRATOR);
+    Access_FpOverdueListTabSheet.insert(TUserRole::VIEWER);
+
+    // Состав реестра просроченных заявок
+    TUserRole::TRoleTypes Access_FpOverdueContentTabSheet;
+    Access_FpOverdueContentTabSheet.insert(TUserRole::OPERATOR);
+    Access_FpOverdueContentTabSheet.insert(TUserRole::ADMINISTRATOR);
+    Access_FpOverdueContentTabSheet.insert(TUserRole::VIEWER);
 
 
     // Доступ к действиям
@@ -200,9 +217,10 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     printDocumentFaNoticesListForPostOfficeAction->Enabled =  bRoleAdministrator || bRoleOperator;
     printCancelStopAction->Enabled =  bRoleAdministrator || bRoleOperator;
     printReconnectAction->Enabled =  bRoleAdministrator || bRoleOperator;
+    printOverdueRequestAction->Enabled =  bRoleAdministrator || bRoleOperator;
 
-    createFaPackAction->Enabled = bRoleAdministrator || bRoleOperator;
-    createFaPackPostAction->Enabled  = bRoleAdministrator || bRoleOperator;
+    createFpNoticesAction->Enabled = bRoleAdministrator || bRoleOperator;
+    createFpPostAction->Enabled  = bRoleAdministrator || bRoleOperator;
     createFaPackStopAction->Enabled = bRoleAdministrator || bRoleOperator;
     createFaPackStopToControlAction->Enabled = bRoleAdministrator || bRoleOperator;
     createFpCancelAction->Enabled = bRoleAdministrator || bRoleOperator;    // Отмена заявки на ост. (вручную)
@@ -213,6 +231,8 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     setFaPackStatusCancelAction->Enabled = bRoleAdministrator || bRoleTester;  // временное значение
     setFaPackStatusFrozenAction->Enabled = bRoleAdministrator || bRoleTester;
     //setFaPackCancelStatusCompleteAction->Enabled = bRoleAdministrator || bRoleTester;
+    createFpOverdueAction->Enabled = bRoleAdministrator || bRoleTester;     // Создать повторную заявку на отключение
+
 
 
     // Главная вкладка в разделе Уведомления
@@ -220,18 +240,16 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp->accessible = isRoleAllowed(Access_MainTabSheet_Notices, MainDataModule->userRole);
     sheetTemp->packModeId = SHEET_TYPE_MAIN_NOTICES;
 
-
     // Вкладка списка должников
     sheetTemp = item->addSheet(DebtorsTabSheet);
     sheetTemp->setColor(RGB(255,255,255));
     sheetTemp->accessible = isRoleAllowed(Access_DebtorsTabSheet, MainDataModule->userRole);
     sheetTemp->packModeId = SHEET_TYPE_PRE_NOTICES_LIST;
-    sheetTemp->addAction(createFaPackAction);
+    sheetTemp->addAction(createFpNoticesAction);
     sheetTemp->addAction(checkAllAction);
     sheetTemp->addAction(checkNoneAction);
     sheetTemp->addAction(checkWithoutCcAction);
     sheetTemp->addAction(checkWithCcLess3MonthAction);
-
 
     // Вкладка реестра должников
     sheetTemp = item->addSheet(PackManualTabSheet);
@@ -244,7 +262,6 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp->addAction(checkNoneAction);
     sheetTemp->addAction(checkWithoutCcAction);
     sheetTemp->addAction(checkWithCcLess3MonthAction);
-
 
     // Вкладка утверждения вручения уведомления
     sheetTemp = item->addSheet(ApprovalListTabSheet);
@@ -261,8 +278,7 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp = item->addSheet(PostListTabSheet);
     sheetTemp->accessible = isRoleAllowed(Access_PostListTabSheet, MainDataModule->userRole);
     sheetTemp->packModeId = SHEET_TYPE_PRE_POST_LIST;
-    //sheetTemp->addAction(createFaPackAction);
-    sheetTemp->addAction(createFaPackPostAction);
+    sheetTemp->addAction(createFpPostAction);
     sheetTemp->addAction(checkAllAction);
     sheetTemp->addAction(checkNoneAction);
     sheetTemp->addAction(checkWithoutCcAction);
@@ -273,7 +289,6 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp = item->addSheet(FullListTabSheet);
     sheetTemp->accessible = isRoleAllowed(Access_FullListTabSheet, MainDataModule->userRole);
     sheetTemp->packModeId = SHEET_TYPE_FULL_LIST;
-    //sheetTemp->addAction(createFaPackAction);
     sheetTemp->addAction(checkAllAction);
     sheetTemp->addAction(checkNoneAction);
     sheetTemp->addAction(checkWithoutCcAction);
@@ -283,9 +298,6 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     
     /* Заявки на отключение */
     item = modePageList.addTab("Заявки на отключение", MODE_STOP);
-    //item.sheets.clear();
-    //item.caption = "Заявки на отключение";
-    //item.mode = MODE_STOP;
 
     // Главная вкладка в разделе Уведомления
     sheetTemp = item->addSheet(MainTabSheet);
@@ -346,36 +358,6 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp->addAction(checkWithoutCcAction);
     sheetTemp->addAction(checkWithCcLess3MonthAction);
 
-
-
-    // Реестр на отмену
-    /*sheetTemp = item->addSheet(FpCancelContentTabSheet);
-    sheetTemp->accessible = isRoleAllowed(AccessFpCancelContentTabSheet, MainDataModule->userRole);
-    sheetTemp->packModeId = SHEET_TYPE_FP_STOP_CONTENT;
-    sheetTemp->addAction(checkAllAction);
-    sheetTemp->addAction(checkNoneAction);
-    sheetTemp->addAction(checkWithoutCcAction);
-    sheetTemp->addAction(checkWithCcLess3MonthAction);
-    //sheetTemp->addAction(createFpCancelStopAction);
-
-
-
-    // Реестр на возобновление
-    sheetTemp = item->addSheet(FpReconnectContentTabSheet);
-    sheetTemp->accessible = isRoleAllowed(AccessFpReconnectContentTabSheet, MainDataModule->userRole);
-    sheetTemp->packModeId = SHEET_TYPE_FP_RECONNECT_CONTENT;
-    sheetTemp->addAction(checkAllAction);
-    sheetTemp->addAction(checkNoneAction);
-    sheetTemp->addAction(checkWithoutCcAction);
-    sheetTemp->addAction(checkWithCcLess3MonthAction); */
-    //sheetTemp->addAction(createFpCancelStopAction);
-
-
-
-
-
-
-
     // Список на отзыв заявки на ограничение
     sheetTemp = item->addSheet(FaCancelStopListTabSheet);
     sheetTemp->accessible = isRoleAllowed(AccessPackRefuseStopTabSheet, MainDataModule->userRole);
@@ -392,32 +374,40 @@ __fastcall TFieldActivityForm::TFieldActivityForm(TComponent* Owner)
     sheetTemp->addAction(checkAllAction);
     sheetTemp->addAction(checkNoneAction);
     sheetTemp->addAction(printReconnectAction);
-    //sheetTemp->addAction(setFaPackReconnectCompleteAction); // Установить статус Отправлен исполнителю
-
-    //sheetTemp->addAction(checkWithoutCcAction);
-    //sheetTemp->addAction(checkWithCcLess3MonthAction);
 
 
+    /* Просроченные заявки на отключение */
+    item = modePageList.addTab("Просроченные заявки", MODE_OVERDUE);
 
-    /*item.sheets.push_back( TSheetEx(StopListTabSheet, !(AccessStopListTabSheet * MainDataModule->userRole).Empty()) );
-    item.sheets.push_back( TSheetEx(PackStopTabSheet, !(AccessPackStopTabSheet * MainDataModule->userRole).Empty()) );
-    item.sheets.push_back( TSheetEx(PackRefuseStopTabSheet, !(AccessPackRefuseStopTabSheet * MainDataModule->userRole).Empty()) );
-    item.sheets.push_back( TSheetEx(PackReloadTabSheet, !(AccessPackReloadTabSheet * MainDataModule->userRole).Empty()) );
-    */
+    // Главная вкладка в разделе Overdue
+    sheetTemp = item->addSheet(MainTabSheet);
+    sheetTemp->accessible = isRoleAllowed(Access_MainTabSheet_Notices, MainDataModule->userRole);
+    sheetTemp->packModeId = SHEET_TYPE_MAIN_NOTICES;
 
-    //_modeList.push_back(item);
+    // Список просроченных заявок PreOverdLisdtueTabSheet
+    sheetTemp = item->addSheet(PreOverdueListTabSheet);
+    sheetTemp->accessible = isRoleAllowed(Access_PreOverdueListTabSheet, MainDataModule->userRole);
+    sheetTemp->packModeId = SHEET_TYPE_PRE_OVERDUE_LIST;
+    sheetTemp->addAction(checkAllAction);
+    sheetTemp->addAction(checkNoneAction);
+    sheetTemp->addAction(createFpOverdueAction);
+
+    // Реестр просроченных заявок FpOverdueListTabSheet
+    sheetTemp = item->addSheet(FpOverdueListTabSheet);
+    sheetTemp->accessible = isRoleAllowed(Access_FpOverdueListTabSheet, MainDataModule->userRole);
+    sheetTemp->packModeId = SHEET_TYPE_FP_OVERDUE_LIST;
+    sheetTemp->addAction(checkAllAction);
+    sheetTemp->addAction(checkNoneAction);
+    sheetTemp->addAction(printOverdueRequestAction);
+
+    // Состав реестра просроченных заявок FpOverdueContentTabSheet
+    sheetTemp = item->addSheet(FpOverdueContentTabSheet);
+    sheetTemp->accessible = isRoleAllowed(Access_FpOverdueContentTabSheet, MainDataModule->userRole);
+    sheetTemp->packModeId = SHEET_TYPE_FP_OVERDUE_CONTENT;
+    sheetTemp->addAction(checkAllAction);
+    sheetTemp->addAction(checkNoneAction);
 
 
-    //SelectModeComboBox->Items->AddObject(item->caption, (TObject*)item);
-    //SelectModeComboBox->Items->AddObject(item.caption, (TObject*)item);
-
-    // modePageList - список всех режимов
-    // _modeList - список вкладок, присоединенных к режиму
-    /*TSheetEx* s1 = modePageList._modeList[0]->getSheetByType(SHEET_TYPE_NOTICES_PACK);
-    TSheetEx* s2 = modePageList._modeList[0]->getSheetByType(SHEET_TYPE_MAIN_NOTICES);
-    bool b1 = s1->accessible;
-    bool b2 = s2->accessible;*/
-    //SHEET_TYPE_NOTICES_PACK
 
     // Заполняем контрол со списком режимов
     for (std::vector<TModeItem*>::iterator it = modePageList._modeList.begin(); it != modePageList._modeList.end(); it++ )
@@ -632,8 +622,27 @@ void __fastcall TFieldActivityForm::setCurPackMode()
     }
     case SHEET_TYPE_FP_RECONNECT_LIST:   // Список реестров на возобновление
     {
-        _currentFilter = MainDataModule->getReconnectListFilter;
+        _currentFilter = MainDataModule->getFpReconnectListFilter;
         _currentDbGrid = ReconnectListGrid;
+        break;
+    }
+    case SHEET_TYPE_PRE_OVERDUE_LIST:   // Список реестров на возобновление
+    {
+        _currentFilter = MainDataModule->getPreOverdueListFilter;
+        _currentDbGrid = PreOverdueListGrid;
+        break;
+    }
+    case SHEET_TYPE_FP_OVERDUE_LIST:   // Список реестров на возобновление
+    {
+        _currentFilter = MainDataModule->getFpOverdueListFilter;
+        _currentDbGrid = FpOverdueListGrid;
+        break;
+    }
+    case SHEET_TYPE_FP_OVERDUE_CONTENT:   // Список реестров на возобновление
+    {
+        ParamPackIdEdit->Text = MainDataModule->getFpOverdueId();
+        _currentFilter = MainDataModule->getFpOverdueContentFilter;
+        _currentDbGrid = FpOverdueContentGrid;
         break;
     }
     }
@@ -784,6 +793,19 @@ void __fastcall TFieldActivityForm::ParamPackIdEditClick(TObject *Sender)
         mode = TSelectFaPackForm::TM_STOP;
         break;
     }
+    case MODE_OVERDUE:
+    {
+        if (!modePageList._currentMode->getSheetByType(SHEET_TYPE_FP_OVERDUE_CONTENT)->accessible)
+        {
+            return;
+        }
+        mode = TSelectFaPackForm::TM_OVERDUE;
+        break;
+    }
+
+
+
+
     }
 
     if ( SelectFaPackForm->execute(MainDataModule->getAcctOtdelen(), mode) )
@@ -819,6 +841,11 @@ void __fastcall TFieldActivityForm::ParamPackIdEditClick(TObject *Sender)
             }
             }
 
+            break;
+        }
+        case MODE_OVERDUE:
+        {
+            showFpOverdueContent(faPackId);
             break;
         }
         }
@@ -1051,7 +1078,12 @@ void __fastcall TFieldActivityForm::OtdelenComboBoxClick(TObject *Sender)
     }
     case SHEET_TYPE_FP_STOP_LIST:
     {
-        showPackStopList();
+        showFpStopList();
+        break;
+    }
+    case SHEET_TYPE_PRE_OVERDUE_LIST:
+    {
+        showPreOverdueList();
         break;
     }
     default:
@@ -1089,7 +1121,7 @@ void __fastcall TFieldActivityForm::printDocumentFaNoticesListActionExecute(TObj
 }
 
 /* Создать реестр уведомлений контролеру */
-void __fastcall TFieldActivityForm::createFaPackActionExecute(TObject *Sender)
+void __fastcall TFieldActivityForm::createFpNoticesActionExecute(TObject *Sender)
 {
 
     String faPackId = MainDataModule->createFpNotice(FPT_MANUAL);
@@ -1190,10 +1222,10 @@ void __fastcall TFieldActivityForm::createFaPackStopActionExecute(
 
     if (result)
     {
-        MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
-        MainDataModule->closeStopList();        // Так как необходимо обновить список на ограничение
+        MainDataModule->closeFpStopList();    // Так как необходимо обновить список реестров
+        MainDataModule->closePreStopList();        // Так как необходимо обновить список на ограничение
 
-        showPackStopList();
+        showFpStopList();
     }
 }
 
@@ -1251,7 +1283,7 @@ void __fastcall TFieldActivityForm::OnChangeCheck(
 
 /* Отображает реестр по ID
 */
-void __fastcall TFieldActivityForm::showFaPackNotices(const Variant faPackId)
+void __fastcall TFieldActivityForm::showFaPackNotices(const String& fpId)
 {
     static bool mutex_ = false;  // Защита от двойного вызова
     if ( mutex_ )
@@ -1271,7 +1303,7 @@ void __fastcall TFieldActivityForm::showFaPackNotices(const Variant faPackId)
         try
         {
             modePageList.setCurrentSheet(SHEET_TYPE_FP_NOTICES_CONTENT);
-            MainDataModule->setCurrentFpNoticesId(faPackId);
+            MainDataModule->setCurrentFpNoticesId(fpId);
         }
         catch (Exception &e)
         {
@@ -1285,7 +1317,7 @@ void __fastcall TFieldActivityForm::showFaPackNotices(const Variant faPackId)
         try
         {
             modePageList.setCurrentSheet(SHEET_TYPE_FP_STOP_CONTENT);
-            MainDataModule->setCurrentFpStopId(faPackId);
+            MainDataModule->setCurrentFpStopId(fpId);
         }
         catch (Exception &e)
         {
@@ -1324,9 +1356,9 @@ void __fastcall TFieldActivityForm::showPrePostList()
 }
 
 /* Отображает содержимое реестра на остановку */
-void __fastcall TFieldActivityForm::showFpStopContent(const Variant faPackId)
+void __fastcall TFieldActivityForm::showFpStopContent(const String& fpId)
 {
-    MainDataModule->setCurrentFpStopId(faPackId);
+    MainDataModule->setCurrentFpStopId(fpId);
     modePageList.setCurrentSheet(SHEET_TYPE_FP_STOP_CONTENT);
 
     setCurPackMode();
@@ -1335,9 +1367,9 @@ void __fastcall TFieldActivityForm::showFpStopContent(const Variant faPackId)
 }
 
 /* Отображает содержимое реестра на отмену остановки */
-void __fastcall TFieldActivityForm::showFpCancelContent(const String& faPackId)
+void __fastcall TFieldActivityForm::showFpCancelContent(const String& fpId)
 {
-    MainDataModule->setCurrentFpCancel(faPackId);
+    MainDataModule->setCurrentFpCancel(fpId);
     modePageList.setCurrentSheet(SHEET_TYPE_FP_CANCEL_CONTENT);
 
     setCurPackMode();
@@ -1346,9 +1378,9 @@ void __fastcall TFieldActivityForm::showFpCancelContent(const String& faPackId)
 }
 
 /* Отображает содержимое реестра на возобновление*/
-void __fastcall TFieldActivityForm::showFpReconnectContent(const String& faPackId)
+void __fastcall TFieldActivityForm::showFpReconnectContent(const String& fpId)
 {
-    MainDataModule->setCurrentFpReconnect(faPackId);
+    MainDataModule->setCurrentFpReconnect(fpId);
     modePageList.setCurrentSheet(SHEET_TYPE_FP_RECONNECT_CONTENT);
 
     setCurPackMode();
@@ -1367,9 +1399,9 @@ void __fastcall TFieldActivityForm::showStopList()
 }
 
 /* Отобразить список реестров на ограничение */
-void __fastcall TFieldActivityForm::showPackStopList()
+void __fastcall TFieldActivityForm::showFpStopList()
 {
-    MainDataModule->getFaPackStopList();
+    MainDataModule->getFpStopList();
     modePageList.setCurrentSheet(SHEET_TYPE_FP_STOP_LIST);
 
     setCurPackMode();
@@ -1378,11 +1410,31 @@ void __fastcall TFieldActivityForm::showPackStopList()
 /* Отобразить список реестров на переподключение (возобновление) */
 void __fastcall TFieldActivityForm::showReconnectList()
 {
-    MainDataModule->getReconnectList();
+    MainDataModule->getFpReconnectList();
     modePageList.setCurrentSheet(SHEET_TYPE_FP_RECONNECT_LIST);
 
     setCurPackMode();
 }
+
+/* Отобразить список абонентов-кандидатов на ограничение*/
+void __fastcall TFieldActivityForm::showPreOverdueList()
+{
+    MainDataModule->getPreOverdueList();
+    modePageList.setCurrentSheet(SHEET_TYPE_PRE_OVERDUE_LIST);
+
+    setCurPackMode();
+}
+
+/* Отобразить список реестров на ограничение */
+/*void __fastcall TFieldActivityForm::showFpOverdueList()
+{
+    MainDataModule->getFpOverdueList();
+    modePageList.setCurrentSheet(SHEET_TYPE_FP_OVERDUE_LIST);
+
+    setCurPackMode();
+} */
+
+
 
 /*
 */
@@ -1414,16 +1466,16 @@ void __fastcall TFieldActivityForm::showFaInspectorList()
 */
 void __fastcall TFieldActivityForm::showCancelList()
 {
-    MainDataModule->getCancelStopList();
+    MainDataModule->getFpCancelList();
     modePageList.setCurrentSheet(SHEET_TYPE_FP_CANCEL_LIST);
     setCurPackMode();
 
 }
 /* Создать реестр на почту*/
-void __fastcall TFieldActivityForm::createFaPackPostActionExecute(
+void __fastcall TFieldActivityForm::createFpPostActionExecute(
       TObject *Sender)
 {
-    Variant faPackId = MainDataModule->createFpNotice(FPT_POST);
+    String faPackId = MainDataModule->createFpNotice(FPT_POST);
     if ( !VarIsClear(faPackId) )
     {
         WaitForm->Execute(2);
@@ -1451,19 +1503,6 @@ void __fastcall TFieldActivityForm::setCcStatusApproveActionExecute(TObject *Sen
         MainDataModule->closeFaPackNoticesList();
         showApprovalList();
     }
-}
-
-
-/* Создание незакрытого пустого реестра (решено пока отказаться) */
-void __fastcall TFieldActivityForm::createFaPackFree_oldExecute(
-      TObject *Sender)
-{
-//
-   /* Variant faPackId = MainDataModule->createFaPackFree(FPT_POST);
-    if ( !VarIsClear(faPackId) )
-    {
-        showFaPack(faPackId);
-    }    */
 }
 
 /* Полный список абонентов (Все абоненты) */
@@ -1500,7 +1539,7 @@ void __fastcall TFieldActivityForm::StopListTabSheetShow(TObject *Sender)
 void __fastcall TFieldActivityForm::PackStopListTabSheetShow(
       TObject *Sender)
 {
-    showPackStopList();
+    showFpStopList();
 }
 
 /* Отображает содержимое реестра на ограничение*/
@@ -1539,9 +1578,9 @@ void __fastcall TFieldActivityForm::deleteFaPackActionExecute(TObject *Sender)
     {
         MessageBoxInf("Выполнено.");
 
-        MainDataModule->closeStopList();
-        MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
-        MainDataModule->getFaPackStopList();
+        MainDataModule->closePreStopList();
+        MainDataModule->closeFpStopList();    // Так как необходимо обновить список реестров
+        MainDataModule->getFpStopList();
     }
 }
 
@@ -1552,8 +1591,8 @@ void __fastcall TFieldActivityForm::setFaPackStatusCancelActionExecute(
     if ( MainDataModule->setFaPackStatusIncomplete() )
     {
         MessageBoxInf("Выполнено.");
-        MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
-        MainDataModule->getFaPackStopList();
+        MainDataModule->closeFpStopList();    // Так как необходимо обновить список реестров
+        MainDataModule->getFpStopList();
     }
 
 }
@@ -1566,8 +1605,8 @@ void __fastcall TFieldActivityForm::setFaPackStatusFrozenActionExecute(
     {
         MessageBoxInf("Выполнено.");
     }
-    MainDataModule->closeFaPackStopList();    // Так как необходимо обновить список реестров
-    MainDataModule->getFaPackStopList();
+    MainDataModule->closeFpStopList();    // Так как необходимо обновить список реестров
+    MainDataModule->getFpStopList();
 }
 
 /* Отображает главную вкладку */
@@ -1606,7 +1645,8 @@ void __fastcall TFieldActivityForm::printDocumentFaNoticesListForPostOfficeActio
 void __fastcall TFieldActivityForm::printDocumentStopActionExecute(
       TObject *Sender)
 {
-    if ( DocumentDataModule->getDocumentStopRequest(MainDataModule->getOtdelenListFilter, MainDataModule->getFpStopListFilter, MainDataModule->getFpStopContentProc))
+    //if ( DocumentDataModule->getDocumentStopRequest(MainDataModule->getOtdelenListFilter, MainDataModule->getFpStopListFilter, MainDataModule->getFpStopContentProc))
+    if ( DocumentDataModule->getDocumentStopRequest() )
     {
         MessageBoxInf("Заявки на ограничение сформированы.");
     }
@@ -1616,7 +1656,7 @@ void __fastcall TFieldActivityForm::printDocumentStopActionExecute(
 void __fastcall TFieldActivityForm::printCancelStopActionExecute(
       TObject *Sender)
 {
-    if (DocumentDataModule->getDocumentCancelStopRequest(MainDataModule->getOtdelenListFilter, MainDataModule->getFpCancelListFilter, MainDataModule->getFpCancelContentTmpProc))  // Здесь доделать, вставить параметры всех датасетов. Это кажется удобно
+    if ( DocumentDataModule->getDocumentCancelRequest() )
     {
         MessageBoxInf("Заявки на отмену ограничений сформированы.");
     }
@@ -1688,11 +1728,13 @@ void __fastcall TFieldActivityForm::FormCreate(TObject *Sender)
 void __fastcall TFieldActivityForm::printReconnectActionExecute(
       TObject *Sender)
 {
-    if (DocumentDataModule->getDocumentReconnectRequest(MainDataModule->getOtdelenListFilter, MainDataModule->getReconnectListFilter, MainDataModule->getFpReconnectContentTmpProc))  // Здесь доделать, вставить параметры всех датасетов. Это кажется удобно
+    if ( DocumentDataModule->getDocumentReconnectRequest() )
     {
         MessageBoxInf("Заявки на возобновление созданы.");
     }
 }
+
+
 //---------------------------------------------------------------------------
 
 
@@ -1763,4 +1805,84 @@ void __fastcall TFieldActivityForm::FpReconnectContentTabSheetShow(
 //---------------------------------------------------------------------------
 
 
+
+
+void __fastcall TFieldActivityForm::PreOverdueListTabSheetShow(
+      TObject *Sender)
+{
+    showPreOverdueList();    
+}
+
+
+/* Отобразить список реестров на ограничение */
+void __fastcall TFieldActivityForm::showFpOverdueList()
+{
+    MainDataModule->getFpOverdueList();
+    modePageList.setCurrentSheet(SHEET_TYPE_FP_OVERDUE_LIST);
+
+    setCurPackMode();
+}
+
+
+//---------------------------------------------------------------------------
+
+void __fastcall TFieldActivityForm::showFpOverdueContent(const String& fpId)
+{
+    /*MainDataModule->setCurrentFpOverdueId(fpId);      */
+    //MainDataModule->getPreOverdueList();
+
+    MainDataModule->setCurrentFpOverdue(fpId);
+
+    modePageList.setCurrentSheet(SHEET_TYPE_FP_OVERDUE_CONTENT);
+
+    setCurPackMode();
+
+    refreshParametersControls();
+}
+
+void __fastcall TFieldActivityForm::createFpOverdueActionExecute(
+      TObject *Sender)
+{
+
+    bool result = false;
+    if (MessageBoxQuestion("Будут созданы новые реестры. Продолжить?") == IDYES)
+    {
+        result = MainDataModule->createFpOverdue();
+        //result = MainDataModule->createPackStop(Sender != createFaPackStopAction);   // Использовать признак группировки (может быть создано несколько реестров)
+    }
+
+    if (result)
+    {
+        MainDataModule->closePreOverdueList();    // Так как необходимо обновить список реестров
+        MainDataModule->closeFpOverdueList();        // Так как необходимо обновить список на ограничение
+        showFpOverdueList();
+        //showFpOverdueContent(MainDataModule->getFpOverdueId());
+    }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFieldActivityForm::FpOverdueListTabSheetShow(
+      TObject *Sender)
+{
+    showFpOverdueList();
+
+}
+//---------------------------------------------------------------------------
+/* Печать запроса о невыполненнии заявок */
+void __fastcall TFieldActivityForm::printOverdueRequestActionExecute(
+      TObject *Sender)
+{
+    if ( DocumentDataModule->getDocumentOverdueRequest() )
+    {
+        MessageBoxInf("Запросы о невыполнении заявок созданы.");
+    }
+}
+//---------------------------------------------------------------------------
+/* */
+void __fastcall TFieldActivityForm::FpOverdueContentTabSheetShow(
+      TObject *Sender)
+{
+    showFpOverdueContent(MainDataModule->getFpOverdueId());
+}
+//---------------------------------------------------------------------------
 

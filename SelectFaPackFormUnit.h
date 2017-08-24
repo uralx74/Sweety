@@ -62,7 +62,12 @@ __published:	// IDE-managed Components
     void __fastcall Button5Click(TObject *Sender);
     void __fastcall Button3Click(TObject *Sender);
 public:
-    typedef enum {TM_NOTICES, TM_STOP} TMode;
+    typedef enum {
+        TM_UNDEFINED = 0,
+        TM_NOTICES,
+        TM_STOP,
+        TM_OVERDUE
+    } TMode;
 
 private:
     TMode _mode;

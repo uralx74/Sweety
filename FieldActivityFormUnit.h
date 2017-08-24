@@ -54,7 +54,8 @@ enum PackMode {
 typedef enum  {
     MODE_UNDEFINED = 0,
     MODE_NOTICES,
-    MODE_STOP
+    MODE_STOP,
+    MODE_OVERDUE
 } TMode;
 
 typedef enum {
@@ -75,7 +76,11 @@ typedef enum {
 
     SHEET_TYPE_FP_STOP_CONTENT,     // Содержимое реестра на остановку
     SHEET_TYPE_FP_CANCEL_CONTENT,   // Содержимое реестра на отмену остановки
-    SHEET_TYPE_FP_RECONNECT_CONTENT // Содержимое реестна на возобновление
+    SHEET_TYPE_FP_RECONNECT_CONTENT, // Содержимое реестра на возобновление
+
+    SHEET_TYPE_PRE_OVERDUE_LIST,    // Список неисполненных заявок
+    SHEET_TYPE_FP_OVERDUE_LIST,     // Список на повторное исполнение
+    SHEET_TYPE_FP_OVERDUE_CONTENT   // Содержимое реестра на исполнение повторно
 
 } TSheetType;
 
@@ -394,7 +399,7 @@ __published:	// IDE-managed Components
     TAction *printDocumentFaNoticesAction;
     TAction *printCancelStopAction;
     TAction *printDocumentStopListAction;
-    TAction *createFaPackAction;
+    TAction *createFpNoticesAction;
     TAction *setCcStatusApproveAction;
     TPopupMenu *ActionsPopupMenu;
     TMenuItem *MenuItem1;
@@ -417,13 +422,12 @@ __published:	// IDE-managed Components
     TMenuItem *N2;
     TMenuItem *N3;
     TMenuItem *N31;
-    TAction *createFaPackPostAction;
+    TAction *createFpPostAction;
     TMenuItem *N10;
     TAction *printFaNoticeEnvelopeAction;
     TMenuItem *N11;
     TAction *printDocumentFaNoticesListAction;
     TAction *printDocumentStopAction;
-        TAction *createFaPackFree_old;
     TAction *updateCcAction;
     TPanel *LeftPanel;
     TGroupBox *GroupBox7;
@@ -542,6 +546,16 @@ __published:	// IDE-managed Components
     TDBGridAlt *FpReconnectContentGrid;
     TPanel *FaIdFilterPanel;
     TEditAlt *FaIdFilterEdit;
+    TTabSheet *PreOverdueListTabSheet;
+    TTabSheet *FpOverdueListTabSheet;
+    TDBGridAlt *PreOverdueListGrid;
+    TAction *createFpOverdueAction;
+    TMenuItem *createFpOverdueAction1;
+    TTabSheet *FpOverdueContentTabSheet;
+    TDBGridAlt *FpOverdueContentGrid;
+    TDBGridAlt *FpOverdueListGrid;
+    TAction *printOverdueRequestAction;
+    TMenuItem *N20;
     void __fastcall FormShow(TObject *Sender);
     void __fastcall FilterComboBoxTextChange(TObject *Sender);
     void __fastcall ParamPackIdEditClick(TObject *Sender);
@@ -565,7 +579,7 @@ __published:	// IDE-managed Components
     void __fastcall OtdelenComboBoxClick(TObject *Sender);
     void __fastcall printDocumentFaNoticesActionExecute(TObject *Sender);
     void __fastcall printDocumentFaNoticesListActionExecute(TObject *Sender);
-    void __fastcall createFaPackActionExecute(TObject *Sender);
+    void __fastcall createFpNoticesActionExecute(TObject *Sender);
     void __fastcall setCcStatusApproveActionExecute(TObject *Sender);
     void __fastcall ShowActionsMenuButtonMouseDown(TObject *Sender, TMouseButton Button,
           TShiftState Shift, int X, int Y);
@@ -585,9 +599,8 @@ __published:	// IDE-managed Components
     void __fastcall checkAllActionUpdate(TObject *Sender);
     void __fastcall createFaPackNoticeActionUpdate(TObject *Sender);
     void __fastcall PostListTabSheetShow(TObject *Sender);
-    void __fastcall createFaPackPostActionExecute(TObject *Sender);
+    void __fastcall createFpPostActionExecute(TObject *Sender);
     void __fastcall printFaNoticeEnvelopeActionExecute(TObject *Sender);
-    void __fastcall createFaPackFree_oldExecute(TObject *Sender);
     void __fastcall FullListTabSheetShow(TObject *Sender);
     void __fastcall updateCcActionExecute(TObject *Sender);
     void __fastcall deleteFaPackActionExecute(TObject *Sender);
@@ -613,6 +626,11 @@ __published:	// IDE-managed Components
     void __fastcall editSaEndDtActionExecute(TObject *Sender);
     void __fastcall FpCancelContentTabSheetShow(TObject *Sender);
     void __fastcall FpReconnectContentTabSheetShow(TObject *Sender);
+    void __fastcall PreOverdueListTabSheetShow(TObject *Sender);
+    void __fastcall createFpOverdueActionExecute(TObject *Sender);
+    void __fastcall FpOverdueListTabSheetShow(TObject *Sender);
+    void __fastcall printOverdueRequestActionExecute(TObject *Sender);
+    void __fastcall FpOverdueContentTabSheetShow(TObject *Sender);
 private:	// User declarations
     //void __fastcall TFieldActivityForm::selectMode(int mode);
     void __fastcall OnQueryAfterExecute(TObject *Sender);
@@ -630,20 +648,26 @@ private:	// User declarations
     void __fastcall showFullList();
     void __fastcall showPreDebtorList();
     void __fastcall showPrePostList();
-    void __fastcall showFaPackNotices(const Variant faPackId);
-    void __fastcall showFpStopContent(const Variant faPackId);
-    void __fastcall showFpCancelContent(const String& faPackId);
-    void __fastcall showFpReconnectContent(const String& faPackId);
+    void __fastcall showFaPackNotices(const String& fpId);
+    void __fastcall showFpStopContent(const String& fpId);
+    void __fastcall showFpCancelContent(const String& fpId);
+    void __fastcall showFpReconnectContent(const String& fpId);
     void __fastcall showStopList();
     void __fastcall showApprovalList();
+    void __fastcall showPreOverdueList();
+    void __fastcall showFpOverdueContent(const String& fpId);
 
 
     void __fastcall showFaList();
-    void __fastcall showPackStopList(/*const String& acctOtdelen*/); // Показать список реестров на ограничение
+    void __fastcall showFpStopList(/*const String& acctOtdelen*/); // Показать список реестров на ограничение
     void __fastcall showFaPostList();
     void __fastcall showFaInspectorList();
     void __fastcall showCancelList();
-    void __fastcall showReconnectList();      // Список реестров реестров на отключение
+    void __fastcall showReconnectList();    // Список реестров реестров на отключение
+    void __fastcall showFpOverdueList();    // Список реестров просроченных заявок
+
+
+
 
 
 

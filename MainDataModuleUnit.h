@@ -309,10 +309,6 @@ __published:	// IDE-managed Components
     TFloatField *getFpStopListProcROWNUM;
     TFloatField *getFpStopListProcCHECK_DATA;
     TStringField *getFpStopListProcFA_PACK_ID;
-    TStringField *getFpStopListProcRECIPIENT_SPR_DESCR;
-    TStringField *getFpStopListProcRECIPIENT_ADDRESS;
-    TStringField *getFpStopListProcRECIPIENT_OFFICIAL_POST;
-    TStringField *getFpStopListProcRECIPIENT_OFFICIAL_NAME;
     TDateTimeField *getFpStopListProcCRE_DTTM;
     TDateTimeField *getFpStopListProcST_P_DT;
     TStringField *getFpStopListProcOWNER;
@@ -324,7 +320,6 @@ __published:	// IDE-managed Components
     TStringField *getFpCancelListProcFA_PACK_STATUS_FLG;
     TStringField *getFpCancelListProcPRNT_FA_ID;
     TStringField *getFpCancelListProcFA_ID;
-    TStringField *getFpCancelListProcRT_SPR;
     TStringField *getFpCancelListProcRT_ADDR;
     TStringField *getFpCancelListProcRT_POST;
     TStringField *getFpCancelListProcRT_NAME;
@@ -357,10 +352,6 @@ __published:	// IDE-managed Components
     TFloatField *findFpStopListProcROWNUM;
     TFloatField *findFpStopListProcCHECK_DATA;
     TStringField *findFpStopListProcFA_PACK_ID;
-    TStringField *findFpStopListProcRECIPIENT_SPR_DESCR;
-    TStringField *findFpStopListProcRECIPIENT_ADDRESS;
-    TStringField *findFpStopListProcRECIPIENT_OFFICIAL_POST;
-    TStringField *findFpStopListProcRECIPIENT_OFFICIAL_NAME;
     TDateTimeField *findFpStopListProcCRE_DTTM;
     TStringField *findFpStopListProcFA_PACK_STATUS_FLG;
     TStringField *findFpStopListProcOWNER;
@@ -420,23 +411,22 @@ __published:	// IDE-managed Components
     TFloatField *getFaPackStatsProcFA_PACK_STOP;
     TFloatField *getFaPackStatsProcFA_PACK_CANCEL;
     TDateTimeField *getConfigProcTODAY;
-    TOraDataSource *getReconnectListDataSource;
-    TDataSetFilter *getReconnectListFilter;
-    TVirtualTable *getReconnectListRam;
-    TOraStoredProc *getReconnectListProc;
-    TFloatField *getReconnectListProcROWNUM;
-    TFloatField *getReconnectListProcCHECK_DATA;
-    TStringField *getReconnectListProcFA_PACK_ID;
-    TDateTimeField *getReconnectListProcCRE_DTTM;
-    TStringField *getReconnectListProcFA_PACK_STATUS_FLG;
-    TStringField *getReconnectListProcPRNT_FA_ID;
-    TStringField *getReconnectListProcRT_SPR;
-    TStringField *getReconnectListProcRT_ADDR;
-    TStringField *getReconnectListProcRT_POST;
-    TStringField *getReconnectListProcRT_NAME;
-    TStringField *getReconnectListProcFA_PACK_STATUS_DESCR;
-    TFloatField *getReconnectListProcACCT_ID_CNT;
-    TStringField *getReconnectListProcOWNER;
+    TOraDataSource *getFpReconnectListDataSource;
+    TDataSetFilter *getFpReconnectListFilter;
+    TVirtualTable *getFpReconnectListRam;
+    TOraStoredProc *getFpReconnectListProc;
+    TFloatField *getFpReconnectListProcROWNUM;
+    TFloatField *getFpReconnectListProcCHECK_DATA;
+    TStringField *getFpReconnectListProcFA_PACK_ID;
+    TDateTimeField *getFpReconnectListProcCRE_DTTM;
+    TStringField *getFpReconnectListProcFA_PACK_STATUS_FLG;
+    TStringField *getFpReconnectListProcPRNT_FA_ID;
+    TStringField *getFpReconnectListProcRT_ADDR;
+    TStringField *getFpReconnectListProcRT_POST;
+    TStringField *getFpReconnectListProcRT_NAME;
+    TStringField *getFpReconnectListProcFA_PACK_STATUS_DESCR;
+    TFloatField *getFpReconnectListProcACCT_ID_CNT;
+    TStringField *getFpReconnectListProcOWNER;
     TOraStoredProc *getFpReconnectContentTmpProc;
     TStringField *StringField1;
     TStringField *StringField2;
@@ -453,7 +443,6 @@ __published:	// IDE-managed Components
     TFloatField *getFaPackStatsProcFA_PACK_RECONNECT;
     TStringField *getFpReconnectContentTmpProcPHONES;
     TStringField *getConfigProcSTOP_ALLERT;
-    TStringField *getFpStopListProcRT_SPR_CD;
     TOraStoredProc *getAcctFullListProc;
     TFloatField *getAcctFullListProcROWNUM;
     TFloatField *getAcctFullListProcCHECK_DATA;
@@ -485,7 +474,6 @@ __published:	// IDE-managed Components
     TOraStoredProc *createFpCancelForceProc;
     TOraStoredProc *createFpStopProc;
     TFloatField *getFpCancelContentTmpProcSTOP_SALDO_UCH;
-    TStringField *findFpStopListProcRT_SPR_CD;
     TStringField *findFpStopListProcRT_TYPE;
     TDateTimeField *getFpStopContentProcST_P_DT_END;
     TDateTimeField *getFpStopContentProcCANCEL_FA_PACK_CRE_DTTM;
@@ -536,8 +524,8 @@ __published:	// IDE-managed Components
     TOraDataSource *getFpReconnectContentDataSource;
     TStringField *findFpStopListProcFA_PACK_TYPE_CD;
     TFloatField *findFaPackListNoticesProcCNT;
-    TStringField *getReconnectListProcSGNR_NAME;
-    TStringField *getReconnectListProcSGNR_POST;
+    TStringField *getFpReconnectListProcSGNR_NAME;
+    TStringField *getFpReconnectListProcSGNR_POST;
     TFloatField *getFpCancelContentTmpProcROWNUM;
     TFloatField *getFpCancelContentTmpProcCHECK_DATA;
     TDateTimeField *getFpCancelContentTmpProcCC_DTTM;
@@ -580,6 +568,120 @@ __published:	// IDE-managed Components
     TStringField *getApprovalListProcAPPROVAL_USER;
     TStringField *getApprovalListProcCC_TYPE_CD;
     TStringField *getApprovalListProcCC_TYPE_DESCR;
+    TOraDataSource *getPreOverdueListDataSource;
+    TDataSetFilter *getPreOverdueListFilter;
+    TVirtualTable *getPreOverdueListRam;
+    TOraStoredProc *getPreOverdueListProc;
+    TFloatField *getPreOverdueListProcROWNUM;
+    TFloatField *getPreOverdueListProcCHECK_DATA;
+    TStringField *getPreOverdueListProcFA_ID;
+    TStringField *getPreOverdueListProcACCT_ID;
+    TDateTimeField *getPreOverdueListProcST_P_DT;
+    TDateTimeField *getPreOverdueListProcSA_E_DT;
+    TStringField *getPreOverdueListProcRT_TYPE;
+    TStringField *getPreOverdueListProcFA_PACK_ID;
+    TOraStoredProc *createFpOverdueProc;
+    TOraDataSource *getFpOverdueContentDataSource;
+    TDataSetFilter *getFpOverdueContentFilter;
+    TVirtualTable *getFpOverdueContentRam;
+    TOraStoredProc *getFpOverdueContentProc;
+    TFloatField *getFpOverdueContentProcROWNUM;
+    TFloatField *getFpOverdueContentProcCHECK_DATA;
+    TStringField *getFpOverdueContentProcFA_ID;
+    TStringField *getFpOverdueContentProcACCT_ID;
+    TStringField *getFpOverdueContentProcFIO;
+    TStringField *getFpOverdueContentProcSTOP_FA_ID;
+    TStringField *getFpOverdueContentProcSTOP_FA_PACK_ID;
+    TDateTimeField *getFpOverdueContentProcSTOP_CRE_DTTM;
+    TStringField *getFpOverdueContentProcNOTICE_FA_ID;
+    TStringField *getFpOverdueContentProcNOTICE_FA_PACK_ID;
+    TDateTimeField *getFpOverdueContentProcNOTICE_CRE_DTTM;
+    TDateTimeField *getFpOverdueContentProcST_P_DT;
+    TStringField *getFpOverdueContentProcPHONES;
+    TStringField *getFpOverdueContentProcCITY;
+    TStringField *getFpOverdueContentProcADDRESS;
+    TStringField *getFpOverdueContentProcPREM_TYPE_DESCR;
+    TStringField *getFpStopListProcRT_CD;
+    TStringField *getFpStopListProcRT_DESCR;
+    TStringField *getFpStopListProcRT_ADDR;
+    TStringField *getFpStopListProcRT_POST;
+    TStringField *getFpStopListProcRT_NAME;
+    TStringField *getFpStopListProcSGNR_NAME;
+    TStringField *getFpStopListProcSGNR_POST;
+    TStringField *getFpCancelListProcRT_DESCR;
+    TStringField *getFpCancelListProcSGNR_NAME;
+    TStringField *getFpCancelListProcSGNR_POST;
+    TStringField *getFpCancelContentTmpProcFA_ID;
+    TDateTimeField *getFpCancelContentTmpProcST_P_DT_END;
+    TStringField *getFpReconnectListProcRT_DESCR;
+    TFloatField *getFpReconnectContentTmpProcROWNUM;
+    TFloatField *getFpReconnectContentTmpProcCHECK_DATA;
+    TStringField *getFpReconnectContentTmpProcFA_ID;
+    TStringField *findFpStopListProcRT_CD;
+    TStringField *findFpStopListProcRT_DESCR;
+    TStringField *findFpStopListProcRT_ADDR;
+    TStringField *findFpStopListProcRT_POST;
+    TStringField *findFpStopListProcRT_NAME;
+    TStringField *getPreOverdueListProcRT_CD;
+    TStringField *getPreOverdueListProcRT_DESCR;
+    TOraDataSource *getFpOverdueListDataSource;
+    TDataSetFilter *getFpOverdueListFilter;
+    TVirtualTable *getFpOverdueListRam;
+    TOraStoredProc *getFpOverdueListProc;
+    TFloatField *FloatField7;
+    TFloatField *FloatField8;
+    TStringField *StringField28;
+    TDateTimeField *DateTimeField12;
+    TDateTimeField *DateTimeField13;
+    TStringField *StringField29;
+    TStringField *StringField30;
+    TFloatField *FloatField9;
+    TStringField *StringField31;
+    TStringField *StringField32;
+    TStringField *StringField33;
+    TStringField *StringField34;
+    TStringField *StringField35;
+    TStringField *StringField36;
+    TStringField *StringField37;
+    TStringField *StringField38;
+    TStringField *StringField39;
+    TStringField *StringField40;
+    TStringField *StringField41;
+    TStringField *StringField42;
+    TStringField *getPreOverdueListProcACCT_OTDELEN;
+    TStringField *getPreOverdueListProcRT_ADDR;
+    TStringField *getPreOverdueListProcRT_NAME;
+    TStringField *getPreOverdueListProcRT_POST;
+    TStringField *getPreOverdueListProcCITY;
+    TStringField *getPreOverdueListProcADDRESS;
+    TStringField *getPreOverdueListProcFIO;
+    TDateTimeField *getFpOverdueContentProcCC_DTTM;
+    TOraDataSource *findFpOverdueListDataSource;
+    TDataSetFilter *findFpOverdueListFilter;
+    TOraStoredProc *findFpOverdueListProc;
+    TVirtualTable *findFpOverdueListRam;
+    TFloatField *findFpOverdueListProcROWNUM;
+    TFloatField *findFpOverdueListProcCHECK_DATA;
+    TStringField *findFpOverdueListProcFA_PACK_ID;
+    TStringField *findFpOverdueListProcRT_CD;
+    TStringField *findFpOverdueListProcRT_TYPE;
+    TStringField *findFpOverdueListProcRT_DESCR;
+    TStringField *findFpOverdueListProcRT_ADDR;
+    TStringField *findFpOverdueListProcRT_POST;
+    TStringField *findFpOverdueListProcRT_NAME;
+    TStringField *findFpOverdueListProcSIGNER_NAME;
+    TStringField *findFpOverdueListProcSIGNER_POST;
+    TDateTimeField *findFpOverdueListProcCRE_DTTM;
+    TStringField *findFpOverdueListProcFA_PACK_STATUS_FLG;
+    TStringField *findFpOverdueListProcSGNR_NAME;
+    TStringField *findFpOverdueListProcSGNR_POST;
+    TStringField *findFpOverdueListProcOWNER;
+    TStringField *findFpOverdueListProcFA_PACK_STATUS_DESCR;
+    TStringField *findFpOverdueListProcFA_PACK_TYPE_DESCR;
+    TFloatField *findFpOverdueListProcFA_CNT;
+    TStringField *findFpOverdueListProcFA_PACK_TYPE_CD;
+    TStringField *getPreOverdueListProcPREM_TYPE_CD;
+    TStringField *getPreOverdueListProcPREM_TYPE_DESCR;
     void __fastcall DataModuleCreate(TObject *Sender);
     void __fastcall OnFilterChange(TDataSetFilter *Sender,
           AnsiString filterName);
@@ -620,12 +722,16 @@ public:		// User declarations
     void __fastcall setOnChangeFilterMethod(TNotifyEvent onChangeFilterMethod);
 
     /* Для последующего обновления */
-    void __fastcall closePreDebtorList();    // Список абонентов на уведомление
-    void __fastcall closeFaPackStopList();    // Список реестров на ограничение
-    void __fastcall closeStopList();        // Список абонентов на ограничение
+    void __fastcall closePreDebtorList();   // Список абонентов на уведомление
+    void __fastcall closeFpStopList();      // Список реестров на ограничение
+    void __fastcall closePreStopList();     // Список абонентов на ограничение
 
     void __fastcall closeFpCancelStopList();
     void __fastcall closeFpReconnectList();
+
+    void __fastcall closePreOverdueList();
+    void __fastcall closeFpOverdueList();
+
 
     void __fastcall closeFpStopContent();
     void __fastcall closeCcApprovalList();  // Список на утверждение;
@@ -677,9 +783,10 @@ public:		// User declarations
 
     String __fastcall createFpNotice(TFaPackTypeCd faPackTypeCd = FPT_UNDEFINED);
     bool __fastcall createPackStop(bool forceSelf = false);
-    String __fastcall createFaPackFree(TFaPackTypeCd faPackTypeCd = FPT_UNDEFINED);
-    //String __fastcall createPackMulti(TDataSetFilter* filter, TFaPackTypeCd faPackTypeCd, const String& acctOtdelen);
+    //String __fastcall createFaPackFree(TFaPackTypeCd faPackTypeCd = FPT_UNDEFINED);
     bool __fastcall createFpCancelForce();
+    bool __fastcall createFpOverdue();
+
 
 
     /* Data exchange with view */
@@ -690,15 +797,31 @@ public:		// User declarations
     void __fastcall selectCcDttmMoreThanThree(TDataSetFilter* filter);
     void __fastcall setCheckAll(TDataSet* dataSet, bool value);
 
+
+    String __fastcall getFpNoticesId() const;
+    String __fastcall getFpStopId() const;
+    String __fastcall getFpCancelId() const;
+    String __fastcall getFpReconnectId() const;
+    String __fastcall getFpOverdueId() const;
+
     /* Отображаемы списки */
     void __fastcall getAcctFullList();
     void __fastcall getPreDebtorList();
     void __fastcall getPrePostList();
+    void __fastcall getPreOverdueList();
+
     void __fastcall getApprovalList();
     void __fastcall getStopList();
-    void __fastcall getFaPackStopList();
-    void __fastcall getCancelStopList();
-    void __fastcall getReconnectList();
+    void __fastcall getFpStopList();
+    void __fastcall getFpCancelList();
+    void __fastcall getFpReconnectList();
+
+
+
+    /* Списки реестров */
+    void __fastcall getFpList(TOraStoredProc* proc, TDataSetFilter* filter, TVirtualTable* vtable, const String& acctOtdelen);
+    void __fastcall getFpOverdueList();
+
 
 
     /* Вспомогательные запросы */
@@ -707,24 +830,24 @@ public:		// User declarations
     /* Для окна выбора реестра */
     void __fastcall findFaPackListNotices(const String& acctOtdelen, const String& faId = "", const String& acctId = "");
     void __fastcall findFaPackListStop(const String& acctOtdelen, const String& faId = "", const String& acctId = "");
+    void __fastcall findFpOverdueList(const String& acctOtdelen, const String& faId = "", const String& acctId = "");
 
     /**/
     void __fastcall setAcctOtdelen(const String& acctOtdelen, bool updateOnly = false);
     Variant __fastcall getAcctOtdelen();
 
-    void __fastcall setFaPack(const String& faPackId);
 
-
+    /* Устанавливает текущий выбранный реестр для отображения */
+    void __fastcall setCurrentFp(const String& faPackId);
+    void __fastcall setCurrentFp(TOraStoredProc* proc, TDataSetFilter* filter, TVirtualTable* vtable, const String& faPackId);
     void __fastcall setCurrentFpNoticesId(const String& faPackId);
     void __fastcall setCurrentFpStopId(const String& faPackId);
     void __fastcall setCurrentFpCancel(const String& faPackId);
     void __fastcall setCurrentFpReconnect(const String& faPackId);
+    void __fastcall setCurrentFpOverdue(const String& faPackId);
 
 
-    String __fastcall getFpNoticesId() const;
-    String __fastcall getFpStopId() const;
-    String __fastcall getFpCancelId() const;
-    String __fastcall getFpReconnectId() const;
+
 
     bool __fastcall deleteFaPack();
     bool __fastcall setFaPackStatusIncomplete();

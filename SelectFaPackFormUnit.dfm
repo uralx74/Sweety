@@ -216,15 +216,12 @@ object SelectFaPackForm: TSelectFaPackForm
       Height = 21
       Style = csDropDownList
       ItemHeight = 13
-      ItemIndex = 0
       TabOrder = 3
-      Text = #1042#1089#1077
       OnChange = FilterComboBoxIndexChange
       Items.Strings = (
         #1042#1089#1077
         #1059#1090#1074#1077#1088#1078#1076#1077#1085
-        #1054#1090#1084#1077#1085#1077#1085
-        #1048#1089#1087#1086#1083#1085#1077#1085)
+        #1054#1090#1084#1077#1085#1077#1085)
     end
     object OwnerFilterEdit: TEdit
       Left = 104

@@ -1,6 +1,6 @@
 object FieldActivityForm: TFieldActivityForm
-  Left = 208
-  Top = 191
+  Left = 193
+  Top = 124
   Width = 1692
   Height = 1015
   Caption = 'ARRES'
@@ -68,18 +68,18 @@ object FieldActivityForm: TFieldActivityForm
         Top = 0
         Width = 1381
         Height = 937
-        ActivePage = ApprovalListTabSheet
+        ActivePage = FpOverdueContentTabSheet
         Align = alClient
         OwnerDraw = True
         ParentShowHint = False
         ShowHint = True
         Style = tsFlatButtons
         TabHeight = 25
-        TabIndex = 3
+        TabIndex = 15
         TabOrder = 0
         OnDrawTab = PackPageControlDrawTab
         object MainTabSheet: TTabSheet
-          Caption = '['#1057#1058#1040#1056#1058']'
+          Caption = '['#1043#1051#1040#1042#1053#1040#1071']'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -1089,9 +1089,9 @@ object FieldActivityForm: TFieldActivityForm
               end
               item
                 Expanded = False
-                FieldName = 'RECIPIENT_SPR_DESCR'
-                Title.Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
-                Width = 120
+                FieldName = 'RT_DESCR'
+                Title.Caption = #1040#1076#1088#1077#1089#1072#1090
+                Width = 200
                 Visible = True
               end
               item
@@ -1174,8 +1174,9 @@ object FieldActivityForm: TFieldActivityForm
               end
               item
                 Expanded = False
-                FieldName = 'RT_SPR'
-                Width = 100
+                FieldName = 'RT_DESCR'
+                Title.Caption = #1040#1076#1088#1077#1089#1072#1090
+                Width = 200
                 Visible = True
               end
               item
@@ -1205,7 +1206,7 @@ object FieldActivityForm: TFieldActivityForm
             Width = 1373
             Height = 902
             Align = alClient
-            DataSource = MainDataModule.getReconnectListDataSource
+            DataSource = MainDataModule.getFpReconnectListDataSource
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
             TitleFont.Color = clWindowText
@@ -1266,8 +1267,9 @@ object FieldActivityForm: TFieldActivityForm
               end
               item
                 Expanded = False
-                FieldName = 'RT_SPR'
-                Width = 100
+                FieldName = 'RT_DESCR'
+                Title.Caption = #1040#1076#1088#1077#1089#1072#1090
+                Width = 200
                 Visible = True
               end
               item
@@ -1808,6 +1810,355 @@ object FieldActivityForm: TFieldActivityForm
                 Expanded = False
                 FieldName = 'SPR_DESCR'
                 Title.Caption = #1054#1073#1089#1083#1091#1078#1080#1074#1072#1102#1097#1072#1103' '#1086#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103
+                Visible = True
+              end>
+          end
+        end
+        object PreOverdueListTabSheet: TTabSheet
+          Caption = #1057#1087#1080#1089#1086#1082' '#1085#1077#1080#1089#1087#1086#1083#1085#1077#1085#1085#1099#1093' '#1079#1072#1103#1074#1086#1082
+          ImageIndex = 13
+          OnShow = PreOverdueListTabSheetShow
+          object PreOverdueListGrid: TDBGridAlt
+            Left = 0
+            Top = 0
+            Width = 1373
+            Height = 902
+            Align = alClient
+            DataSource = MainDataModule.getPreOverdueListDataSource
+            ReadOnly = True
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'MS Sans Serif'
+            TitleFont.Style = []
+            DefaultSortFieldName = 'ROWNUM'
+            CheckDataFieldName = 'CHECK_DATA'
+            OddRowColor = 16448250
+            EvenRowColor = clWhite
+            SortColumnColor = 13824255
+            ColumnAutosize = False
+            CheckedFont.Charset = DEFAULT_CHARSET
+            CheckedFont.Color = clRed
+            CheckedFont.Height = -11
+            CheckedFont.Name = 'MS Sans Serif'
+            CheckedFont.Style = []
+            EditableFont.Charset = DEFAULT_CHARSET
+            EditableFont.Color = clBlack
+            EditableFont.Height = -11
+            EditableFont.Name = 'MS Sans Serif'
+            EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'CHECK_DATA'
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'ROWNUM'
+                Title.Caption = 'N'
+                Width = 50
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_ID'
+                Title.Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_ID'
+                Title.Caption = #1040#1082#1090#1080#1074#1085#1086#1089#1090#1100
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ACCT_ID'
+                Title.Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ST_P_DT'
+                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1103' '#1087#1083#1072#1085'.'
+                Width = 130
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'RT_DESCR'
+                Title.Caption = #1040#1076#1088#1077#1089#1072#1090
+                Width = 300
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FIO'
+                Title.Caption = #1060#1048#1054
+                Width = 160
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CITY'
+                Title.Caption = #1053#1072#1089'. '#1087#1091#1085#1082#1090
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ADDRESS'
+                Title.Caption = #1040#1076#1088#1077#1089
+                Width = 200
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'PREM_TYPE_DESCR'
+                Title.Caption = #1058#1080#1087' '#1054#1054
+                Width = 120
+                Visible = True
+              end>
+          end
+        end
+        object FpOverdueListTabSheet: TTabSheet
+          Caption = #1057#1087#1080#1089#1086#1082' '#1088#1077#1077#1089#1090#1088#1086#1074' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1079#1072#1103#1074#1086#1082
+          ImageIndex = 14
+          OnShow = FpOverdueListTabSheetShow
+          object FpOverdueListGrid: TDBGridAlt
+            Left = 0
+            Top = 0
+            Width = 1373
+            Height = 902
+            Align = alClient
+            DataSource = MainDataModule.getFpOverdueListDataSource
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'MS Sans Serif'
+            TitleFont.Style = []
+            DefaultSortFieldName = 'ROWNUM'
+            CheckDataFieldName = 'CHECK_DATA'
+            OddRowColor = 16448250
+            EvenRowColor = clWhite
+            SortColumnColor = 13824255
+            ColumnAutosize = False
+            CheckedFont.Charset = DEFAULT_CHARSET
+            CheckedFont.Color = clRed
+            CheckedFont.Height = -11
+            CheckedFont.Name = 'MS Sans Serif'
+            CheckedFont.Style = []
+            EditableFont.Charset = DEFAULT_CHARSET
+            EditableFont.Color = clBlack
+            EditableFont.Height = -11
+            EditableFont.Name = 'MS Sans Serif'
+            EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ROWNUM'
+                Title.Caption = 'N'
+                Width = 40
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CHECK_DATA'
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_ID'
+                Title.Caption = #1056#1077#1077#1089#1090#1088
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CRE_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1088#1077#1077#1089#1090#1088#1072
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_CNT'
+                Title.Caption = #1050#1086#1083'-'#1074#1086' '#1072#1073#1086#1085#1077#1085#1090#1086#1074
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ST_P_DT'
+                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1082#1083'.'
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_PACK_STATUS_DESCR'
+                Title.Caption = #1057#1090#1072#1090#1091#1089' '#1088#1077#1077#1089#1090#1088#1072
+                Width = 90
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'RT_DESCR'
+                Title.Caption = #1040#1076#1088#1077#1089#1072#1090
+                Width = 200
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'OWNER'
+                Title.Caption = #1042#1083#1072#1076#1077#1083#1077#1094
+                Visible = True
+              end>
+          end
+        end
+        object FpOverdueContentTabSheet: TTabSheet
+          Caption = #1057#1087#1080#1089#1086#1082' '#1072#1073#1086#1085#1077#1085#1090#1086#1074' '#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1079#1072#1103#1074#1086#1082
+          ImageIndex = 15
+          OnShow = FpOverdueContentTabSheetShow
+          object FpOverdueContentGrid: TDBGridAlt
+            Left = 0
+            Top = 0
+            Width = 1373
+            Height = 902
+            Align = alClient
+            DataSource = MainDataModule.getFpOverdueContentDataSource
+            ReadOnly = True
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'MS Sans Serif'
+            TitleFont.Style = []
+            DefaultSortFieldName = 'ROWNUM'
+            CheckDataFieldName = 'CHECK_DATA'
+            OddRowColor = 16448250
+            EvenRowColor = clWhite
+            SortColumnColor = 13824255
+            ColumnAutosize = False
+            CheckedFont.Charset = DEFAULT_CHARSET
+            CheckedFont.Color = clRed
+            CheckedFont.Height = -11
+            CheckedFont.Name = 'MS Sans Serif'
+            CheckedFont.Style = []
+            EditableFont.Charset = DEFAULT_CHARSET
+            EditableFont.Color = clBlack
+            EditableFont.Height = -11
+            EditableFont.Name = 'MS Sans Serif'
+            EditableFont.Style = []
+            OnChangeCheck = OnChangeCheck
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'CHECK_DATA'
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'ROWNUM'
+                Title.Caption = 'N'
+                Width = 50
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FA_ID'
+                Title.Caption = #1040#1082#1090#1080#1074#1085#1086#1089#1090#1100
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'ACCT_ID'
+                Title.Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ST_P_DT'
+                Title.Caption = #1044#1072#1090#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1103' '#1087#1083#1072#1085'.'
+                Width = 130
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'FIO'
+                Title.Caption = #1060#1048#1054
+                Width = 160
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CITY'
+                Title.Caption = #1053#1072#1089'. '#1087#1091#1085#1082#1090
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ADDRESS'
+                Title.Caption = #1040#1076#1088#1077#1089
+                Width = 200
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'PREM_TYPE_DESCR'
+                Title.Caption = #1058#1080#1087' '#1054#1054
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'STOP_FA_PACK_ID'
+                Title.Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'STOP_CRE_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1086#1090#1082#1083#1102
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'NOTICE_FA_ID'
+                Title.Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'NOTICE_FA_PACK_ID'
+                Title.Caption = #1056#1077#1077#1089#1090#1088' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'NOTICE_CRE_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'CC_DTTM'
+                Title.Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1072#1082#1090#1072
+                Width = 64
                 Visible = True
               end>
           end
@@ -2625,6 +2976,9 @@ object FieldActivityForm: TFieldActivityForm
     object N18: TMenuItem
       Action = printReconnectAction
     end
+    object N20: TMenuItem
+      Action = printOverdueRequestAction
+    end
   end
   object ActionList1: TActionList
     Left = 320
@@ -2642,11 +2996,6 @@ object FieldActivityForm: TFieldActivityForm
       OnExecute = printFaNoticeEnvelopeActionExecute
       OnUpdate = createFaPackNoticeActionUpdate
     end
-    object createFaPackFree_old: TAction
-      Category = 'Actions_notice'
-      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1089#1074#1086#1073#1086#1076#1085#1099#1081' '#1088#1077#1077#1089#1090#1088' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081' '#1082#1086#1085#1090#1088#1086#1083#1077#1088#1091
-      OnExecute = createFaPackFree_oldExecute
-    end
     object printDocumentFaNoticesListAction: TAction
       Category = 'Reports'
       Caption = #1055#1077#1095#1072#1090#1100' '#1089#1087#1080#1089#1082#1072' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081
@@ -2659,10 +3008,17 @@ object FieldActivityForm: TFieldActivityForm
       Caption = #1042#1074#1077#1089#1090#1080' '#1076#1072#1090#1091' '#1082#1086#1085#1090#1072#1082#1090#1072' '#1089' '#1072#1073#1086#1085#1077#1085#1090#1086#1084
       OnExecute = editSaEndDtActionExecute
     end
-    object createFaPackPostAction: TAction
+    object createFpPostAction: TAction
       Category = 'Actions_notice'
       Caption = #1057#1086#1079#1076#1072#1090#1100' '#1088#1077#1077#1089#1090#1088' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081' '#1087#1086' '#1087#1086#1095#1090#1077
-      OnExecute = createFaPackPostActionExecute
+      OnExecute = createFpPostActionExecute
+      OnUpdate = createFaPackNoticeActionUpdate
+    end
+    object printOverdueRequestAction: TAction
+      Category = 'Reports'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1079#1072#1087#1088#1086#1089#1072' '#1086' '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1080' '#1079#1072#1103#1074#1086#1082
+      Enabled = False
+      OnExecute = printOverdueRequestActionExecute
       OnUpdate = createFaPackNoticeActionUpdate
     end
     object printReconnectAction: TAction
@@ -2705,10 +3061,10 @@ object FieldActivityForm: TFieldActivityForm
       OnExecute = printCancelStopActionExecute
       OnUpdate = createFaPackNoticeActionUpdate
     end
-    object createFaPackAction: TAction
+    object createFpNoticesAction: TAction
       Category = 'Actions_notice'
       Caption = #1057#1086#1079#1076#1072#1090#1100' '#1088#1077#1077#1089#1090#1088' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081' '#1082#1086#1085#1090#1088#1086#1083#1077#1088#1091
-      OnExecute = createFaPackActionExecute
+      OnExecute = createFpNoticesActionExecute
       OnUpdate = createFaPackNoticeActionUpdate
     end
     object setCcStatusApproveAction: TAction
@@ -2784,12 +3140,17 @@ object FieldActivityForm: TFieldActivityForm
       OnExecute = createFpCancelActionExecute
       OnUpdate = createFaPackNoticeActionUpdate
     end
+    object createFpOverdueAction: TAction
+      Category = 'Actions_overdue'
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1079#1072#1103#1074#1082#1091' '#1085#1072' '#1086#1090#1082#1083'. '#1087#1086#1074#1090#1086#1088#1085#1086
+      OnExecute = createFpOverdueActionExecute
+    end
   end
   object ActionsPopupMenu: TPopupMenu
     Left = 368
     Top = 152
     object MenuItem1: TMenuItem
-      Action = createFaPackAction
+      Action = createFpNoticesAction
     end
     object N16: TMenuItem
       Action = createFaPackStopToControlAction
@@ -2798,7 +3159,7 @@ object FieldActivityForm: TFieldActivityForm
       Action = createFaPackStopAction
     end
     object N10: TMenuItem
-      Action = createFaPackPostAction
+      Action = createFpPostAction
     end
     object N13: TMenuItem
       Action = deleteFaPackAction
@@ -2817,6 +3178,9 @@ object FieldActivityForm: TFieldActivityForm
     end
     object N19: TMenuItem
       Action = createFpCancelAction
+    end
+    object createFpOverdueAction1: TMenuItem
+      Action = createFpOverdueAction
     end
   end
   object ActionList2: TActionList
