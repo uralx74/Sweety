@@ -12,6 +12,8 @@
 #include <ExtCtrls.hpp>
 #include <Grids.hpp>
 #include "MainDataModuleUnit.h"
+#include "NoticesDataModuleUnit.h"
+#include "StopDataModuleUnit.h"
 #include "DocumentDataModuleUnit.h"
 #include "SelectFaPackFormUnit.h"
 #include <Buttons.hpp>
@@ -33,6 +35,7 @@
 #include <ActnList.hpp>
 #include "formlogin.h"
 #include <ActnMan.hpp>
+#include "ComboBoxAlt.h"
 #include <set>
 #include <algorithm>
 #include "WaitFormUnit.h"
@@ -61,6 +64,7 @@ typedef enum  {
 typedef enum {
     SHEET_TYPE_UNDEFINED = 0,
     SHEET_TYPE_MAIN_NOTICES,        // Главная вкладка (в наст. время она общая на все режимы)
+    //SHEET_TYPE_MAIN_STOP,           // SHEET_TYPE_MAIN_NOTICES
 
     SHEET_TYPE_FULL_LIST,           // Полный список абонентов
     SHEET_TYPE_PRE_NOTICES_LIST,    // Предварительный список на уведомление
@@ -105,6 +109,7 @@ public:
     /* actions */
     void assignSheet(TTabSheet* sheet, bool accessible = false);
     void addAction(TAction* action, bool accessible = false);
+    void hideActions();
     void showActions();
 
     TSheetType packModeId;    // Спорный вопрос, хранить здесь или нет!!!!!!!!!! Наверное да!
@@ -141,6 +146,16 @@ void TSheetEx::addAction(TAction* action, bool accessible)
         _actions.push_back(action);
     }
 }
+
+/* Скрывает доступные действия */
+void TSheetEx::hideActions()
+{
+    for (std::vector<TAction*>::iterator action = _actions.begin(); action != _actions.end(); action++)
+    {
+        (*action)->Visible = false;
+    }
+}
+
 
 /* Отображает доступные действия */
 void TSheetEx::showActions()
@@ -253,8 +268,6 @@ void TModeItem::setCurrentSheet(TSheetEx* sheetEx)
 {
     if ( sheetEx->accessible )
     {
-        //hideAllActions();
-
         currentSheet = sheetEx;
         if ( !currentSheet->sheet->Visible)
         {
@@ -347,11 +360,14 @@ void TModeList::setCurrentSheet(TSheetType type)
 /* Задает текущий режим */
 void TModeList::setMode(TModeItem* mode)
 {
+    hideAllActions();  // Прячем все действия 2017-08-29
+
     // Сначала прячем вообще все вкладки
     for (std::vector<TModeItem*>::iterator it = _modeList.begin(); it != _modeList.end(); it++)
     {
         (*it)->hideSheets();
     }
+
     mode->showSheets(); // Отображаем вкладки выбранного режим
     _currentMode = mode;    // Сохраняем текущий режим
 }
@@ -372,6 +388,7 @@ void TModeList::hideAllActions()
     }
 }
 
+/* Добавляет вкладку */
 TModeItem* TModeList::addTab(const String& tabName, TMode mode)
 {
     TModeItem* item = new TModeItem();
@@ -430,7 +447,7 @@ __published:	// IDE-managed Components
     TAction *printDocumentStopAction;
     TAction *updateCcAction;
     TPanel *LeftPanel;
-    TGroupBox *GroupBox7;
+    TGroupBox *ParametersGroupBox;
     TComboBox *SelectModeComboBox;
     TGroupBox *FilterGroupBox;
     TPanel *AcctIdFilterPanel;
@@ -460,7 +477,7 @@ __published:	// IDE-managed Components
     TComboBox *PremTypeComboBox;
     TAction *deleteFaPackAction;
     TMenuItem *N13;
-    TAction *setFaPackStatusCancelAction;
+    TAction *setFpStopStatusCancelAction;
     TMenuItem *N14;
     TAction *setFaPackStatusFrozenAction;
     TMenuItem *N15;
@@ -493,7 +510,7 @@ __published:	// IDE-managed Components
     TTabSheet *PostListTabSheet;
     TTabSheet *FullListTabSheet;
     TDBGridAlt *FullListGrid;
-    TPanel *Panel3;
+    TPanel *SummaryPanel;
     TGroupBox *SummaryInfoGroupBox;
     TLabel *Label16;
     TLabel *Label15;
@@ -519,17 +536,12 @@ __published:	// IDE-managed Components
     TSplitter *Splitter1;
     TDBGridAlt *PostListGrid;
     TButton *TestButton1;
-    TDBLookupComboBox *DBLookupComboBox1;
-    TLabel *Label8;
-    TLabel *Label9;
-    TDBLookupComboBox *DBLookupComboBox2;
     TComboBox *MrRteCdFilterComboBox;
     TAction *setCcStatusRefuseAction;
     TPanel *FaPackStatusFilterPanel;
     TComboBox *FaPackStatusFilterComboBox;
     TMenuItem *N12;
     TPanel *Panel4;
-    TDBLookupComboBox *OtdelenComboBox;
     TPanel *FaPackIdParamPanel;
     TEdit *ParamPackIdEdit;
     TBitBtn *BitBtn1;
@@ -556,6 +568,17 @@ __published:	// IDE-managed Components
     TDBGridAlt *FpOverdueListGrid;
     TAction *printOverdueRequestAction;
     TMenuItem *N20;
+    TAction *setFpCancelStatusCancelAction;
+    TAction *setFpReconnectStatusCancelAction;
+    TMenuItem *N21;
+    TMenuItem *N22;
+    TAction *setFpOverdueStatusCancelAction;
+    TMenuItem *N23;
+    TAction *resetConnectionAction;
+    TMenuItem *TESTER1;
+    TPanel *CcCallerFilterPanel;
+    TEdit *CcCallerFilterEdit;
+    TComboBoxAlt *OtdelenComboBoxAlt;
     void __fastcall FormShow(TObject *Sender);
     void __fastcall FilterComboBoxTextChange(TObject *Sender);
     void __fastcall ParamPackIdEditClick(TObject *Sender);
@@ -597,14 +620,14 @@ __published:	// IDE-managed Components
     void __fastcall SelectAllCheckBoxClick(TObject *Sender);
     void __fastcall PackStopListTabSheetShow(TObject *Sender);
     void __fastcall checkAllActionUpdate(TObject *Sender);
-    void __fastcall createFaPackNoticeActionUpdate(TObject *Sender);
+    void __fastcall updateIfCheckedItems(TObject *Sender);
     void __fastcall PostListTabSheetShow(TObject *Sender);
     void __fastcall createFpPostActionExecute(TObject *Sender);
     void __fastcall printFaNoticeEnvelopeActionExecute(TObject *Sender);
     void __fastcall FullListTabSheetShow(TObject *Sender);
     void __fastcall updateCcActionExecute(TObject *Sender);
     void __fastcall deleteFaPackActionExecute(TObject *Sender);
-    void __fastcall setFaPackStatusCancelActionExecute(
+    void __fastcall setFpStopStatusCancelActionExecute(
           TObject *Sender);
     void __fastcall setFaPackStatusFrozenActionExecute(TObject *Sender);
     void __fastcall MainTabSheetShow(TObject *Sender);
@@ -631,6 +654,10 @@ __published:	// IDE-managed Components
     void __fastcall FpOverdueListTabSheetShow(TObject *Sender);
     void __fastcall printOverdueRequestActionExecute(TObject *Sender);
     void __fastcall FpOverdueContentTabSheetShow(TObject *Sender);
+    void __fastcall setFpCancelStatusCancelActionExecute(TObject *Sender);
+    void __fastcall setFpReconnectStatusCancelActionExecute(TObject *Sender);
+    void __fastcall setFpOverdueStatusCancelActionExecute(TObject *Sender);
+    void __fastcall resetConnectionActionExecute(TObject *Sender);
 private:	// User declarations
     //void __fastcall TFieldActivityForm::selectMode(int mode);
     void __fastcall OnQueryAfterExecute(TObject *Sender);
@@ -648,7 +675,7 @@ private:	// User declarations
     void __fastcall showFullList();
     void __fastcall showPreDebtorList();
     void __fastcall showPrePostList();
-    void __fastcall showFaPackNotices(const String& fpId);
+    void __fastcall showFpNoticesContent(const String& fpId);
     void __fastcall showFpStopContent(const String& fpId);
     void __fastcall showFpCancelContent(const String& fpId);
     void __fastcall showFpReconnectContent(const String& fpId);
@@ -706,7 +733,7 @@ private:	// User declarations
     //bool _packPageControlChangedSelf;
 
     // Тест, если работает, то перенести в специальный модуль
-    void __fastcall RealignControls(TWinControl *parent);
+    //void __fastcall RealignControls(TWinControl *parent);
 
 public:		// User declarations
     __fastcall TFieldActivityForm(TComponent* Owner);

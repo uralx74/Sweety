@@ -1,10 +1,10 @@
 object EditCcForm: TEditCcForm
-  Left = 211
-  Top = 124
+  Left = 429
+  Top = 306
   BorderStyle = bsDialog
   Caption = #1050#1086#1085#1090#1072#1082#1090' '#1089' '#1072#1073#1086#1085#1077#1085#1090#1086#1084
   ClientHeight = 357
-  ClientWidth = 442
+  ClientWidth = 435
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,8 +16,9 @@ object EditCcForm: TEditCcForm
   Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
+  OnShow = FormShow
   DesignSize = (
-    442
+    435
     357)
   PixelsPerInch = 96
   TextHeight = 13
@@ -30,7 +31,7 @@ object EditCcForm: TEditCcForm
     Visible = False
   end
   object LockCcStatusFlgButton: TSpeedButton
-    Left = 401
+    Left = 394
     Top = 8
     Width = 23
     Height = 22
@@ -42,7 +43,7 @@ object EditCcForm: TEditCcForm
   object GroupBox1: TGroupBox
     Left = 8
     Top = 8
-    Width = 424
+    Width = 417
     Height = 81
     Anchors = [akLeft, akTop, akRight]
     Caption = #1040#1073#1086#1085#1077#1085#1090
@@ -77,7 +78,7 @@ object EditCcForm: TEditCcForm
     end
   end
   object Button2: TButton
-    Left = 360
+    Left = 353
     Top = 326
     Width = 75
     Height = 25
@@ -87,7 +88,7 @@ object EditCcForm: TEditCcForm
     TabOrder = 1
   end
   object Button3: TButton
-    Left = 280
+    Left = 273
     Top = 326
     Width = 73
     Height = 25
@@ -100,13 +101,13 @@ object EditCcForm: TEditCcForm
   object GroupBox2: TGroupBox
     Left = 8
     Top = 96
-    Width = 424
+    Width = 417
     Height = 217
     Anchors = [akLeft, akTop, akRight, akBottom]
     Caption = #1050#1086#1085#1090#1072#1082#1090
     TabOrder = 3
     DesignSize = (
-      424
+      417
       217)
     object Label24: TLabel
       Left = 16
@@ -129,15 +130,8 @@ object EditCcForm: TEditCcForm
       Height = 13
       Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
     end
-    object Label28: TLabel
-      Left = 16
-      Top = 80
-      Width = 130
-      Height = 13
-      Caption = #1048#1089#1087#1086#1083#1085#1080#1090#1077#1083#1100' ('#1050#1086#1085#1090#1088#1086#1083#1077#1088')'
-    end
     object LockCcDttmButton: TSpeedButton
-      Left = 273
+      Left = 266
       Top = 24
       Width = 23
       Height = 22
@@ -146,7 +140,7 @@ object EditCcForm: TEditCcForm
       GroupIndex = 101
     end
     object LockCcTypeCdButton: TSpeedButton
-      Left = 385
+      Left = 378
       Top = 48
       Width = 23
       Height = 22
@@ -154,17 +148,8 @@ object EditCcForm: TEditCcForm
       Anchors = [akTop, akRight]
       GroupIndex = 102
     end
-    object LockCallerButton: TSpeedButton
-      Left = 385
-      Top = 72
-      Width = 23
-      Height = 22
-      AllowAllUp = True
-      Anchors = [akTop, akRight]
-      GroupIndex = 104
-    end
     object LockDescrButton: TSpeedButton
-      Left = 385
+      Left = 378
       Top = 96
       Width = 23
       Height = 22
@@ -175,7 +160,7 @@ object EditCcForm: TEditCcForm
     object DescrEdit: TRichEdit
       Left = 16
       Top = 120
-      Width = 392
+      Width = 385
       Height = 81
       Anchors = [akLeft, akTop, akRight]
       PlainText = True
@@ -184,7 +169,7 @@ object EditCcForm: TEditCcForm
     object CcDttmDateTimePicker: TDateTimePicker
       Left = 160
       Top = 24
-      Width = 113
+      Width = 106
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       CalAlignment = dtaLeft
@@ -196,29 +181,53 @@ object EditCcForm: TEditCcForm
       ParseInput = False
       TabOrder = 1
     end
-    object CallerEdit: TEdit
-      Left = 160
-      Top = 72
-      Width = 224
-      Height = 21
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 2
-    end
     object CcTypeCdComboBox: TDBLookupComboBox
       Left = 160
       Top = 48
-      Width = 224
+      Width = 209
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       DropDownRows = 8
       KeyField = 'FIELD_VALUE'
       ListField = 'DESCR;FIELD_VALUE'
       ListSource = MainDataModule.getCcTypeCdDataSource
+      TabOrder = 2
+      OnClick = CcTypeCdComboBoxClick
+    end
+    object OpAreaCdPanel: TPanel
+      Left = 16
+      Top = 72
+      Width = 385
+      Height = 25
+      Alignment = taLeftJustify
+      BevelOuter = bvNone
+      Caption = #1050#1086#1085#1090#1088#1086#1083#1077#1088
       TabOrder = 3
+      DesignSize = (
+        385
+        25)
+      object LockCallerButton: TSpeedButton
+        Left = 362
+        Top = 0
+        Width = 23
+        Height = 22
+        AllowAllUp = True
+        Anchors = [akTop, akRight]
+        GroupIndex = 104
+      end
+      object CcOpAreaCdComboBox: TComboBoxAlt
+        Left = 144
+        Top = 0
+        Width = 209
+        Height = 21
+        Style = csDropDownList
+        ItemHeight = 13
+        TabOrder = 0
+      end
     end
   end
   object DeleteCcButton: TButton
-    Left = 8
+    Left = 9
     Top = 326
     Width = 75
     Height = 25
@@ -230,7 +239,7 @@ object EditCcForm: TEditCcForm
   object CcStatusFlgComboBox: TDBLookupComboBox
     Left = 208
     Top = 8
-    Width = 192
+    Width = 185
     Height = 21
     Anchors = [akLeft, akTop, akRight]
     DropDownRows = 10

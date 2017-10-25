@@ -66,6 +66,16 @@ void __fastcall TEditSaEndDtForm::Button3Click(TObject *Sender)
     {
         TDateTime saEndDt = SaEndDtDataTimeicker->Date;
 
+        // Проверяем была ли уже отмена заявки, если была то выдаем предупреждение
+        if ( !_ds->FieldByName("CANCEL_FA_PACK_ID")->IsNull )
+        {
+            if ( MessageBoxQuestion("По данному абоненту заявка уже отменена. Продолжить?")  != IDYES )
+            {
+                return;
+            }
+
+        }
+
         // Добавляем новый контакт или обновляем старый
         if ( _ds->FieldByName("sa_end_dt")->IsNull )
         {

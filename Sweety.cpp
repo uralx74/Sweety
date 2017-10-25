@@ -1,8 +1,6 @@
 #include <vcl.h>
 #pragma hdrstop
 
-//#define DEBUG
-
 USEFORM("MainFormUnit.cpp", MainForm);
 USEFORM("FieldActivityFormUnit.cpp", FieldActivityForm);
 USEFORM("MainDataModuleUnit.cpp", MainDataModule); /* TDataModule: File Type */
@@ -15,6 +13,8 @@ USEFORM("..\util\FormLogin\formlogin.cpp", LoginForm);
 USEFORM("WaitFormUnit.cpp", WaitForm);
 USEFORM("SelectAcctOtdelenFormUnit.cpp", SelectAcctOtdelenForm);
 USEFORM("EditSaEndDtFormUnit.cpp", EditSaEndDtForm);
+USEFORM("NoticesDataModuleUnit.cpp", NoticesDataModule); /* TDataModule: File Type */
+USEFORM("StopDataModuleUnit.cpp", StopDataModule); /* TDataModule: File Type */
 
 //---------------------------------------------------------------------------
 /*
@@ -36,12 +36,14 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     {
         Application->Initialize();
         Application->Title = "ARRES";
-         Application->CreateForm(__classid(TMainDataModule), &MainDataModule);
+        Application->CreateForm(__classid(TNoticesDataModule), &NoticesDataModule);
+        Application->CreateForm(__classid(TStopDataModule), &StopDataModule);
+        Application->CreateForm(__classid(TMainDataModule), &MainDataModule);
         if (Application->Terminated)
         {
             Application->Run();
             return 0;
-        } 
+        }
         Application->CreateForm(__classid(TFormSpecialModule), &FormSpecialModule);
         Application->CreateForm(__classid(TDocumentDataModule), &DocumentDataModule);
         Application->CreateForm(__classid(TFieldActivityForm), &FieldActivityForm);
@@ -59,4 +61,5 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     return 0;
 }
 //---------------------------------------------------------------------------
+
 

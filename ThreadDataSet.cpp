@@ -162,7 +162,7 @@ __fastcall TThreadDataSet::~TThreadDataSet()
 void __fastcall TThreadDataSet::Execute()
 {
     Synchronize(SyncBeginThread);
-
+                                     
     try
     {
         //if (_dataSet != NULL)

@@ -16,6 +16,8 @@
 #include "DBGridAlt.h"
 #include <DBGrids.hpp>
 #include <Grids.hpp>
+#include "ComboBoxAlt.h"
+#include <ExtCtrls.hpp>
 //---------------------------------------------------------------------------
 class TEditCcForm : public TForm
 {
@@ -33,28 +35,30 @@ __published:	// IDE-managed Components
     TLabel *Label24;
     TLabel *Label25;
     TLabel *Label26;
-    TLabel *Label28;
     TSpeedButton *LockCcDttmButton;
     TSpeedButton *LockCcTypeCdButton;
-    TSpeedButton *LockCallerButton;
     TSpeedButton *LockDescrButton;
     TRichEdit *DescrEdit;
     TDateTimePicker *CcDttmDateTimePicker;
-    TEdit *CallerEdit;
     TDBLookupComboBox *CcTypeCdComboBox;
     TButton *DeleteCcButton;
     TLabel *Label27;
     TDBLookupComboBox *CcStatusFlgComboBox;
     TSpeedButton *LockCcStatusFlgButton;
+    TPanel *OpAreaCdPanel;
+    TComboBoxAlt *CcOpAreaCdComboBox;
+    TSpeedButton *LockCallerButton;
     void __fastcall Button3Click(TObject *Sender);
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall CloseWindowActionExecute(TObject *Sender);
     void __fastcall DeleteCcButtonClick(TObject *Sender);
     void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+    void __fastcall CcTypeCdComboBoxClick(TObject *Sender);
+    void __fastcall FormShow(TObject *Sender);
 private:	// User declarations
     bool _canceled;
     //bool _modified;
-    TDataSet* _ds;
+    TDataSet* faInfo;
 
     /* default values to each display form */
     void __fastcall SaveDefaultValues();
@@ -64,7 +68,7 @@ private:	// User declarations
     TCcTypeCd::Type ccTypeCdDefaultValue;
     TCcStatusFlg::Type ccStatusFlgDefaultValue;
     TDateTime ccDttmDefaultValue;
-    String callerDefaultValue;
+    String agentIdDefaultValue;
     String descrDefaultValue;
 
 public:		// User declarations

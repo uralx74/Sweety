@@ -1,6 +1,6 @@
 object SelectFaPackForm: TSelectFaPackForm
-  Left = 733
-  Top = 103
+  Left = 1069
+  Top = 328
   Width = 1147
   Height = 558
   Caption = #1042#1099#1073#1086#1088' '#1088#1077#1077#1089#1090#1088#1072
@@ -24,7 +24,7 @@ object SelectFaPackForm: TSelectFaPackForm
     Width = 812
     Height = 439
     Anchors = [akLeft, akTop, akRight, akBottom]
-    TabOrder = 0
+    TabOrder = 3
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
@@ -117,7 +117,7 @@ object SelectFaPackForm: TSelectFaPackForm
         Visible = True
       end>
   end
-  object Button1: TButton
+  object OkButton: TButton
     Left = 956
     Top = 486
     Width = 75
@@ -125,10 +125,10 @@ object SelectFaPackForm: TSelectFaPackForm
     Anchors = [akRight, akBottom]
     Caption = #1054#1050
     ModalResult = 1
-    TabOrder = 1
+    TabOrder = 4
     OnClick = faListGridChangeCheck
   end
-  object Button2: TButton
+  object CancelButton: TButton
     Left = 1044
     Top = 486
     Width = 75
@@ -136,15 +136,15 @@ object SelectFaPackForm: TSelectFaPackForm
     Anchors = [akRight, akBottom]
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
-    TabOrder = 2
+    TabOrder = 5
   end
-  object GroupBox1: TGroupBox
+  object FilterGroupBox: TGroupBox
     Left = 16
     Top = 88
     Width = 273
     Height = 177
     Caption = #1060#1080#1083#1100#1090#1088
-    TabOrder = 3
+    TabOrder = 0
     object Label13: TLabel
       Left = 16
       Top = 32
@@ -173,14 +173,14 @@ object SelectFaPackForm: TSelectFaPackForm
       Height = 13
       Caption = #1042#1083#1072#1076#1077#1083#1077#1094
     end
-    object Button3: TButton
+    object FilterResetButton: TButton
       Left = 104
       Top = 128
       Width = 153
       Height = 33
       Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
-      TabOrder = 0
-      OnClick = Button3Click
+      TabOrder = 4
+      OnClick = FilterResetButtonClick
     end
     object FaPackTypeCdFilterComboBox: TComboBox
       Left = 104
@@ -206,7 +206,7 @@ object SelectFaPackForm: TSelectFaPackForm
       Top = 24
       Width = 153
       Height = 21
-      TabOrder = 2
+      TabOrder = 0
       OnChange = FilterEditTextChange
     end
     object FaPackStatusFlgFilterComboBox: TComboBox
@@ -216,7 +216,7 @@ object SelectFaPackForm: TSelectFaPackForm
       Height = 21
       Style = csDropDownList
       ItemHeight = 13
-      TabOrder = 3
+      TabOrder = 2
       OnChange = FilterComboBoxIndexChange
       Items.Strings = (
         #1042#1089#1077
@@ -228,17 +228,17 @@ object SelectFaPackForm: TSelectFaPackForm
       Top = 96
       Width = 153
       Height = 21
-      TabOrder = 4
+      TabOrder = 3
       OnChange = FilterEditTextChange
     end
   end
-  object GroupBox2: TGroupBox
+  object SearchGroupBox: TGroupBox
     Left = 16
     Top = 280
     Width = 281
     Height = 145
     Caption = #1055#1086#1080#1089#1082
-    TabOrder = 4
+    TabOrder = 1
     object Label4: TLabel
       Left = 16
       Top = 32
@@ -253,14 +253,14 @@ object SelectFaPackForm: TSelectFaPackForm
       Height = 13
       Caption = #1051#1080#1094#1077#1074#1086#1081' '#1089#1095#1077#1090
     end
-    object Button4: TButton
+    object FindButton: TButton
       Left = 176
       Top = 96
       Width = 89
       Height = 33
       Caption = #1053#1072#1081#1090#1080
-      TabOrder = 0
-      OnClick = Button4Click
+      TabOrder = 2
+      OnClick = FindButtonClick
     end
     object FaIdFindEdit: TEdit
       Left = 112
@@ -274,25 +274,25 @@ object SelectFaPackForm: TSelectFaPackForm
       Top = 48
       Width = 153
       Height = 21
-      TabOrder = 2
+      TabOrder = 0
     end
-    object Button5: TButton
+    object SearchResetButton: TButton
       Left = 8
       Top = 96
       Width = 153
       Height = 33
       Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
       TabOrder = 3
-      OnClick = Button5Click
+      OnClick = SearchResetButtonClick
     end
   end
-  object GroupBox3: TGroupBox
+  object ParamsGroupBox: TGroupBox
     Left = 16
     Top = 16
-    Width = 265
+    Width = 273
     Height = 65
     Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
-    TabOrder = 5
+    TabOrder = 2
     object Label5: TLabel
       Left = 16
       Top = 32
@@ -300,17 +300,13 @@ object SelectFaPackForm: TSelectFaPackForm
       Height = 13
       Caption = #1059#1095#1072#1089#1090#1086#1082
     end
-    object OtdelenComboBox: TDBLookupComboBox
-      Left = 88
+    object OtdelenComboBoxAlt: TComboBoxAlt
+      Left = 96
       Top = 24
       Width = 161
-      Height = 21
-      DataField = 'ACCT_OTDELEN'
-      DropDownRows = 11
-      KeyField = 'ACCT_OTDELEN'
-      ListField = 'DESCR'
-      ListSource = MainDataModule.getOtdelenListDataSource
-      ParentColor = True
+      Height = 22
+      Style = csOwnerDrawFixed
+      ItemHeight = 16
       TabOrder = 0
       OnClick = OtdelenComboBoxClick
     end

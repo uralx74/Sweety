@@ -13,6 +13,8 @@
 #include "DataSetFilter.h"
 #include "DocumentWriter.h"
 #include "MainDataModuleUnit.h"
+#include "NoticesDataModuleUnit.h"
+#include "StopDataModuleUnit.h"
 #include <DB.hpp>
 #include <DBClient.hpp>
 #include "DBAccess.hpp"
@@ -36,31 +38,34 @@ __published:	// IDE-managed Components
     TDataSetFilter *getCheckedFilter;
 private:	// User declarations
     typedef enum {
-        DT_NOTICES_MANUAL,
-        DT_NOTICES_LIST_FOR_POSTOFFICE,
-        DT_STOP_REQUEST,
-        DT_CANCEL_REQUEST,
-        DT_RECONNECT_REQUEST,
-        DT_OVERDUE_REQUEST
+        DT_NOTICES_MANUAL,      // Уведомления
+        DT_NOTICES_LIST,        // Список уведомлений
+        DT_NOTICES_LIST_FOR_POSTOFFICE,     // Список уведомлений для почтовой службы
+        DT_STOP_REQUEST,                // Заявки на отключение
+        DT_CANCEL_REQUEST,              // Заявки на отмену отключения
+        DT_RECONNECT_REQUEST,           // Заявки на возобновление
+        DT_OVERDUE_REQUEST              // Просроченные заявки на отключение
     } TDocTypeCd;
 
     TDocumentWriter* documentWriter;
     
-    String __fastcall askExcelFileName();
+    String __fastcall askExcelFileName(const String &defaultFileName = "");
     String __fastcall askWordFileName(const String &defaultFileName = "");
 
     void __fastcall BeginPrint(TDataSetFilter* dsFilter);
     void __fastcall EndPrint(TDataSetFilter* dsFilter);
 
-    bool __fastcall getDocument(TDataSetFilter* otdelenData, TDataSetFilter* fpListData, TDataSetFilter* faDataFilter, TDocTypeCd docTypeCd);
+    bool __fastcall getDocumentWord(TDataSetFilter* otdelenData, TDataSet* fpInfo, TDataSetFilter* faDataFilter, TDocTypeCd docTypeCd);
     bool __fastcall getDocument(TDataSetFilter* otdelenData, TDataSetFilter* fpListData, TOraStoredProc* faDataProc, TDocTypeCd docTypeCd);
+    //bool __fastcall getDocumentExcel(TDataSetFilter* otdelenData, TDataSetFilter* fpListData, TOraStoredProc* faDataProc, TDocTypeCd docTypeCd);
+    bool __fastcall getDocumentExcel(TDataSetFilter* otdelenData, TDataSet* fpInfo, TDataSetFilter* faDataFilter, TDocTypeCd docTypeCd);
 
 public:		// User declarations
     __fastcall TDocumentDataModule(TComponent* Owner);
     __fastcall ~TDocumentDataModule();
-    void __fastcall getDocumentFaNoticesList(TDataSetFilter *mergeFields);
-    bool __fastcall getDocumentFaNotices(TDataSetFilter* otdelenData, TDataSetFilter* faPackData, TDataSetFilter* faData);
-    bool __fastcall getDocumentFaNoticesListForPostOffice(TDataSetFilter* otdelenDsF, TDataSetFilter* recDsF, TDataSetFilter* tableDsF);
+    bool __fastcall getDocumentFaNoticesList();
+    bool __fastcall getDocumentFaNotices();
+    bool __fastcall getDocumentFaNoticesListForPostOffice();
     bool __fastcall getDocumentStopRequest();
     bool __fastcall getDocumentCancelRequest();
     bool __fastcall getDocumentReconnectRequest();

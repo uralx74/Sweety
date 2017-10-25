@@ -20,26 +20,26 @@
 #include "DBAccess.hpp"
 #include "Ora.hpp"
 #include <DB.hpp>
+#include "ComboBoxAlt.h"
 
 //---------------------------------------------------------------------------
 class TSelectFaPackForm : public TForm
 {
 __published:	// IDE-managed Components
     TDBGridAlt *faListGrid;
-    TButton *Button1;
-    TButton *Button2;
-    TGroupBox *GroupBox1;
+    TButton *OkButton;
+    TButton *CancelButton;
+    TGroupBox *FilterGroupBox;
     TLabel *Label13;
-    TButton *Button3;
+    TButton *FilterResetButton;
     TComboBox *FaPackTypeCdFilterComboBox;
     TLabel *Label1;
-    TGroupBox *GroupBox2;
+    TGroupBox *SearchGroupBox;
     TLabel *Label4;
-    TButton *Button4;
+    TButton *FindButton;
     TEdit *FaIdFindEdit;
-    TGroupBox *GroupBox3;
+    TGroupBox *ParamsGroupBox;
     TLabel *Label5;
-    TDBLookupComboBox *OtdelenComboBox;
     TActionList *ActionList1;
     TButton *Button6;
     TAction *CloseWindowAction;
@@ -50,7 +50,8 @@ __published:	// IDE-managed Components
     TEdit *OwnerFilterEdit;
     TEdit *AcctIdFindEdit;
     TLabel *Label6;
-    TButton *Button5;
+    TButton *SearchResetButton;
+    TComboBoxAlt *OtdelenComboBoxAlt;
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall faListGridChangeCheck(TObject *Sender);
     void __fastcall FilterComboBoxTextChange(TObject *Sender);
@@ -58,9 +59,9 @@ __published:	// IDE-managed Components
     void __fastcall FilterEditTextChange(TObject *Sender);
     void __fastcall OtdelenComboBoxClick(TObject *Sender);
     void __fastcall CloseWindowActionExecute(TObject *Sender);
-    void __fastcall Button4Click(TObject *Sender);
-    void __fastcall Button5Click(TObject *Sender);
-    void __fastcall Button3Click(TObject *Sender);
+    void __fastcall FindButtonClick(TObject *Sender);
+    void __fastcall SearchResetButtonClick(TObject *Sender);
+    void __fastcall FilterResetButtonClick(TObject *Sender);
 public:
     typedef enum {
         TM_UNDEFINED = 0,

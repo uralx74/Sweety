@@ -10,6 +10,7 @@
 #pragma link "OtdelenComboBoxFrameUnit"
 #pragma link "DBAccess"
 #pragma link "Ora"
+#pragma link "ComboBoxAlt"
 #pragma resource "*.dfm"
 TSelectFaPackForm *SelectFaPackForm;
 //---------------------------------------------------------------------------
@@ -23,6 +24,8 @@ void __fastcall TSelectFaPackForm::FormCreate(TObject *Sender)
 {
     // Если нужно присоединить список к ComboBox
     //MainDataModule->otdelenList.assignTo(ComboBox1);
+    OtdelenComboBoxAlt->AddSource(MainDataModule->getOtdelenListProc, "DESCR", "ACCT_OTDELEN", true);
+    //OtdelenComboBoxAlt->ItemIndex = 0;
 }
 
 /* Выбор строки*/
@@ -48,7 +51,8 @@ bool __fastcall TSelectFaPackForm::execute(String acctOtdelen, int mode)
         return false;
     }
     _mode = mode;
-    OtdelenComboBox->KeyValue = acctOtdelen;
+
+    OtdelenComboBoxAlt->Value = acctOtdelen;
 
 
     FindPackList(); // Поиск
@@ -66,21 +70,21 @@ void __fastcall TSelectFaPackForm::FindPackList()
     {
     case TM_NOTICES:
     {
-        MainDataModule->findFaPackListNotices(OtdelenComboBox->KeyValue, FaIdFindEdit->Text, AcctIdFindEdit->Text);
+        MainDataModule->findFaPackListNotices(OtdelenComboBoxAlt->Value, FaIdFindEdit->Text, AcctIdFindEdit->Text);
         faListGrid->DataSource = MainDataModule->findFaPackListNoticesDS;
         _currentFilter = MainDataModule->findFaPackListNoticesFilter;
         break;
     }
     case TM_STOP:
     {
-        MainDataModule->findFaPackListStop(OtdelenComboBox->KeyValue, FaIdFindEdit->Text, AcctIdFindEdit->Text);
+        MainDataModule->findFaPackListStop(OtdelenComboBoxAlt->Value, FaIdFindEdit->Text, AcctIdFindEdit->Text);
         faListGrid->DataSource = MainDataModule->findFaPackListStopDS;
         _currentFilter = MainDataModule->findFpStopListFilter;
         break;
     }
     case TM_OVERDUE:
     {
-        MainDataModule->findFpOverdueList(OtdelenComboBox->KeyValue, FaIdFindEdit->Text, AcctIdFindEdit->Text);
+        MainDataModule->findFpOverdueList(OtdelenComboBoxAlt->Value, FaIdFindEdit->Text, AcctIdFindEdit->Text);
         faListGrid->DataSource = MainDataModule->findFpOverdueListDataSource;
         _currentFilter = MainDataModule->findFpOverdueListFilter;
         break;
@@ -131,21 +135,20 @@ void __fastcall TSelectFaPackForm::OtdelenComboBoxClick(TObject *Sender)
     {
     case TM_NOTICES:
     {
-        MainDataModule->findFaPackListNotices(OtdelenComboBox->KeyValue/*, _mode*/);
+        MainDataModule->findFaPackListNotices(OtdelenComboBoxAlt->Value/*, _mode*/);
         break;
     }
     case TM_STOP:
     {
-        MainDataModule->findFaPackListStop(OtdelenComboBox->KeyValue/*, _mode*/);
+        MainDataModule->findFaPackListStop(OtdelenComboBoxAlt->Value/*, _mode*/);
         break;
     }
     case TM_OVERDUE:
     {
-        MainDataModule->findFpOverdueList(OtdelenComboBox->KeyValue/*, _mode*/);
+        MainDataModule->findFpOverdueList(OtdelenComboBoxAlt->Value/*, _mode*/);
         break;
     }
     }
-
 }
 
 /**/
@@ -165,7 +168,7 @@ void __fastcall TSelectFaPackForm::CloseWindowActionExecute(TObject *Sender)
 {
     //OtdelenComboBox2->KeyValue = otdelen;
 }*/
-void __fastcall TSelectFaPackForm::Button4Click(TObject *Sender)
+void __fastcall TSelectFaPackForm::FindButtonClick(TObject *Sender)
 {
     FindPackList();
     //MainDataModule->findFaPackListNoticesProc->ParamByName("p_acct_otdelen")->Value = acctOtdelen;
@@ -181,7 +184,7 @@ void __fastcall TSelectFaPackForm::Button4Click(TObject *Sender)
 }
 
 /**/
-void __fastcall TSelectFaPackForm::Button5Click(TObject *Sender)
+void __fastcall TSelectFaPackForm::SearchResetButtonClick(TObject *Sender)
 {
     ResetFindFilter();
     FindPackList();
@@ -195,7 +198,7 @@ void __fastcall TSelectFaPackForm::ResetFindFilter()
 }
 
 /* Очистка фильтров - кнопка*/
-void __fastcall TSelectFaPackForm::Button3Click(TObject *Sender)
+void __fastcall TSelectFaPackForm::FilterResetButtonClick(TObject *Sender)
 {
     ResetFilter();
 }
